@@ -8,6 +8,7 @@ public class ETRDAOImpl implements ETRDAO {
 
 	@Override
 	public void proba() {
+		System.out.println("Szko");
 	}
 	
 }
