@@ -101,7 +101,7 @@ public class ETRGUI extends JFrame {
 		JButton logInButton = new JButton(Labels.LOG_IN);
 		buttonPanel.add(logInButton);
 
-		/*logInButton.addActionListener(e -> {
+		logInButton.addActionListener(e -> {
 			if (userName.getText().isEmpty()) {
 				JOptionPane.showMessageDialog(
 						  this,
@@ -115,10 +115,12 @@ public class ETRGUI extends JFrame {
 						  Labels.ERROR,
 						  JOptionPane.ERROR_MESSAGE);
 			} else {
-				System.out.println(userName.getText() + " " + password.getText());
+				dispose();
+				new ReferentFrame(controller);
+				//System.out.println(userName.getText() + " " + password.getText());
 			}
 
-		});*/
+		});
 
 		panel.add(dataPanel);
 		panel.add(buttonPanel);

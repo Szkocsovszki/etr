@@ -1,15 +1,15 @@
 package dao;
 
+import dao.model.Account;
+
 public interface ETRDAO {
-	/**
-	 * Bejelentkezés szerinti azonosítás:
-	 * 		0 - sikertelen bejelentkezés
-	 * 		1 - hallgató
-	 * 		2 - oktató
-	 * 		3 - referens
-	 * @return
-	 */
-	//public int getProfile();
+	public Account getAccount(String eha, String password);
 	
-	public void proba();
+	public void createAccount(Account account);
+	
+	public void deleteAccount(String eha);
+	
+	public void modifyAccount(Account account);
+	
+	public void changePassword();
 }
