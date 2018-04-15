@@ -2,6 +2,7 @@ package controller;
 
 import dao.ETRDAO;
 import dao.ETRDAOImpl;
+import dao.model.Account;
 import view.ETRGUI;
 
 public class ETRController {
@@ -15,7 +16,9 @@ public class ETRController {
 		dao = new ETRDAOImpl();
 	}
 
-	//public Account getAccount(String eha, String password);
+	public Account getAccount(String eha, String password) {
+		return dao.getAccount(eha, password);
+	}
 	
 	//public void createAccount(Account account);
 	

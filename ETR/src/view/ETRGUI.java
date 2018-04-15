@@ -117,6 +117,7 @@ public class ETRGUI extends JFrame {
 			} else {
 				dispose();
 				new ReferentFrame(controller);
+				controller.getAccount(userName.getText(), password.getText());
 				//System.out.println(userName.getText() + " " + password.getText());
 			}
 
