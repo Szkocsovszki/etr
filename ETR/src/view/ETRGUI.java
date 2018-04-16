@@ -80,6 +80,7 @@ public class ETRGUI extends JFrame {
 	 * return panel; }
 	 */
 
+	@SuppressWarnings("deprecation")
 	private JPanel createSignInPanel() {
 		JPanel panel = new JPanel();
 		panel.setBorder(BorderFactory.createLineBorder(Color.BLACK));

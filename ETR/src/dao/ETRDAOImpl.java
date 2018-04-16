@@ -12,6 +12,11 @@ public class ETRDAOImpl implements ETRDAO {
 	public Account getAccount(String eha, String password) {
 		return null;
 	}
+	
+	@Override
+	public Account getAccountToModify(String eha) {
+		return null;
+	}
 
 	@Override
 	public void createAccount(Account account) {

@@ -12,4 +12,6 @@ public interface ETRDAO {
 	public void modifyAccount(Account account);
 	
 	public void changePassword();
+
+	public Account getAccountToModify(String eha);
 }

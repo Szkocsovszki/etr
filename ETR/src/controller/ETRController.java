@@ -20,11 +20,21 @@ public class ETRController {
 		return dao.getAccount(eha, password);
 	}
 	
-	//public void createAccount(Account account);
+	public Account getAccountToModify(String eha) {
+		return dao.getAccountToModify(eha);
+	}
 	
-	//public void deleteAccount(String eha);
+	public void createAccount(Account account) {
+		dao.createAccount(account);
+	}
 	
-	//public void modifyAccount(Account account);
+	public void deleteAccount(String eha) {
+		dao.deleteAccount(eha);
+	}
+	
+	public void modifyAccount(Account account) {
+		dao.modifyAccount(account);
+	}
 	
 	//public void changePassword();
 }
