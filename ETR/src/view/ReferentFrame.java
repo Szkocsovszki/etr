@@ -5,8 +5,8 @@ import java.awt.ComponentOrientation;
 import java.awt.FlowLayout;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
+import java.sql.Date;
 import java.util.ArrayList;
-import java.util.Date;
 
 import javax.swing.Box;
 import javax.swing.JButton;
@@ -18,6 +18,7 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 
 import controller.ETRController;
+import dao.model.Account;
 import dao.model.Referent;
 
 public class ReferentFrame extends JFrame {
@@ -126,7 +127,7 @@ public class ReferentFrame extends JFrame {
 							Referent referent = new Referent(
 																nameTextField.getText(),
 																ehaTextField.getText(),
-																new Date(birthDateTextField.getText()),
+																null,
 																addressTextField.getText(),
 																null
 															);
@@ -283,7 +284,7 @@ public class ReferentFrame extends JFrame {
 						  JOptionPane.ERROR_MESSAGE);
 			} else {
 				try {
-					controller.getAccountToModify(ehaTextField.getText());
+					Account acc = controller.getAccountToModify(ehaTextField.getText());
 					
 					workingPanel.removeAll();
 
@@ -299,11 +300,11 @@ public class ReferentFrame extends JFrame {
 					JLabel addressLabel = new JLabel(Labels.ADDRESS);
 					JLabel departmentLabel = new JLabel(Labels.DEPARTMENT);
 					
-					JTextField nameTextField = new JTextField("asd");
+					JTextField nameTextField = new JTextField(acc.getName());
 					JTextField ehaTextField2 = new JTextField(ehaTextField.getText());
-					JTextField birthDateTextField = new JTextField("asd");
-					JTextField addressTextField = new JTextField("asd");
-					JTextField departmentTextField = new JTextField("asd");
+					JTextField birthDateTextField = new JTextField(acc.getBirthDate().toString());
+					JTextField addressTextField = new JTextField(acc.getAddress());
+					JTextField departmentTextField = new JTextField(acc.getDepartment().toString());
 					
 					ehaTextField2.setEditable(false);
 
@@ -356,7 +357,7 @@ public class ReferentFrame extends JFrame {
 									Referent referent = new Referent(
 																		nameTextField.getText(),
 																		ehaTextField2.getText(),
-																		new Date(birthDateTextField.getText()),
+																		null,
 																		addressTextField.getText(),
 																		null
 																	);

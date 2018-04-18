@@ -1,7 +1,8 @@
 package dao.model;
 
+import java.sql.Date;
 import java.util.ArrayList;
-import java.util.Date;
+
 
 public class Referent extends Account {
 
