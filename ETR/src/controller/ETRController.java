@@ -36,5 +36,7 @@ public class ETRController {
 		dao.modifyAccount(account);
 	}
 	
-	//public void changePassword();
+	public void changePassword() {
+		dao.changePassword();
+	}
 }
