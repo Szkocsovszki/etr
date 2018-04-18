@@ -1,10 +1,14 @@
 package view;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.ComponentOrientation;
 import java.awt.FlowLayout;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -15,10 +19,13 @@ import javax.swing.JLabel;
 import javax.swing.JMenuBar;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 
 import controller.ETRController;
+import dao.model.Account;
 import dao.model.Referent;
+import dao.model.Student;
 
 public class ReferentFrame extends JFrame {
 	private static final long serialVersionUID = 1873297524242533738L;
@@ -44,11 +51,12 @@ public class ReferentFrame extends JFrame {
 	@SuppressWarnings("deprecation")
 	private JMenuBar createMenuBar() {
 		JMenuBar menuBar = new JMenuBar();
-		JButton signOut = new JButton(Labels.SIGN_OUT);
 
 		JButton createAccount = new JButton(Labels.CREATE_ACCOUNT);
 		JButton modifyAccount = new JButton(Labels.MODIFY_ACCOUNT);
 		JButton deleteAccount = new JButton(Labels.DELETE_ACCOUNT);
+		JButton changePassword = new JButton(Labels.CHANGE_PASSWORD);
+		JButton signOut = new JButton(Labels.SIGN_OUT);
 
 		createAccount.addActionListener(e -> {
 			workingPanel.removeAll();
@@ -67,10 +75,65 @@ public class ReferentFrame extends JFrame {
 			
 			JTextField nameTextField = new JTextField();
 			JTextField ehaTextField = new JTextField();
-			JTextField birthDateTextField = new JTextField();
+			JTextField birthDateTextField = new JTextField(Labels.DEFAULT_BIRTH_DATE);
 			JTextField addressTextField = new JTextField();
-			JTextField departmentTextField = new JTextField();
+			JTextField departmentTextField = new JTextField(Labels.DEFAULT_DEPARTMENT);
+			
+			birthDateTextField.setForeground(Color.GRAY);
 
+			birthDateTextField.addFocusListener(new FocusListener() {
+				public void focusGained(FocusEvent e) {
+					if(birthDateTextField.getText().equals(Labels.DEFAULT_BIRTH_DATE)) {
+						birthDateTextField.setText("");
+						birthDateTextField.setForeground(new Color(51, 51, 51));
+					}
+				}
+
+				public void focusLost(FocusEvent e) {
+					if(birthDateTextField.getText().isEmpty()) {
+						birthDateTextField.setForeground(Color.GRAY);
+						birthDateTextField.setText(Labels.DEFAULT_BIRTH_DATE);
+					} else {
+						int counter = 0;
+						
+						for(int i=0; i<birthDateTextField.getText().length(); i++) {
+							if(birthDateTextField.getText().charAt(i) == '/') {
+								counter++;
+								if(counter > 2) {
+									break;
+								}
+							}
+						}
+						
+						if(counter != 2) {
+							JOptionPane.showMessageDialog(
+									  inputPanel,
+									  Labels.WRONG_DATE_FORMAT,
+									  Labels.ERROR,
+									  JOptionPane.ERROR_MESSAGE);
+						}
+					}
+				}
+			});
+			
+			departmentTextField.setForeground(Color.GRAY);
+
+			departmentTextField.addFocusListener(new FocusListener() {
+				public void focusGained(FocusEvent e) {
+					if(departmentTextField.getText().equals(Labels.DEFAULT_DEPARTMENT)) {
+						departmentTextField.setText("");
+						departmentTextField.setForeground(new Color(51, 51, 51));
+					}
+				}
+
+				public void focusLost(FocusEvent e) {
+					if(departmentTextField.getText().isEmpty()) {
+						departmentTextField.setForeground(Color.GRAY);
+						departmentTextField.setText(Labels.DEFAULT_DEPARTMENT);
+					}
+				}
+			});
+			
 			inputPanel.add(nameLabel);
 			inputPanel.add(nameTextField);
 			inputPanel.add(ehaLabel);
@@ -100,7 +163,7 @@ public class ReferentFrame extends JFrame {
 							  Labels.EMPTY_EHA_TEXTFIELD,
 							  Labels.ERROR,
 							  JOptionPane.ERROR_MESSAGE);
-				} else if(birthDateTextField.getText().isEmpty()) {
+				} else if(birthDateTextField.getText().equals(Labels.DEFAULT_BIRTH_DATE)) {
 					JOptionPane.showMessageDialog(
 							  this,
 							  Labels.EMPTY_BIRTH_DATE_TEXTFIELD,
@@ -112,15 +175,18 @@ public class ReferentFrame extends JFrame {
 							  Labels.EMPTY_ADDRESS_TEXTFIELD,
 							  Labels.ERROR,
 							  JOptionPane.ERROR_MESSAGE);
-				} else if(departmentTextField.getText().isEmpty()) {
+				} else if(departmentTextField.getText().equals(Labels.DEFAULT_DEPARTMENT)) {
 					JOptionPane.showMessageDialog(
 							  this,
 							  Labels.EMPTY_DEPARTMENT_TEXTFIELD,
 							  Labels.ERROR,
 							  JOptionPane.ERROR_MESSAGE);
 				} else {
+					String[] pieces = departmentTextField.getText().split(", ");
 					ArrayList<String> department = new ArrayList<>();
-					department.add(departmentTextField.getText());
+					for(int i=0; i<pieces.length; i++) {
+						department.add(pieces[i]);
+					}
 					try {
 						if(true) {
 							Referent referent = new Referent(
@@ -157,9 +223,11 @@ public class ReferentFrame extends JFrame {
 								  JOptionPane.INFORMATION_MESSAGE);
 						nameTextField.setText("");
 						ehaTextField.setText("");
-						birthDateTextField.setText("");
+						birthDateTextField.setText(Labels.DEFAULT_BIRTH_DATE);
+						birthDateTextField.setForeground(Color.GRAY);
 						addressTextField.setText("");
-						departmentTextField.setText("");
+						departmentTextField.setText(Labels.DEFAULT_DEPARTMENT);
+						departmentTextField.setForeground(Color.GRAY);
 					} catch(Exception exception) {
 						JOptionPane.showMessageDialog(
 								  this,
@@ -237,6 +305,71 @@ public class ReferentFrame extends JFrame {
 			revalidate();
 			repaint();
 		});
+		
+		changePassword.addActionListener(e -> {
+			workingPanel.removeAll();
+
+			JPanel panel = new JPanel();
+			panel.setLayout(new GridLayout(2, 1));
+
+			JPanel inputPanel = new JPanel();
+			inputPanel.setLayout(new GridLayout(3, 2));
+			JLabel oldPasswordLabel = new JLabel(Labels.OLD_PASSWORD);
+			JLabel newPasswordLabel = new JLabel(Labels.NEW_PASSWORD);
+			JLabel confirmPasswordLabel = new JLabel(Labels.CONFIRM_PASSWORD);
+			JPasswordField oldPasswordField = new JPasswordField();
+			JPasswordField newPasswordField = new JPasswordField();
+			JPasswordField confirmPasswordField = new JPasswordField();
+			inputPanel.add(oldPasswordLabel);
+			inputPanel.add(oldPasswordField);
+			inputPanel.add(newPasswordLabel);
+			inputPanel.add(newPasswordField);
+			inputPanel.add(confirmPasswordLabel);
+			inputPanel.add(confirmPasswordField);
+			
+			JPanel buttonPanel = new JPanel();
+			buttonPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
+			JButton button = new JButton(Labels.MODIFY);
+			buttonPanel.add(button);
+			
+			button.addActionListener(e2 -> {
+				//régi jelszó lekérése - MEGVALÓSÍTANI!!!
+				
+				/*else*/ if(!newPasswordField.getText().equals(confirmPasswordField.getText())) {
+					JOptionPane.showMessageDialog(
+							  this,
+							  Labels.NEW_PASSWORD_MUST_MATCH_CONFIRMED_PASSWORD,
+							  Labels.ERROR,
+							  JOptionPane.ERROR_MESSAGE);
+				} else {
+					try {
+						controller.changePassword(/*jelszó továbbítás*/);
+						JOptionPane.showMessageDialog(
+								  this,
+								  Labels.PASSWORD_SUCCESSFULLY_CHANGED,
+								  Labels.INFORMATION,
+								  JOptionPane.INFORMATION_MESSAGE);
+						oldPasswordField.setText("");
+						newPasswordField.setText("");
+						confirmPasswordField.setText("");
+					} catch (Exception exception) {
+						JOptionPane.showMessageDialog(
+								  this,
+								  Labels.UNSUCCESSFULLY_PASSWORD_CHANGE,
+								  Labels.ERROR,
+								  JOptionPane.ERROR_MESSAGE);
+					}
+				}
+			});
+
+			panel.add(inputPanel);
+			panel.add(buttonPanel);
+
+			workingPanel.add(panel);
+
+			revalidate();
+			repaint();
+		});
 
 		signOut.addActionListener(e -> {
 			dispose();
@@ -250,6 +383,7 @@ public class ReferentFrame extends JFrame {
 
 		signOut.setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
 		menuBar.add(Box.createHorizontalGlue());
+		menuBar.add(changePassword);
 		menuBar.add(signOut);
 
 		return menuBar;
@@ -283,7 +417,22 @@ public class ReferentFrame extends JFrame {
 						  JOptionPane.ERROR_MESSAGE);
 			} else {
 				try {
-					controller.getAccountToModify(ehaTextField.getText());
+					Account account = controller.getAccountToModify(ehaTextField.getText());
+					
+					String asd = "asd";
+					ArrayList<String> asd2 = new ArrayList<>();
+					asd2.add(asd);
+					//asd2.add(asd);
+					//asd2.add(asd);
+					SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+					Date date = sdf.parse("20/02/2002");
+					account = new Student(
+											"asd", 
+											ehaTextField.getText(),
+											date,
+											"asd",
+											asd2
+										 );
 					
 					workingPanel.removeAll();
 
@@ -299,11 +448,30 @@ public class ReferentFrame extends JFrame {
 					JLabel addressLabel = new JLabel(Labels.ADDRESS);
 					JLabel departmentLabel = new JLabel(Labels.DEPARTMENT);
 					
-					JTextField nameTextField = new JTextField("asd");
-					JTextField ehaTextField2 = new JTextField(ehaTextField.getText());
-					JTextField birthDateTextField = new JTextField("asd");
-					JTextField addressTextField = new JTextField("asd");
-					JTextField departmentTextField = new JTextField("asd");
+					JTextField nameTextField = new JTextField(account.getName());
+					JTextField ehaTextField2 = new JTextField(account.getEha());
+					
+					Date date2 = account.getBirthDate();
+					String dateToWrite = "";
+					SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy");
+					dateToWrite = dateToWrite + simpleDateFormat.format(date2) + "/";
+					simpleDateFormat = new SimpleDateFormat("MM");
+					dateToWrite = dateToWrite + simpleDateFormat.format(date2) + "/";
+					simpleDateFormat = new SimpleDateFormat("dd");
+					dateToWrite = dateToWrite + simpleDateFormat.format(date2);
+					
+					JTextField birthDateTextField = new JTextField(dateToWrite);
+					JTextField addressTextField = new JTextField(account.getAddress());
+					
+					ArrayList<String> departmentList = account.getDepartment();
+					String departmentToWrite = "";
+					
+					for(String d : departmentList) {
+						departmentToWrite = departmentToWrite + d + ", ";
+					}
+					departmentToWrite = departmentToWrite.substring(0, departmentToWrite.length()-2);
+					
+					JTextField departmentTextField = new JTextField(departmentToWrite);
 					
 					ehaTextField2.setEditable(false);
 
@@ -411,6 +579,7 @@ public class ReferentFrame extends JFrame {
 							  Labels.ERROR,
 							  JOptionPane.ERROR_MESSAGE);
 					exception.printStackTrace();
+					modify();
 				}
 			}
 		});
