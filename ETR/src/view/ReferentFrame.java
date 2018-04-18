@@ -334,6 +334,7 @@ public class ReferentFrame extends JFrame {
 			
 			button.addActionListener(e2 -> {
 				//r�gi jelsz� lek�r�se - MEGVAL�S�TANI!!!
+
 				
 				/*else*/ if(!newPasswordField.getText().equals(confirmPasswordField.getText())) {
 					JOptionPane.showMessageDialog(
