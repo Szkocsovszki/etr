@@ -125,7 +125,6 @@ public class ReferentFrame extends JFrame {
 						departmentTextField.setForeground(new Color(51, 51, 51));
 					}
 				}
-
 				public void focusLost(FocusEvent e) {
 					if(departmentTextField.getText().isEmpty()) {
 						departmentTextField.setForeground(Color.GRAY);
@@ -334,7 +333,6 @@ public class ReferentFrame extends JFrame {
 			
 			button.addActionListener(e2 -> {
 				//r�gi jelsz� lek�r�se - MEGVAL�S�TANI!!!
-
 				
 				/*else*/ if(!newPasswordField.getText().equals(confirmPasswordField.getText())) {
 					JOptionPane.showMessageDialog(
@@ -449,7 +447,9 @@ public class ReferentFrame extends JFrame {
 					JLabel birthDateLabel = new JLabel(Labels.BIRTH_DATE);
 					JLabel addressLabel = new JLabel(Labels.ADDRESS);
 					JLabel departmentLabel = new JLabel(Labels.DEPARTMENT);
-					/*JTextField nameTextField = new JTextField(acc.getName());
+
+					/*Szkocsi, ez jól jöhet majd
+					JTextField nameTextField = new JTextField(acc.getName());
 					JTextField ehaTextField2 = new JTextField(ehaTextField.getText());
 					JTextField birthDateTextField = new JTextField(acc.getBirthDate().toString());
 					JTextField addressTextField = new JTextField(acc.getAddress());
