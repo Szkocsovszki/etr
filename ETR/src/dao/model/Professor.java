@@ -1,7 +1,7 @@
 package dao.model;
 
 import java.util.ArrayList;
-import java.util.Date;
+import java.sql.Date;
 
 public class Professor extends Account {
 	public Professor(String name, String eha, Date birthDate, String address, ArrayList<String> department) {

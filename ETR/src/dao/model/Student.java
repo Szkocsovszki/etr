@@ -1,7 +1,7 @@
 package dao.model;
 
 import java.util.ArrayList;
-import java.util.Date;
+import java.sql.Date;
 
 public class Student extends Account {
 	private int balance;
