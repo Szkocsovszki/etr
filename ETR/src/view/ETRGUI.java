@@ -7,6 +7,7 @@ import java.awt.FlowLayout;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.Toolkit;
+import java.sql.SQLException;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -118,7 +119,12 @@ public class ETRGUI extends JFrame {
 			} else {
 				dispose();
 				new ReferentFrame(controller);
-				controller.getAccount(userName.getText(), password.getText());
+				try {
+					controller.getAccount(userName.getText(), password.getText());
+				} catch (SQLException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
 				//System.out.println(userName.getText() + " " + password.getText());
 			}
 

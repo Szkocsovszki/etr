@@ -32,9 +32,8 @@ public class ETRDAOImpl implements ETRDAO {
 	}
 
 	@Override
-	public Account getAccountToModify(String eha){
+	public Account getAccountToModify(String eha) throws SQLException{
 		Statement st;
-		try {
 			st = conn.createStatement();
 			ResultSet accExists = st.executeQuery("SELECT * FROM SZEMELY WHERE EHA ='" + eha + "'");
 			if (accExists.next()) {
@@ -64,9 +63,6 @@ public class ETRDAOImpl implements ETRDAO {
 					}
 				}
 			}
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
 
 		return null;
 	}

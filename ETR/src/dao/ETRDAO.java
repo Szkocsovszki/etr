@@ -1,17 +1,19 @@
 package dao;
 
+import java.sql.SQLException;
+
 import dao.model.Account;
 
 public interface ETRDAO {
-	public Account getAccount(String eha, String password);
+	public Account getAccount(String eha, String password) throws SQLException;
 	
-	public void createAccount(Account account);
+	public void createAccount(Account account) throws SQLException;
 	
-	public void deleteAccount(String eha);
+	public void deleteAccount(String eha) throws SQLException;
 	
-	public void modifyAccount(Account account);
+	public void modifyAccount(Account account) throws SQLException;
 	
-	public void changePassword();
+	public void changePassword() throws SQLException;
 
-	public Account getAccountToModify(String eha);
+	public Account getAccountToModify(String eha) throws SQLException;
 }
