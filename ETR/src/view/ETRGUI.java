@@ -20,6 +20,11 @@ import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 
 import controller.ETRController;
+import dao.model.Account;
+import dao.model.Professor;
+import dao.model.Referent;
+import dao.model.Student;
+import view.referent.ReferentFrame;
 
 public class ETRGUI extends JFrame {
 
@@ -120,7 +125,13 @@ public class ETRGUI extends JFrame {
 				dispose();
 				new ReferentFrame(controller);
 				try {
-					controller.getAccount(userName.getText(), password.getText());
+					Account acc = controller.getAccount(userName.getText(), password.getText());
+					if(acc instanceof Referent) {
+					}
+					if(acc instanceof Professor) {
+					}
+					if(acc instanceof Student) {
+					}
 				} catch (SQLException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
