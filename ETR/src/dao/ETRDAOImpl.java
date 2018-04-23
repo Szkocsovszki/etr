@@ -20,6 +20,7 @@ public class ETRDAOImpl implements ETRDAO {
 			conn = DriverManager.getConnection("jdbc:oracle:thin:@localhost:4000:kabinet", "h675353", "geniusos123");
 			//ods.setURL("jdbc:oracle:thin:@localhost:4000:kabinet");
 			//conn = ods.getConnection("h675353", "geniusos123");
+			conn.setAutoCommit(false);
 
 		} catch (Exception ex) {
 			ex.printStackTrace();
@@ -86,15 +87,44 @@ public class ETRDAOImpl implements ETRDAO {
 
 	}
 
+	public void updateStudentBalance(Account acc, int balance) throws SQLException{
+		PreparedStatement st = conn.prepareStatement("UPDATE hallgato SET egyenleg = ? WHERE eha = ?");
+		st.setInt(1, balance);
+		st.setString(2, acc.getEha());
+		st.executeUpdate();
+		st.close();
+	}
+
 	@Override
 	public int modifyAccount(Account account) throws SQLException{
-		Statement st = conn.createStatement();
-		return st.executeUpdate("UPDATE "+account.tableName()+
-				" SET eha='"+account.getEha()+", "+
-				" nev='"+account.getName()+", "+
-				" szuletesi datum=to_year('"+account.getBirthDate()+"', 'YYYY-MM-DD'), "+
-				" cim='"+account.getAddress()+"' "+
-				" where eha='"+account.getEha()+"'");
+		PreparedStatement ps = conn.prepareStatement("UPDATE szemely "
+				+ "SET eha =?,"
+				+ " nev =?,"
+				+ " szuletesi_datum =to_date(?, 'YYYY-MM-DD'),"
+				+ " cim =?"
+				+ " where eha =?");
+		ps.setString(1, account.getEha());
+		ps.setString(2, account.getName());
+		ps.setString(3, account.getBirthDate());
+		ps.setString(4, account.getAddress());
+		ps.setString(5, account.getEha());
+		int szemely = ps.executeUpdate();
+		ps.close();
+		
+		ps = conn.prepareStatement("DELETE FROM szak WHERE eha = ?");
+		ps.setString(1, account.getEha());
+		int szakDel = ps.executeUpdate();
+		ps.close();
+		
+		ps = conn.prepareStatement("INSERT INTO szak VALUES (?, ?)");
+		int szakIns = 0;
+		ps.setString(1, account.getEha());
+		for(String sz : account.getDepartment()) {
+			ps.setString(2, sz);
+			szakIns += ps.executeUpdate();
+		}
+		ps.close();
+		return szemely+szakDel+szakIns;
 	}
 
 	@Override
