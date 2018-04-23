@@ -55,9 +55,9 @@ public class ETRDAOImpl implements ETRDAO {
 			while (departments.next())
 				departmentStore.add(departments.getString(1));
 			departments.close();
-			
+
 			if(departmentStore.isEmpty()) departmentStore = null;
-			 
+
 
 			ResultSet accTypeCheck = st.executeQuery("SELECT * FROM REFERENS WHERE EHA ='" + eha + "'");
 			if (accTypeCheck.next()) {
@@ -87,7 +87,7 @@ public class ETRDAOImpl implements ETRDAO {
 
 	@Override
 	public void createAccount(Account account) throws SQLException {
-		
+
 	}
 
 	@Override
