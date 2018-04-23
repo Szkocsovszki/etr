@@ -38,7 +38,7 @@ public class ETRController {
 		dao.modifyAccount(account);
 	}
 	
-	public void changePassword() throws SQLException{
-		dao.changePassword();
+	public void changePassword(String eha, String password) throws SQLException{
+		dao.changePassword(eha, password);
 	}
 }

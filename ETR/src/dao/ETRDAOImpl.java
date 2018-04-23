@@ -5,7 +5,6 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.ArrayList;
 
 import dao.model.Account;
@@ -36,45 +35,61 @@ public class ETRDAOImpl implements ETRDAO {
 
 	@Override
 	public Account getAccount(String eha, String password) throws SQLException {
-		return null;
+		PreparedStatement st = conn.prepareStatement("SELECT eha, jelszo FROM SZEMELY WHERE EHA = ?");
+		st.setString(1, eha);
+		ResultSet accExists = st.executeQuery();
+		if(accExists.next() && accExists.getString(2).equals(password)) {
+			st.close();
+			return getAccountToModify(eha);
+		}else {
+			st.close();
+			return null;
+		}
+		
 	}
 
 	@Override
 	public Account getAccountToModify(String eha) throws SQLException {
-		Statement st = conn.createStatement();
-		ResultSet accExists = st.executeQuery("SELECT * FROM SZEMELY WHERE EHA ='" + eha + "'");
+		PreparedStatement st = conn.prepareStatement("SELECT * FROM szemely WHERE EHA = ?");
+		st.setString(1, eha);
+		ResultSet accExists = st.executeQuery();
 		if (accExists.next()) {
 			String accName = accExists.getString(2);
 			String accEHA = accExists.getString(1);
-			String accBirth = accExists.getString(3);
+			String accBirth = (accExists.getString(3).split(" "))[0];
 			String accAddress = accExists.getString(4);
 			accExists.close();
 
 			ArrayList<String> departmentStore = new ArrayList<String>();
-			ResultSet departments = st.executeQuery("SELECT szaknev FROM SZAK WHERE EHA ='" + eha + "'");
+			st = conn.prepareStatement("SELECT szaknev FROM szak WHERE EHA = ?");
+			st.setString(1, eha);
+			ResultSet departments = st.executeQuery();
 			while (departments.next())
 				departmentStore.add(departments.getString(1));
 			departments.close();
-
-			if(departmentStore.isEmpty()) departmentStore = null;
-
-
-			ResultSet accTypeCheck = st.executeQuery("SELECT * FROM REFERENS WHERE EHA ='" + eha + "'");
+			
+			st = conn.prepareStatement("SELECT * FROM referens WHERE EHA = ?");
+			st.setString(1, eha);
+			ResultSet accTypeCheck = st.executeQuery();
 			if (accTypeCheck.next()) {
 				accTypeCheck.close();
-				accExists.close();
+				st.close();
 				return new Referent(accName, accEHA, accBirth, accAddress, departmentStore);
 			} else {
-				accTypeCheck = st.executeQuery("SELECT * FROM OKTATO WHERE EHA ='" + eha + "'");
+				st = conn.prepareStatement("SELECT * FROM oktato WHERE EHA = ?");
+				st.setString(1, eha);
+				accTypeCheck = st.executeQuery();
 				if (accTypeCheck.next()) {
 					accTypeCheck.close();
-					accExists.close();
+					st.close();
 					return new Professor(accName, accEHA, accBirth, accAddress, departmentStore);
 				} else {
-					accTypeCheck = st.executeQuery("SELECT * FROM HALLGATO WHERE EHA ='" + eha + "'");
+					st = conn.prepareStatement("SELECT * FROM hallgato WHERE EHA = ?");
+					st.setString(1, eha);
+					accTypeCheck = st.executeQuery();
 					if (accTypeCheck.next()) {
 						accTypeCheck.close();
-						accExists.close();
+						st.close();
 						return new Student(accName, accEHA, accBirth, accAddress, departmentStore);
 					}
 				}
@@ -82,11 +97,32 @@ public class ETRDAOImpl implements ETRDAO {
 			accTypeCheck.close();
 		}
 		accExists.close();
+		st.close();
 		return null;
 	}
 
 	@Override
 	public void createAccount(Account account) throws SQLException {
+		PreparedStatement st = conn.prepareStatement("INSERT INTO szemely VALUES (?,?,to_date(?, 'YYYY-MM-DD'),?,?)");
+		st.setString(1, account.getEha());
+		st.setString(2, account.getName());
+		st.setString(3, account.getBirthDate());
+		st.setString(4, account.getAddress());
+		st.setString(5, account.getEha());
+		st.executeUpdate();
+		
+		st = conn.prepareStatement("INSERT INTO szak VALUES (?,?)");
+		st.setString(1, account.getEha());
+		for(String sz : account.getDepartment()) {
+			st.setString(2, sz);
+			st.executeQuery();
+		}
+		
+		st = conn.prepareStatement("INSERT INTO "+account.tableName()+"(eha) VALUES (?)");
+		st.setString(1, account.getEha());
+		st.executeQuery();
+		conn.commit();
+		st.close();
 
 	}
 
@@ -94,9 +130,11 @@ public class ETRDAOImpl implements ETRDAO {
 	public void deleteAccount(String eha) throws SQLException {
 		PreparedStatement st = conn.prepareStatement("DELETE FROM szemely WHERE eha = ? ");
 		st.setString(1, eha);
-		st.executeUpdate();
+		int deleted = st.executeUpdate();
 		conn.commit();
 		st.close();
+		if(deleted == 0)
+			throw new SQLException();
 	}
 
 	public void updateStudentBalance(Account acc, int balance) throws SQLException {
@@ -109,7 +147,7 @@ public class ETRDAOImpl implements ETRDAO {
 	}
 
 	@Override
-	public int modifyAccount(Account account) throws SQLException {
+	public void modifyAccount(Account account) throws SQLException {
 		PreparedStatement update = conn.prepareStatement("UPDATE szemely " + "SET eha =?," + " nev =?,"
 				+ " szuletesi_datum =to_date(?, 'YYYY-MM-DD')," + " cim =?" + " where eha =?");
 		update.setString(1, account.getEha());
@@ -117,28 +155,32 @@ public class ETRDAOImpl implements ETRDAO {
 		update.setString(3, account.getBirthDate());
 		update.setString(4, account.getAddress());
 		update.setString(5, account.getEha());
-		int szemely = update.executeUpdate();
+		update.executeUpdate();
 		update.close();
 
 		PreparedStatement delete = conn.prepareStatement("DELETE FROM szak WHERE eha = ?");
 		delete.setString(1, account.getEha());
-		int szakDel = delete.executeUpdate();
+		delete.executeUpdate();
 		delete.close();
 
 		PreparedStatement insert = conn.prepareStatement("INSERT INTO szak VALUES (?, ?)");
-		int szakIns = 0;
 		insert.setString(1, account.getEha());
 		for (String sz : account.getDepartment()) {
 			insert.setString(2, sz);
-			szakIns += insert.executeUpdate();
+			insert.executeUpdate();
 		}
 		insert.close();
 		conn.commit();
-		return szemely + szakDel + szakIns;
 	}
 
 	@Override
-	public void changePassword() throws SQLException {
-
+	public void changePassword(String eha, String jelszo) throws SQLException {
+		PreparedStatement getPass = conn.prepareStatement("SELECT standard_hash(jelszo) FROM szemely");
+		ResultSet rs = getPass.executeQuery();
+		if(rs.next())
+			System.out.println(rs.getString(1)+" TTT "+jelszo);
+		getPass.close();
 	}
+
+	
 }
