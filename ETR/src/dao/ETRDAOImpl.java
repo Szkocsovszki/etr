@@ -67,6 +67,7 @@ public class ETRDAOImpl implements ETRDAO {
 			while (departments.next())
 				departmentStore.add(departments.getString(1));
 			departments.close();
+
 			
 			st = conn.prepareStatement("SELECT * FROM referens WHERE EHA = ?");
 			st.setString(1, eha);
@@ -111,6 +112,7 @@ public class ETRDAOImpl implements ETRDAO {
 		st.setString(5, account.getEha());
 		st.executeUpdate();
 		
+
 		st = conn.prepareStatement("INSERT INTO szak VALUES (?,?)");
 		st.setString(1, account.getEha());
 		for(String sz : account.getDepartment()) {
