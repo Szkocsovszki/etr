@@ -1,13 +1,12 @@
 package dao.model;
 
-import java.sql.Date;
 import java.util.ArrayList;
 
 
 public abstract class Account {
 	protected String name;
 	protected String eha;
-	protected Date birthDate;
+	protected String birthDate;
 	protected String address;
 	protected ArrayList<String> department;
 
@@ -27,11 +26,11 @@ public abstract class Account {
 		this.eha = eha;
 	}
 
-	public Date getBirthDate() {
+	public String getBirthDate() {
 		return birthDate;
 	}
 
-	public void setBirthDate(Date birthDate) {
+	public void setBirthDate(String birthDate) {
 		this.birthDate = birthDate;
 	}
 
@@ -50,5 +49,7 @@ public abstract class Account {
 	public void setDepartment(ArrayList<String> department) {
 		this.department = department;
 	}
+	
+	public abstract String tableName();
 
 }

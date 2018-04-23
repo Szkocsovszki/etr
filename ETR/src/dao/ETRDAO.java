@@ -11,7 +11,7 @@ public interface ETRDAO {
 	
 	public void deleteAccount(String eha) throws SQLException;
 	
-	public void modifyAccount(Account account) throws SQLException;
+	public int modifyAccount(Account account) throws SQLException;
 	
 	public void changePassword() throws SQLException;
 
