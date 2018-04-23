@@ -38,7 +38,7 @@ public class Labels {
 	public static final String EMPTY_ADDRESS_TEXTFIELD = "A Cím mező tartalma nem lehet üres!";
 	public static final String EMPTY_DEPARTMENT_TEXTFIELD = "A Szak mező tartalma nem lehet üres!";
 	public static final String INFORMATION = "Információ";
-	public static final String DEFAULT_BIRTH_DATE = "YYYY/MM/DD";
+	public static final String DEFAULT_BIRTH_DATE = "YYYY-MM-DD";
 	public static final String WRONG_DATE_FORMAT = "Rossz dátum formátum!";
 	public static final String DEFAULT_DEPARTMENT = "szak1, szak2, ...";
 	public static final String OLD_PASSWORD = "Régi jelszó";
@@ -47,5 +47,9 @@ public class Labels {
 	public static final String NEW_PASSWORD_DOES_NOT_MATCH_CONFIRMED_PASSWORD = "Az új jelszó nem egyezik a megerősített jelszóval!";
 	public static final String PASSWORD_SUCCESSFULLY_CHANGED = "Sikeres jelszó módosítás.";
 	public static final String UNSUCCESSFULLY_PASSWORD_CHANGE = "A jelszó megváltoztatása nem sikerült!";
+	public static final String REFERENT = "Referens";
+	public static final String PROFESSOR = "Oktató";
+	public static final String STUDENT = "Hallgató";
+	public static final String NO_CHECKBOX_SELECTED = "Nincs megadva a létrehozni kívánt személy típusa!";
 
 }

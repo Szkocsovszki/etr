@@ -5,9 +5,11 @@ import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
-import java.sql.Date;
 import java.sql.SQLException;
-import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
+import java.time.format.ResolverStyle;
 import java.util.ArrayList;
 
 import javax.swing.JButton;
@@ -18,7 +20,6 @@ import javax.swing.JTextField;
 
 import controller.ETRController;
 import dao.model.Account;
-import dao.model.Referent;
 import view.Labels;
 
 public class ModifyAccount extends JPanel {
@@ -44,7 +45,7 @@ public class ModifyAccount extends JPanel {
 		JButton button = new JButton(Labels.SEARCH);
 		buttonPanel.add(button);
 		
-		button.addActionListener(e2 -> {
+		button.addActionListener(e -> {
 			if(ehaTextField.getText().isEmpty()) {
 				JOptionPane.showMessageDialog(
 						  this,
@@ -68,10 +69,11 @@ public class ModifyAccount extends JPanel {
 
 					JTextField nameTextField = new JTextField(account.getName());
 					
-					JTextField ehaTextField2 = new JTextField(ehaTextField.getText());
+					JTextField ehaTextField2 = new JTextField(account.getEha());
 					ehaTextField2.setEditable(false);
 					
-					JTextField birthDateTextField = new JTextField(account.getBirthDate().toString());
+					String[] correctedDate = account.getBirthDate().split(" ");
+					JTextField birthDateTextField = new JTextField(correctedDate[0]);
 					
 					birthDateTextField.addFocusListener(new FocusListener() {
 						public void focusGained(FocusEvent e) {
@@ -93,8 +95,8 @@ public class ModifyAccount extends JPanel {
 					
 					JTextField departmentTextField;
 					ArrayList<String> departmentList = account.getDepartment();
-					String departmentToWrite = "";
 					
+					String departmentToWrite = "";
 					for(String d : departmentList) {
 						departmentToWrite = departmentToWrite + d + ", ";
 					}
@@ -105,6 +107,27 @@ public class ModifyAccount extends JPanel {
 						departmentToWrite = departmentToWrite.substring(0, departmentToWrite.length()-2);
 						departmentTextField = new JTextField(departmentToWrite);
 					}
+					
+					departmentTextField.addFocusListener(new FocusListener() {
+						public void focusGained(FocusEvent e) {
+							if(departmentTextField.getText().equals(Labels.DEFAULT_DEPARTMENT)) {
+								departmentTextField.setText("");
+								departmentTextField.setForeground(new Color(51, 51, 51));
+							}
+						}
+						public void focusLost(FocusEvent e) {
+							if(departmentTextField.getText().isEmpty()) {
+								departmentTextField.setForeground(Color.GRAY);
+								departmentTextField.setText(Labels.DEFAULT_DEPARTMENT);
+							}
+						}
+					});
+					
+					/*if(account instanceof Referent) {
+						departmentTextField.setText("");
+						departmentTextField.setEditable(false);
+						departmentTextField.setFocusable(false);
+					}*/
 
 					inputPanel2.add(nameLabel);
 					inputPanel2.add(nameTextField);
@@ -122,7 +145,7 @@ public class ModifyAccount extends JPanel {
 					JButton button2 = new JButton(Labels.MODIFY);
 					buttonPanel2.add(button2);
 					
-					button2.addActionListener(e3 -> {
+					button2.addActionListener(e2 -> {
 						if(nameTextField.getText().isEmpty()) {
 							JOptionPane.showMessageDialog(
 									  this,
@@ -141,7 +164,7 @@ public class ModifyAccount extends JPanel {
 									  Labels.EMPTY_ADDRESS_TEXTFIELD,
 									  Labels.ERROR,
 									  JOptionPane.ERROR_MESSAGE);
-						} else if(departmentTextField.getText().isEmpty()) {
+						} else if(departmentTextField.getText().equals(Labels.DEFAULT_DEPARTMENT)) {
 							JOptionPane.showMessageDialog(
 									  this,
 									  Labels.EMPTY_DEPARTMENT_TEXTFIELD,
@@ -149,60 +172,24 @@ public class ModifyAccount extends JPanel {
 									  JOptionPane.ERROR_MESSAGE);
 						} else {
 							try {
-								int counter = 0; 
-								
-								for(int i=0; i<birthDateTextField.getText().length(); i++) {
-									if(birthDateTextField.getText().charAt(i) == '-') {
-										counter++;
-										if(counter > 2) {
-											break;
-										}
-									}
-								}
-								
-								if(counter == 2) {
-									/*SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
-									JTextField birthDateTextField = new JTextField(simpleDateFormat.format(account.getBirthDate()));*/
-									
-									String[] pieces = birthDateTextField.getText().split("-");
-									new Date(Integer.parseInt(pieces[0]), Integer.parseInt(pieces[1]), Integer.parseInt(pieces[2]));
-								} else {
-									throw new Exception();
-								}
+								LocalDate.parse(birthDateTextField.getText(),
+												DateTimeFormatter.ofPattern("uuuu-MM-dd")
+												.withResolverStyle(ResolverStyle.STRICT)
+				                );
 								
 								String[] pieces = departmentTextField.getText().split(", ");
 								ArrayList<String> department = new ArrayList<>();
 								for(int i=0; i<pieces.length; i++) {
 									department.add(pieces[i]);
 								}
-								if(true) {
-									Referent referent = new Referent(
-																		nameTextField.getText(),
-																		ehaTextField2.getText(),
-																		null,
-																		addressTextField.getText(),
-																		null
-																	);
-									controller.modifyAccount(referent);
-								} /*else if(true) {
-									Professor professor = new Professor(
-											nameTextField.getText(),
-											ehaTextField2.getText(),
-											new Date(birthDateTextField.getText()),
-											addressTextField.getText(),
-											department
-										);
-									controller.modifyAccount(professor);
-								} else {
-									Student student = new Student(
-											nameTextField.getText(),
-											ehaTextField2.getText(),
-											new Date(birthDateTextField.getText()),
-											addressTextField.getText(),
-											department
-										);
-									controller.modifyAccount(student);
-								}*/
+								
+								account.setName(nameTextField.getText());
+								account.setBirthDate(birthDateTextField.getText());
+								account.setAddress(addressTextField.getText());
+								account.setDepartment(department);
+								
+								controller.modifyAccount(account);
+								
 								JOptionPane.showMessageDialog(
 										  this,
 										  Labels.USERS_DATA_SUCCESSFULLY_MODIFIED,
@@ -216,7 +203,7 @@ public class ModifyAccount extends JPanel {
 										  Labels.ERROR,
 										  JOptionPane.ERROR_MESSAGE);
 								exception.printStackTrace();
-							} catch (Exception exception) {
+							} catch (DateTimeParseException exception) {
 								JOptionPane.showMessageDialog(
 										  inputPanel,
 										  Labels.WRONG_DATE_FORMAT,
@@ -248,6 +235,4 @@ public class ModifyAccount extends JPanel {
 		repaint();
 	}
 	
-	
-
 }

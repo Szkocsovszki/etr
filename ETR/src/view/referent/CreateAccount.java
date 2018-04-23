@@ -6,24 +6,31 @@ import java.awt.GridLayout;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.sql.SQLException;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
+import java.time.format.ResolverStyle;
 import java.util.ArrayList;
-import java.util.Date;
 
+import javax.swing.ButtonGroup;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
 import controller.ETRController;
+import dao.model.Professor;
 import dao.model.Referent;
+import dao.model.Student;
 import view.Labels;
 
 public class CreateAccount extends JPanel {
 	private static final long serialVersionUID = 1605525325559960395L;
 
 	public CreateAccount(ETRController controller) {
-		setLayout(new GridLayout(2, 1));
+		setLayout(new GridLayout(3, 1));
 		
 		JPanel inputPanel = new JPanel();
 		inputPanel.setLayout(new GridLayout(5, 2));
@@ -44,8 +51,6 @@ public class CreateAccount extends JPanel {
 
 		birthDateTextField.addFocusListener(new FocusListener() {
 			public void focusGained(FocusEvent e) {
-				//errorIsVisible = wrongDateFormat ? true : false;
-				
 				if(birthDateTextField.getText().equals(Labels.DEFAULT_BIRTH_DATE)) {
 					birthDateTextField.setText("");
 					birthDateTextField.setForeground(new Color(51, 51, 51));
@@ -88,12 +93,51 @@ public class CreateAccount extends JPanel {
 		inputPanel.add(departmentLabel);
 		inputPanel.add(departmentTextField);
 		
+		JPanel accountPanel = new JPanel();
+		accountPanel.setLayout(new GridLayout(1, 3));
+		JCheckBox referentCheckBox = new JCheckBox(Labels.REFERENT);
+		JCheckBox professorCheckBox = new JCheckBox(Labels.PROFESSOR);
+		JCheckBox studentCheckBox = new JCheckBox(Labels.STUDENT);
+		
+		ButtonGroup buttonGroup = new ButtonGroup();
+		buttonGroup.add(referentCheckBox);
+		buttonGroup.add(professorCheckBox);
+		buttonGroup.add(studentCheckBox);
+		
+		accountPanel.add(referentCheckBox);
+		accountPanel.add(professorCheckBox);
+		accountPanel.add(studentCheckBox);
+		
+		referentCheckBox.addActionListener(e -> {
+			departmentTextField.setText("");
+			departmentTextField.setEditable(false);
+			departmentTextField.setFocusable(false);
+		});
+		
+		professorCheckBox.addActionListener(e -> {
+			departmentTextField.setEditable(true);
+			departmentTextField.setFocusable(true);
+			if(departmentTextField.getText().isEmpty()) {
+				departmentTextField.setForeground(Color.GRAY);
+				departmentTextField.setText(Labels.DEFAULT_DEPARTMENT);
+			}
+		});
+		
+		studentCheckBox.addActionListener(e -> {
+			departmentTextField.setEditable(true);
+			departmentTextField.setFocusable(true);
+			if(departmentTextField.getText().isEmpty()) {
+				departmentTextField.setForeground(Color.GRAY);
+				departmentTextField.setText(Labels.DEFAULT_DEPARTMENT);
+			}
+		});
+		
 		JPanel buttonPanel = new JPanel();
 		buttonPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
 		JButton button = new JButton(Labels.CREATE);
 		buttonPanel.add(button);
 		
-		button.addActionListener(e2 -> {
+		button.addActionListener(e -> {
 			if(nameTextField.getText().isEmpty()) {
 				JOptionPane.showMessageDialog(
 						  this,
@@ -126,23 +170,10 @@ public class CreateAccount extends JPanel {
 						  JOptionPane.ERROR_MESSAGE);
 			} else {
 				try {
-					int counter = 0;
-					
-					for(int i=0; i<birthDateTextField.getText().length(); i++) {
-						if(birthDateTextField.getText().charAt(i) == '-') {
-							counter++;
-							if(counter > 2) {
-								break;
-							}
-						}
-					}
-					
-					if(counter == 2) {
-						String[] pieces = birthDateTextField.getText().split("-");
-						new Date(Integer.parseInt(pieces[0]), Integer.parseInt(pieces[1]), Integer.parseInt(pieces[2]));
-					} else {
-						throw new Exception();
-					}
+					LocalDate.parse(birthDateTextField.getText(),
+									DateTimeFormatter.ofPattern("uuuu-MM-dd")
+			                 		.withResolverStyle(ResolverStyle.STRICT)
+			        );
 					
 					String[] pieces = departmentTextField.getText().split(", ");
 					ArrayList<String> department = new ArrayList<>();
@@ -150,34 +181,36 @@ public class CreateAccount extends JPanel {
 						department.add(pieces[i]);
 					}
 				
-					if(true) {
+					if(referentCheckBox.isSelected()) {
 						Referent referent = new Referent(
-															nameTextField.getText(),
-															ehaTextField.getText(),
-															null,
-															addressTextField.getText(),
-															null
-														);
+							nameTextField.getText(),
+							ehaTextField.getText(),
+							birthDateTextField.getText(),
+							addressTextField.getText(),
+							null
+						);
 						controller.createAccount(referent);
-					} /*else if(true) {
+					} else if(professorCheckBox.isSelected()) {
 						Professor professor = new Professor(
-								nameTextField.getText(),
-								ehaTextField.getText(),
-								new Date(birthDateTextField.getText()),
-								addressTextField.getText(),
-								department
-							);
+							nameTextField.getText(),
+							ehaTextField.getText(),
+							birthDateTextField.getText(),
+							addressTextField.getText(),
+							department
+						);
 						controller.createAccount(professor);
-					} else {
+					} else if(studentCheckBox.isSelected()) {
 						Student student = new Student(
-								nameTextField.getText(),
-								ehaTextField.getText(),
-								new Date(birthDateTextField.getText()),
-								addressTextField.getText(),
-								department
-							);
+							nameTextField.getText(),
+							ehaTextField.getText(),
+							birthDateTextField.getText(),
+							addressTextField.getText(),
+							department
+						);
 						controller.createAccount(student);
-					}*/
+					} else {
+						throw new NullPointerException();
+					}
 					JOptionPane.showMessageDialog(
 							  this,
 							  Labels.USER_SUCCESSFULLY_CREATED,
@@ -190,6 +223,9 @@ public class CreateAccount extends JPanel {
 					addressTextField.setText("");
 					departmentTextField.setText(Labels.DEFAULT_DEPARTMENT);
 					departmentTextField.setForeground(Color.GRAY);
+					departmentTextField.setEditable(true);
+					departmentTextField.setFocusable(true);
+					buttonGroup.clearSelection();
 				} catch(SQLException exception) {
 					JOptionPane.showMessageDialog(
 							  this,
@@ -197,17 +233,31 @@ public class CreateAccount extends JPanel {
 							  Labels.ERROR,
 							  JOptionPane.ERROR_MESSAGE);
 					exception.printStackTrace();
-				} catch (Exception exception) {
+				} catch (NullPointerException exception) {
 					JOptionPane.showMessageDialog(
-							  inputPanel,
+							  this,
+							  Labels.NO_CHECKBOX_SELECTED,
+							  Labels.ERROR,
+							  JOptionPane.ERROR_MESSAGE);
+				} catch (DateTimeParseException exception) {
+					JOptionPane.showMessageDialog(
+							  this,
 							  Labels.WRONG_DATE_FORMAT,
 							  Labels.ERROR,
 							  JOptionPane.ERROR_MESSAGE);
+				} catch (Exception exception) {
+					JOptionPane.showMessageDialog(
+							  this,
+							  exception.getMessage(),
+							  Labels.ERROR,
+							  JOptionPane.ERROR_MESSAGE);
+					exception.printStackTrace();
 				}
 			}
 		});
 
 		add(inputPanel);
+		add(accountPanel);
 		add(buttonPanel);
 	}
 	

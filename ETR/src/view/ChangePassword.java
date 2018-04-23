@@ -38,7 +38,7 @@ public class ChangePassword extends JPanel {
 		JButton button = new JButton(Labels.MODIFY);
 		buttonPanel.add(button);
 		
-		button.addActionListener(e2 -> {
+		button.addActionListener(e -> {
 			//r�gi jelsz� lek�r�se - MEGVAL�S�TANI!!!
 			
 			/*else*/ if(!newPasswordField.getText().equals(confirmPasswordField.getText())) {
