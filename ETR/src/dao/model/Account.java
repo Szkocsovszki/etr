@@ -1,6 +1,5 @@
 package dao.model;
 
-import java.sql.Date;
 import java.util.ArrayList;
 
 
