@@ -27,10 +27,10 @@ public class DeleteAccount extends JPanel {
 		
 		JPanel buttonPanel = new JPanel();
 		buttonPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
-		JButton button = new JButton(Labels.DELETE);
-		buttonPanel.add(button);
+		JButton deleteButton = new JButton(Labels.DELETE);
+		buttonPanel.add(deleteButton);
 		
-		button.addActionListener(e -> {
+		deleteButton.addActionListener(e -> {
 			if(deleteAccountTextField.getText().isEmpty()) {
 				JOptionPane.showMessageDialog(
 						  this,

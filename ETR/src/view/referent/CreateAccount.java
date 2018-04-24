@@ -134,10 +134,10 @@ public class CreateAccount extends JPanel {
 		
 		JPanel buttonPanel = new JPanel();
 		buttonPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
-		JButton button = new JButton(Labels.CREATE);
-		buttonPanel.add(button);
+		JButton createButton = new JButton(Labels.CREATE);
+		buttonPanel.add(createButton);
 		
-		button.addActionListener(e -> {
+		createButton.addActionListener(e -> {
 			if(nameTextField.getText().isEmpty()) {
 				JOptionPane.showMessageDialog(
 						  this,

@@ -42,10 +42,10 @@ public class ModifyAccount extends JPanel {
 		
 		JPanel buttonPanel = new JPanel();
 		buttonPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
-		JButton button = new JButton(Labels.SEARCH);
-		buttonPanel.add(button);
+		JButton searchButton = new JButton(Labels.SEARCH);
+		buttonPanel.add(searchButton);
 		
-		button.addActionListener(e -> {
+		searchButton.addActionListener(e -> {
 			if(ehaTextField.getText().isEmpty()) {
 				JOptionPane.showMessageDialog(
 						  this,
@@ -127,6 +127,7 @@ public class ModifyAccount extends JPanel {
 						departmentTextField.setText("");
 						departmentTextField.setEditable(false);
 						departmentTextField.setFocusable(false);
+						account.setDepartment(null);
 					}*/
 
 					inputPanel2.add(nameLabel);
@@ -142,10 +143,10 @@ public class ModifyAccount extends JPanel {
 					
 					JPanel buttonPanel2 = new JPanel();
 					buttonPanel2.setLayout(new FlowLayout(FlowLayout.CENTER));
-					JButton button2 = new JButton(Labels.MODIFY);
-					buttonPanel2.add(button2);
+					JButton modifyButton = new JButton(Labels.MODIFY);
+					buttonPanel2.add(modifyButton);
 					
-					button2.addActionListener(e2 -> {
+					modifyButton.addActionListener(e2 -> {
 						if(nameTextField.getText().isEmpty()) {
 							JOptionPane.showMessageDialog(
 									  this,

@@ -35,10 +35,10 @@ public class ChangePassword extends JPanel {
 		
 		JPanel buttonPanel = new JPanel();
 		buttonPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
-		JButton button = new JButton(Labels.MODIFY);
-		buttonPanel.add(button);
+		JButton modifyButton = new JButton(Labels.MODIFY);
+		buttonPanel.add(modifyButton);
 		
-		button.addActionListener(e -> {
+		modifyButton.addActionListener(e -> {
 			//r�gi jelsz� lek�r�se - MEGVAL�S�TANI!!!
 			
 			/*else*/ if(!newPasswordField.getText().equals(confirmPasswordField.getText())) {
