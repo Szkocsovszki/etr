@@ -49,7 +49,7 @@ public class ChangePassword extends JPanel {
 						  JOptionPane.ERROR_MESSAGE);
 			} else {
 				try {
-					controller.changePassword(/*jelsz� tov�bb�t�s*/);
+					//controller.changePassword(/*jelsz� tov�bb�t�s*/);
 					JOptionPane.showMessageDialog(
 							  this,
 							  Labels.PASSWORD_SUCCESSFULLY_CHANGED,

@@ -67,8 +67,6 @@ public class ETRDAOImpl implements ETRDAO {
 			while (departments.next())
 				departmentStore.add(departments.getString(1));
 			departments.close();
-
-			if(departmentStore.isEmpty()) departmentStore = null;
 			
 			st = conn.prepareStatement("SELECT * FROM referens WHERE EHA = ?");
 			st.setString(1, eha);
@@ -113,6 +111,13 @@ public class ETRDAOImpl implements ETRDAO {
 		st.setString(5, account.getEha());
 		st.executeUpdate();
 		
+		st = conn.prepareStatement("INSERT INTO szak VALUES (?,?)");
+		st.setString(1, account.getEha());
+		for(String sz : account.getDepartment()) {
+			st.setString(2, sz);
+			st.executeQuery();
+		}
+
 		st = conn.prepareStatement("INSERT INTO "+account.tableName()+"(eha) VALUES (?)");
 		st.setString(1, account.getEha());
 		st.executeQuery();
@@ -125,9 +130,11 @@ public class ETRDAOImpl implements ETRDAO {
 	public void deleteAccount(String eha) throws SQLException {
 		PreparedStatement st = conn.prepareStatement("DELETE FROM szemely WHERE eha = ? ");
 		st.setString(1, eha);
-		st.executeUpdate();
+		int deleted = st.executeUpdate();
 		conn.commit();
 		st.close();
+		if(deleted == 0)
+			throw new SQLException();
 	}
 
 	public void updateStudentBalance(Account acc, int balance) throws SQLException {
@@ -140,7 +147,7 @@ public class ETRDAOImpl implements ETRDAO {
 	}
 
 	@Override
-	public int modifyAccount(Account account) throws SQLException {
+	public void modifyAccount(Account account) throws SQLException {
 		PreparedStatement update = conn.prepareStatement("UPDATE szemely " + "SET eha =?," + " nev =?,"
 				+ " szuletesi_datum =to_date(?, 'YYYY-MM-DD')," + " cim =?" + " where eha =?");
 		update.setString(1, account.getEha());
@@ -148,24 +155,22 @@ public class ETRDAOImpl implements ETRDAO {
 		update.setString(3, account.getBirthDate());
 		update.setString(4, account.getAddress());
 		update.setString(5, account.getEha());
-		int szemely = update.executeUpdate();
+		update.executeUpdate();
 		update.close();
 
 		PreparedStatement delete = conn.prepareStatement("DELETE FROM szak WHERE eha = ?");
 		delete.setString(1, account.getEha());
-		int szakDel = delete.executeUpdate();
+		delete.executeUpdate();
 		delete.close();
 
 		PreparedStatement insert = conn.prepareStatement("INSERT INTO szak VALUES (?, ?)");
-		int szakIns = 0;
 		insert.setString(1, account.getEha());
 		for (String sz : account.getDepartment()) {
 			insert.setString(2, sz);
-			szakIns += insert.executeUpdate();
+			insert.executeUpdate();
 		}
 		insert.close();
 		conn.commit();
-		return szemely + szakDel + szakIns;
 	}
 
 	@Override
