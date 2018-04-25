@@ -30,6 +30,7 @@ public class ETRGUI extends JFrame {
 
 	private static final long serialVersionUID = -6123017900301369195L;
 	private ETRController controller;
+	private Account currentAccount;
 
 	public ETRGUI(ETRController controller) {
 		this.controller = controller;
@@ -37,6 +38,7 @@ public class ETRGUI extends JFrame {
 
 	public ETRController getController() {
 		return controller;
+		
 	}
 
 	public void startGUI() {
@@ -86,7 +88,6 @@ public class ETRGUI extends JFrame {
 	 * return panel; }
 	 */
 
-	@SuppressWarnings("deprecation")
 	private JPanel createSignInPanel() {
 		JPanel panel = new JPanel();
 		panel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
@@ -115,22 +116,24 @@ public class ETRGUI extends JFrame {
 						  Labels.MISSING_USERNAME,
 						  Labels.ERROR,
 						  JOptionPane.ERROR_MESSAGE);
-			} else if (password.getText().isEmpty()) {
+			} else if (String.valueOf(password.getPassword()).isEmpty()) {
 				JOptionPane.showMessageDialog(
 						  this,
 						  Labels.MISSING_PASSWORD,
 						  Labels.ERROR,
 						  JOptionPane.ERROR_MESSAGE);
 			} else {
-				dispose();
-				new ReferentFrame(controller);
+				
 				try {
-					Account acc = controller.getAccount(userName.getText(), password.getText());
-					if(acc instanceof Referent) {
+					// hibakezelés, ha null-lal térek vissza !!!
+					currentAccount = controller.logIn(userName.getText(), String.valueOf(password.getPassword()));
+					if(currentAccount instanceof Referent) {
+						dispose();
+						new ReferentFrame(controller, currentAccount);
 					}
-					if(acc instanceof Professor) {
+					if(currentAccount instanceof Professor) {
 					}
-					if(acc instanceof Student) {
+					if(currentAccount instanceof Student) {
 					}
 				} catch (SQLException e1) {
 					// TODO Auto-generated catch block

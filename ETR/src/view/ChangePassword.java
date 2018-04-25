@@ -10,12 +10,12 @@ import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 
 import controller.ETRController;
+import dao.model.Account;
 
 public class ChangePassword extends JPanel {
 	private static final long serialVersionUID = 3169541212541291110L;
 
-	@SuppressWarnings("deprecation")
-	public ChangePassword(ETRController controller) {
+	public ChangePassword(ETRController controller, Account current) {
 		setLayout(new GridLayout(2, 1));
 
 		JPanel inputPanel = new JPanel();
@@ -39,32 +39,44 @@ public class ChangePassword extends JPanel {
 		buttonPanel.add(modifyButton);
 		
 		modifyButton.addActionListener(e -> {
-			//r�gi jelsz� lek�r�se - MEGVAL�S�TANI!!!
+			Account acc = null;
+			try {
+				acc = controller.logIn(current.getEha(), String.valueOf(oldPasswordField.getPassword()));
+			}catch(Exception ex) {}
 			
-			/*else*/ if(!newPasswordField.getText().equals(confirmPasswordField.getText())) {
-				JOptionPane.showMessageDialog(
-						  this,
-						  Labels.NEW_PASSWORD_DOES_NOT_MATCH_CONFIRMED_PASSWORD,
-						  Labels.ERROR,
-						  JOptionPane.ERROR_MESSAGE);
-			} else {
-				try {
-					//controller.changePassword(/*jelsz� tov�bb�t�s*/);
+			if(acc != null) {
+				
+				if(!(String.valueOf(newPasswordField.getPassword())).equals(String.valueOf(confirmPasswordField.getPassword())) ) {
 					JOptionPane.showMessageDialog(
 							  this,
-							  Labels.PASSWORD_SUCCESSFULLY_CHANGED,
-							  Labels.INFORMATION,
-							  JOptionPane.INFORMATION_MESSAGE);
-					oldPasswordField.setText("");
-					newPasswordField.setText("");
-					confirmPasswordField.setText("");
-				} catch (Exception exception) {
-					JOptionPane.showMessageDialog(
-							  this,
-							  Labels.UNSUCCESSFULLY_PASSWORD_CHANGE,
+							  Labels.NEW_PASSWORD_DOES_NOT_MATCH_CONFIRMED_PASSWORD,
 							  Labels.ERROR,
 							  JOptionPane.ERROR_MESSAGE);
+				} else {
+					try {
+						controller.changePassword(current.getEha(), String.valueOf(newPasswordField.getPassword()));
+						JOptionPane.showMessageDialog(
+								  this,
+								  Labels.PASSWORD_SUCCESSFULLY_CHANGED,
+								  Labels.INFORMATION,
+								  JOptionPane.INFORMATION_MESSAGE);
+						oldPasswordField.setText("");
+						newPasswordField.setText("");
+						confirmPasswordField.setText("");
+					} catch (Exception exception) {
+						JOptionPane.showMessageDialog(
+								  this,
+								  Labels.UNSUCCESSFULLY_PASSWORD_CHANGE,
+								  Labels.ERROR,
+								  JOptionPane.ERROR_MESSAGE);
+					}
 				}
+			}else {
+				JOptionPane.showMessageDialog(
+						  this,
+						  Labels.OLD_PASSWORD_DOES_NOT_MATCH,
+						  Labels.ERROR,
+						  JOptionPane.ERROR_MESSAGE);
 			}
 		});
 

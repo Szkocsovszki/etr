@@ -18,8 +18,8 @@ public class ETRController {
 		dao = new ETRDAOImpl();
 	}
 
-	public Account getAccount(String eha, String password) throws SQLException{
-		return dao.getAccount(eha, password);
+	public Account logIn(String eha, String password) throws SQLException{
+		return dao.logIn(eha, password);
 	}
 	
 	public Account getAccountToModify(String eha) throws SQLException{
