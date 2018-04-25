@@ -5,7 +5,7 @@ import java.sql.SQLException;
 import dao.model.Account;
 
 public interface ETRDAO {
-	public Account getAccount(String eha, String password) throws SQLException;
+	public Account logIn(String eha, String password) throws SQLException;
 	
 	public void createAccount(Account account) throws SQLException;
 	

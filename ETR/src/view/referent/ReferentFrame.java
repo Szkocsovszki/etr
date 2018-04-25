@@ -11,6 +11,7 @@ import javax.swing.JMenuBar;
 import javax.swing.JPanel;
 
 import controller.ETRController;
+import dao.model.Account;
 import view.ChangePassword;
 import view.ETRGUI;
 import view.Labels;
@@ -20,8 +21,9 @@ public class ReferentFrame extends JFrame {
 	private ETRController controller;
 	private ETRGUI gui;
 	private JPanel workingPanel;
+	private Account currentAccount;
 
-	public ReferentFrame(ETRController controller) {
+	public ReferentFrame(ETRController controller, Account current) {
 		this.controller = controller;
 		// setTitle();
 		setExtendedState(JFrame.MAXIMIZED_BOTH);
@@ -34,6 +36,7 @@ public class ReferentFrame extends JFrame {
 		add(workingPanel, BorderLayout.CENTER);
 
 		setVisible(true);
+		currentAccount = current;
 	}
 
 	private JMenuBar createMenuBar() {
@@ -68,7 +71,7 @@ public class ReferentFrame extends JFrame {
 		
 		changePassword.addActionListener(e -> {
 			workingPanel.removeAll();
-			workingPanel.add(new ChangePassword(controller));
+			workingPanel.add(new ChangePassword(controller, currentAccount));
 			revalidate();
 			repaint();
 		});

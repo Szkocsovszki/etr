@@ -46,6 +46,7 @@ public class Labels {
 	public static final String CONFIRM_PASSWORD = "Jelszó megerősítése";
 	public static final String NEW_PASSWORD_DOES_NOT_MATCH_CONFIRMED_PASSWORD = "Az új jelszó nem egyezik a megerősített jelszóval!";
 	public static final String PASSWORD_SUCCESSFULLY_CHANGED = "Sikeres jelszó módosítás.";
+	public static final String OLD_PASSWORD_DOES_NOT_MATCH = "A régi jelszó nem megfelelő!";
 	public static final String UNSUCCESSFULLY_PASSWORD_CHANGE = "A jelszó megváltoztatása nem sikerült!";
 	public static final String REFERENT = "Referens";
 	public static final String PROFESSOR = "Oktató";

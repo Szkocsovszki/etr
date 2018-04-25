@@ -34,14 +34,16 @@ public class ETRDAOImpl implements ETRDAO {
 	}
 
 	@Override
-	public Account getAccount(String eha, String password) throws SQLException {
-		PreparedStatement st = conn.prepareStatement("SELECT eha, jelszo FROM SZEMELY WHERE EHA = ?");
+	public Account logIn(String eha, String password) throws SQLException {
+		PreparedStatement st = conn.prepareStatement("SELECT jelszo FROM SZEMELY WHERE EHA = ? AND jelszo = ora_hash(concat( ? , 'etr' ))");
 		st.setString(1, eha);
+		st.setString(2, password);
 		ResultSet accExists = st.executeQuery();
-		if(accExists.next() && accExists.getString(2).equals(password)) {
+		if(accExists.next() ) {
 			st.close();
 			return getAccountToModify(eha);
 		}else {
+			System.out.println("rossz");
 			st.close();
 			return null;
 		}
@@ -176,12 +178,14 @@ public class ETRDAOImpl implements ETRDAO {
 	}
 
 	@Override
-	public void changePassword(String eha, String jelszo) throws SQLException {
-		PreparedStatement getPass = conn.prepareStatement("SELECT standard_hash(jelszo) FROM szemely");
-		ResultSet rs = getPass.executeQuery();
-		if(rs.next())
-			System.out.println(rs.getString(1)+" TTT "+jelszo);
-		getPass.close();
+	public void changePassword(String eha, String password) throws SQLException {
+		PreparedStatement updatePass = conn.prepareStatement("UPDATE szemely SET jelszo = ora_hash(concat(?, 'etr')), jelszo1 = ? WHERE eha = ?");
+		updatePass.setString(1, password);
+		updatePass.setString(2, password);
+		updatePass.setString(3, eha);
+		updatePass.executeUpdate();
+		updatePass.close();
+		conn.commit();
 	}
 
 	
