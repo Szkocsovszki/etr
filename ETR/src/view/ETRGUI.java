@@ -123,23 +123,34 @@ public class ETRGUI extends JFrame {
 						  Labels.ERROR,
 						  JOptionPane.ERROR_MESSAGE);
 			} else {
-				
+				dispose();
+				new ReferentFrame(controller, null);
 				try {
 					// hibakezelés, ha null-lal térek vissza !!!
 					currentAccount = controller.logIn(userName.getText(), String.valueOf(password.getPassword()));
 					if(currentAccount instanceof Referent) {
-						dispose();
-						new ReferentFrame(controller, currentAccount);
+						//new ReferentFrame(controller, currentAccount);
 					}
-					if(currentAccount instanceof Professor) {
+					else if(currentAccount instanceof Professor) {
+						//new ProfessorFrame(controller, currentAccount);
 					}
-					if(currentAccount instanceof Student) {
+					else if(currentAccount instanceof Student) {
+						//new StudentFrame(controller, currentAccount);
+					} else {
+						JOptionPane.showMessageDialog(
+								  this,
+								  Labels.ACCOUNT_DOES_NOT_EXIST,
+								  Labels.WARNING,
+								  JOptionPane.WARNING_MESSAGE);
 					}
-				} catch (SQLException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
+				} catch (SQLException exception) {
+					JOptionPane.showMessageDialog(
+							  this,
+							  exception.getMessage(),
+							  Labels.ERROR,
+							  JOptionPane.ERROR_MESSAGE);
+					exception.printStackTrace();
 				}
-				//System.out.println(userName.getText() + " " + password.getText());
 			}
 
 		});

@@ -8,6 +8,7 @@ public class Labels {
 	public static final String LOG_IN = "Bejelentkezés";
 	//public static final String REGISTRATION = "Regisztrálás";
 	//public static final String CONFIRM_PASSWORD = "Jelszó megerősítése";
+	public static final String WARNING = "Figyelmeztetés!";
 	public static final String ERROR = "Hiba!";
 	public static final String MISSING_USERNAME = "A felhasználónevet kötelező megadni!";
 	public static final String MISSING_PASSWORD = "A jelszót kötelező megadni!";
@@ -38,7 +39,7 @@ public class Labels {
 	public static final String EMPTY_ADDRESS_TEXTFIELD = "A Cím mező tartalma nem lehet üres!";
 	public static final String EMPTY_DEPARTMENT_TEXTFIELD = "A Szak mező tartalma nem lehet üres!";
 	public static final String INFORMATION = "Információ";
-	public static final String DEFAULT_BIRTH_DATE = "YYYY-MM-DD";
+	public static final String DEFAULT_BIRTH_DATE = "év-hónap-nap";
 	public static final String WRONG_DATE_FORMAT = "Rossz dátum formátum!";
 	public static final String DEFAULT_DEPARTMENT = "szak1, szak2, ...";
 	public static final String OLD_PASSWORD = "Régi jelszó";
@@ -52,5 +53,12 @@ public class Labels {
 	public static final String PROFESSOR = "Oktató";
 	public static final String STUDENT = "Hallgató";
 	public static final String NO_CHECKBOX_SELECTED = "Nincs megadva a létrehozni kívánt személy típusa!";
+	public static final String DEFAULT_EHA_ENDING = ".SZE";
+	public static final String DEFAULT_EHA = "XXXXXXX.SZE";
+	public static final String CORRECT_EHA_FORM = "[A-Z]{7}\\.SZE";
+	public static final String WRONG_EHA_FORMAT = "Az EHA kód nem felel meg az elvárt formátumnak!";
+	public static final String DEFAULT_NAME = "Vezetéknév Keresztnév";
+	public static final String DEFAULT_ADDRESS = "Ország, irányítószám, város, utca, házszám";
+	public static final String ACCOUNT_DOES_NOT_EXIST = "Nem létezik ilyen felhasználó!";
 
 }

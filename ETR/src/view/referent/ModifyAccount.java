@@ -20,6 +20,7 @@ import javax.swing.JTextField;
 
 import controller.ETRController;
 import dao.model.Account;
+import dao.model.Referent;
 import view.Labels;
 
 public class ModifyAccount extends JPanel {
@@ -69,11 +70,26 @@ public class ModifyAccount extends JPanel {
 
 					JTextField nameTextField = new JTextField(account.getName());
 					
+					nameTextField.addFocusListener(new FocusListener() {
+						public void focusGained(FocusEvent e) {
+							if(nameTextField.getText().equals(Labels.DEFAULT_NAME)) {
+								nameTextField.setText("");
+								nameTextField.setForeground(new Color(51, 51, 51));
+							}
+						}
+
+						public void focusLost(FocusEvent e) {
+							if(nameTextField.getText().isEmpty()) {
+								nameTextField.setForeground(Color.GRAY);
+								nameTextField.setText(Labels.DEFAULT_NAME);
+							}
+						}
+					});
+					
 					JTextField ehaTextField2 = new JTextField(account.getEha());
 					ehaTextField2.setEditable(false);
 					
-					String[] correctedDate = account.getBirthDate().split(" ");
-					JTextField birthDateTextField = new JTextField(correctedDate[0]);
+					JTextField birthDateTextField = new JTextField(account.getBirthDate());
 					
 					birthDateTextField.addFocusListener(new FocusListener() {
 						public void focusGained(FocusEvent e) {
@@ -93,12 +109,31 @@ public class ModifyAccount extends JPanel {
 					
 					JTextField addressTextField = new JTextField(account.getAddress());
 					
-					JTextField departmentTextField;
-					ArrayList<String> departmentList = account.getDepartment();
+					addressTextField.addFocusListener(new FocusListener() {
+						public void focusGained(FocusEvent e) {
+							if( addressTextField.getText().equals(Labels.DEFAULT_ADDRESS)) {
+								addressTextField.setText("");
+								addressTextField.setForeground(new Color(51, 51, 51));
+							}
+						}
+
+						public void focusLost(FocusEvent e) {
+							if( addressTextField.getText().isEmpty()) {
+								addressTextField.setForeground(Color.GRAY);
+								addressTextField.setText(Labels.DEFAULT_ADDRESS);
+							}
+						}
+					});
 					
+					JTextField departmentTextField;
+					
+					ArrayList<String> departmentList = account.getDepartment();
 					String departmentToWrite = "";
-					for(String d : departmentList) {
-						departmentToWrite = departmentToWrite + d + ", ";
+					
+					if(departmentList != null) {
+						for(String d : departmentList) {
+							departmentToWrite = departmentToWrite + d + ", ";
+						}
 					}
 					
 					if(departmentToWrite.equals(null) || departmentToWrite.isEmpty()) {
@@ -123,13 +158,26 @@ public class ModifyAccount extends JPanel {
 						}
 					});
 					
-					/*if(account instanceof Referent) {
-						departmentTextField.setText("");
+					if(account instanceof Referent) {
 						departmentTextField.setEditable(false);
 						departmentTextField.setFocusable(false);
-						account.setDepartment(null);
-					}*/
-
+						
+						departmentTextField.addFocusListener(new FocusListener() {
+							public void focusGained(FocusEvent e) {
+								if(departmentTextField.getText().equals(Labels.DEFAULT_DEPARTMENT)) {
+									departmentTextField.setText("");
+									departmentTextField.setForeground(new Color(51, 51, 51));
+								}
+							}
+							public void focusLost(FocusEvent e) {
+								if(departmentTextField.getText().isEmpty()) {
+									departmentTextField.setForeground(Color.GRAY);
+									departmentTextField.setText(Labels.DEFAULT_DEPARTMENT);
+								}
+							}
+						});
+					}
+					
 					inputPanel2.add(nameLabel);
 					inputPanel2.add(nameTextField);
 					inputPanel2.add(ehaLabel2);
@@ -147,7 +195,7 @@ public class ModifyAccount extends JPanel {
 					buttonPanel2.add(modifyButton);
 					
 					modifyButton.addActionListener(e2 -> {
-						if(nameTextField.getText().isEmpty()) {
+						if(nameTextField.getText().equals(Labels.DEFAULT_NAME)) {
 							JOptionPane.showMessageDialog(
 									  this,
 									  Labels.EMPTY_NAME_TEXTFIELD,
@@ -159,7 +207,7 @@ public class ModifyAccount extends JPanel {
 									  Labels.EMPTY_BIRTH_DATE_TEXTFIELD,
 									  Labels.ERROR,
 									  JOptionPane.ERROR_MESSAGE);
-						} else if(addressTextField.getText().isEmpty()) {
+						} else if(addressTextField.getText().equals(Labels.DEFAULT_ADDRESS)) {
 							JOptionPane.showMessageDialog(
 									  this,
 									  Labels.EMPTY_ADDRESS_TEXTFIELD,
@@ -187,7 +235,11 @@ public class ModifyAccount extends JPanel {
 								account.setName(nameTextField.getText());
 								account.setBirthDate(birthDateTextField.getText());
 								account.setAddress(addressTextField.getText());
-								account.setDepartment(department);
+								if(account instanceof Referent) {
+									account.setDepartment(new ArrayList<String>());
+								} else {
+									account.setDepartment(department);
+								}
 								
 								controller.modifyAccount(account);
 								

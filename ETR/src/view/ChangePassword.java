@@ -14,8 +14,10 @@ import dao.model.Account;
 
 public class ChangePassword extends JPanel {
 	private static final long serialVersionUID = 3169541212541291110L;
-
-	public ChangePassword(ETRController controller, Account current) {
+	private Account current;
+	
+	public ChangePassword(ETRController controller, Account account) {
+		this.current = account;
 		setLayout(new GridLayout(2, 1));
 
 		JPanel inputPanel = new JPanel();
@@ -42,16 +44,15 @@ public class ChangePassword extends JPanel {
 			Account acc = null;
 			try {
 				acc = controller.logIn(current.getEha(), String.valueOf(oldPasswordField.getPassword()));
-			}catch(Exception ex) {}
+			} catch(Exception ex) {}
 			
 			if(acc != null) {
-				
 				if(!(String.valueOf(newPasswordField.getPassword())).equals(String.valueOf(confirmPasswordField.getPassword())) ) {
-					JOptionPane.showMessageDialog(
-							  this,
-							  Labels.NEW_PASSWORD_DOES_NOT_MATCH_CONFIRMED_PASSWORD,
-							  Labels.ERROR,
-							  JOptionPane.ERROR_MESSAGE);
+				JOptionPane.showMessageDialog(
+						  this,
+						  Labels.NEW_PASSWORD_DOES_NOT_MATCH_CONFIRMED_PASSWORD,
+						  Labels.ERROR,
+						  JOptionPane.ERROR_MESSAGE);
 				} else {
 					try {
 						controller.changePassword(current.getEha(), String.valueOf(newPasswordField.getPassword()));
@@ -71,7 +72,7 @@ public class ChangePassword extends JPanel {
 								  JOptionPane.ERROR_MESSAGE);
 					}
 				}
-			}else {
+			} else {
 				JOptionPane.showMessageDialog(
 						  this,
 						  Labels.OLD_PASSWORD_DOES_NOT_MATCH,

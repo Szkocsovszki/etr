@@ -2,6 +2,7 @@ package view.referent;
 
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
+import java.sql.SQLException;
 
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -46,13 +47,18 @@ public class DeleteAccount extends JPanel {
 							  Labels.INFORMATION,
 							  JOptionPane.INFORMATION_MESSAGE);
 					deleteAccountTextField.setText("");
-				} catch(Exception exception) {
+				} catch(SQLException exception) {
 					JOptionPane.showMessageDialog(
 							  this,
 							  Labels.USER_DOES_NOT_EXIST,
+							  Labels.WARNING,
+							  JOptionPane.WARNING_MESSAGE);
+				} catch(Exception exception) {
+					JOptionPane.showMessageDialog(
+							  this,
+							  exception.getMessage(),
 							  Labels.ERROR,
 							  JOptionPane.ERROR_MESSAGE);
-					exception.printStackTrace();
 				}
 			}
 		});

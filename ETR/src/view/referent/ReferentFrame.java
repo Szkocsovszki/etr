@@ -3,6 +3,7 @@ package view.referent;
 import java.awt.BorderLayout;
 import java.awt.ComponentOrientation;
 import java.awt.GridBagLayout;
+import java.awt.Toolkit;
 
 import javax.swing.Box;
 import javax.swing.JButton;
@@ -23,9 +24,14 @@ public class ReferentFrame extends JFrame {
 	private JPanel workingPanel;
 	private Account currentAccount;
 
-	public ReferentFrame(ETRController controller, Account current) {
+	public ReferentFrame(ETRController controller, Account account) {
 		this.controller = controller;
+		this.currentAccount = account;
 		// setTitle();
+		setSize(
+				(int)Toolkit.getDefaultToolkit().getScreenSize().getWidth() - 752,
+				(int) Toolkit.getDefaultToolkit().getScreenSize().getHeight() - 400
+		);
 		setExtendedState(JFrame.MAXIMIZED_BOTH);
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 
@@ -36,7 +42,6 @@ public class ReferentFrame extends JFrame {
 		add(workingPanel, BorderLayout.CENTER);
 
 		setVisible(true);
-		currentAccount = current;
 	}
 
 	private JMenuBar createMenuBar() {

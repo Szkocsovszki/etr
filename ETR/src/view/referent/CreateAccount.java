@@ -11,6 +11,8 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.time.format.ResolverStyle;
 import java.util.ArrayList;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
@@ -41,11 +43,61 @@ public class CreateAccount extends JPanel {
 		JLabel addressLabel = new JLabel(Labels.ADDRESS);
 		JLabel departmentLabel = new JLabel(Labels.DEPARTMENT);
 		
-		JTextField nameTextField = new JTextField();
-		JTextField ehaTextField = new JTextField();
+		JTextField nameTextField = new JTextField(Labels.DEFAULT_NAME);
+		JTextField ehaTextField = new JTextField(Labels.DEFAULT_EHA);
 		JTextField birthDateTextField = new JTextField(Labels.DEFAULT_BIRTH_DATE);
-		JTextField addressTextField = new JTextField();
+		JTextField addressTextField = new JTextField(Labels.DEFAULT_ADDRESS);
 		JTextField departmentTextField = new JTextField(Labels.DEFAULT_DEPARTMENT);
+		
+		nameTextField.setForeground(Color.GRAY);
+
+		nameTextField.addFocusListener(new FocusListener() {
+			public void focusGained(FocusEvent e) {
+				if(nameTextField.getText().equals(Labels.DEFAULT_NAME)) {
+					nameTextField.setText("");
+					nameTextField.setForeground(new Color(51, 51, 51));
+				}
+			}
+
+			public void focusLost(FocusEvent e) {
+				if(nameTextField.getText().isEmpty()) {
+					nameTextField.setForeground(Color.GRAY);
+					nameTextField.setText(Labels.DEFAULT_NAME);
+				} /*else {
+					String[] pieces = nameTextField.getText().split(" ");
+					String name = "";
+					for(int i=0; i<pieces.length; i++) {
+						pieces[i] = Character.toUpperCase(pieces[i].charAt(0)) + pieces[i].substring(1).toLowerCase();
+						name += pieces[i] + " ";
+					}
+					name = name.substring(0, name.length()-1);
+					nameTextField.setText(name);
+				}*/
+			}
+		});
+		
+		ehaTextField.setForeground(Color.GRAY);
+		
+		ehaTextField.addFocusListener(new FocusListener() {
+			public void focusGained(FocusEvent e) {
+				ehaTextField.setForeground(new Color(51, 51, 51));
+				if(ehaTextField.getText().equals(Labels.DEFAULT_EHA)) {
+					ehaTextField.setText("");
+				}
+			}
+
+			public void focusLost(FocusEvent e) {
+				if(ehaTextField.getText().isEmpty() || ehaTextField.getText().equals(Labels.DEFAULT_EHA_ENDING)) {
+					ehaTextField.setForeground(Color.GRAY);
+					ehaTextField.setText(Labels.DEFAULT_EHA);
+				} else {
+					if(!ehaTextField.getText().endsWith(Labels.DEFAULT_EHA_ENDING)) {
+						ehaTextField.setText(ehaTextField.getText() + Labels.DEFAULT_EHA_ENDING);
+					}
+					ehaTextField.setText(ehaTextField.getText().toUpperCase());
+				}
+			}
+		});
 		
 		birthDateTextField.setForeground(Color.GRAY);
 
@@ -61,6 +113,24 @@ public class CreateAccount extends JPanel {
 				if(birthDateTextField.getText().isEmpty()) {
 					birthDateTextField.setForeground(Color.GRAY);
 					birthDateTextField.setText(Labels.DEFAULT_BIRTH_DATE);
+				}
+			}
+		});
+		
+		addressTextField.setForeground(Color.GRAY);
+		
+		addressTextField.addFocusListener(new FocusListener() {
+			public void focusGained(FocusEvent e) {
+				if( addressTextField.getText().equals(Labels.DEFAULT_ADDRESS)) {
+					addressTextField.setText("");
+					addressTextField.setForeground(new Color(51, 51, 51));
+				}
+			}
+
+			public void focusLost(FocusEvent e) {
+				if( addressTextField.getText().isEmpty()) {
+					addressTextField.setForeground(Color.GRAY);
+					addressTextField.setText(Labels.DEFAULT_ADDRESS);
 				}
 			}
 		});
@@ -94,7 +164,7 @@ public class CreateAccount extends JPanel {
 		inputPanel.add(departmentTextField);
 		
 		JPanel accountPanel = new JPanel();
-		accountPanel.setLayout(new GridLayout(1, 3));
+		accountPanel.setLayout(new FlowLayout());
 		JCheckBox referentCheckBox = new JCheckBox(Labels.REFERENT);
 		JCheckBox professorCheckBox = new JCheckBox(Labels.PROFESSOR);
 		JCheckBox studentCheckBox = new JCheckBox(Labels.STUDENT);
@@ -138,13 +208,13 @@ public class CreateAccount extends JPanel {
 		buttonPanel.add(createButton);
 		
 		createButton.addActionListener(e -> {
-			if(nameTextField.getText().isEmpty()) {
+			if(nameTextField.getText().equals(Labels.DEFAULT_NAME)) {
 				JOptionPane.showMessageDialog(
 						  this,
 						  Labels.EMPTY_NAME_TEXTFIELD,
 						  Labels.ERROR,
 						  JOptionPane.ERROR_MESSAGE);
-			} else if(ehaTextField.getText().isEmpty()) {
+			} else if(ehaTextField.getText().equals(Labels.DEFAULT_EHA)) {
 				JOptionPane.showMessageDialog(
 						  this,
 						  Labels.EMPTY_EHA_TEXTFIELD,
@@ -156,7 +226,7 @@ public class CreateAccount extends JPanel {
 						  Labels.EMPTY_BIRTH_DATE_TEXTFIELD,
 						  Labels.ERROR,
 						  JOptionPane.ERROR_MESSAGE);
-			} else if(addressTextField.getText().isEmpty()) {
+			} else if(addressTextField.getText().equals(Labels.DEFAULT_ADDRESS)) {
 				JOptionPane.showMessageDialog(
 						  this,
 						  Labels.EMPTY_ADDRESS_TEXTFIELD,
@@ -170,6 +240,12 @@ public class CreateAccount extends JPanel {
 						  JOptionPane.ERROR_MESSAGE);
 			} else {
 				try {
+					Pattern pattern = Pattern.compile(Labels.CORRECT_EHA_FORM);
+					Matcher matcher = pattern.matcher(ehaTextField.getText());
+					if(!matcher.matches()) {
+						throw new IllegalArgumentException();
+					}
+					
 					LocalDate.parse(birthDateTextField.getText(),
 									DateTimeFormatter.ofPattern("uuuu-MM-dd")
 			                 		.withResolverStyle(ResolverStyle.STRICT)
@@ -180,14 +256,14 @@ public class CreateAccount extends JPanel {
 					for(int i=0; i<pieces.length; i++) {
 						department.add(pieces[i]);
 					}
-				
+
 					if(referentCheckBox.isSelected()) {
 						Referent referent = new Referent(
 							nameTextField.getText(),
 							ehaTextField.getText(),
 							birthDateTextField.getText(),
 							addressTextField.getText(),
-							null
+							new ArrayList<String>()
 						);
 						controller.createAccount(referent);
 					} else if(professorCheckBox.isSelected()) {
@@ -209,7 +285,7 @@ public class CreateAccount extends JPanel {
 						);
 						controller.createAccount(student);
 					} else {
-						throw new NullPointerException();
+						throw new NullPointerException(Labels.NO_CHECKBOX_SELECTED);
 					}
 					JOptionPane.showMessageDialog(
 							  this,
@@ -236,15 +312,23 @@ public class CreateAccount extends JPanel {
 				} catch (NullPointerException exception) {
 					JOptionPane.showMessageDialog(
 							  this,
-							  Labels.NO_CHECKBOX_SELECTED,
+							  exception.getMessage(),
 							  Labels.ERROR,
 							  JOptionPane.ERROR_MESSAGE);
+					exception.printStackTrace();
 				} catch (DateTimeParseException exception) {
 					JOptionPane.showMessageDialog(
 							  this,
 							  Labels.WRONG_DATE_FORMAT,
 							  Labels.ERROR,
 							  JOptionPane.ERROR_MESSAGE);
+				} catch (IllegalArgumentException exception) {
+					JOptionPane.showMessageDialog(
+							  this,
+							  Labels.WRONG_EHA_FORMAT,
+							  Labels.ERROR,
+							  JOptionPane.ERROR_MESSAGE);
+					exception.printStackTrace();
 				} catch (Exception exception) {
 					JOptionPane.showMessageDialog(
 							  this,
