@@ -322,7 +322,7 @@ public class CreateAccount extends JPanel {
 							  Labels.USER_ALREADY_EXISTS,
 							  Labels.ERROR,
 							  JOptionPane.ERROR_MESSAGE);
-					exception.printStackTrace();
+					//exception.printStackTrace();
 				} catch (NullPointerException exception) {
 					JOptionPane.showMessageDialog(
 							  this,
@@ -342,7 +342,7 @@ public class CreateAccount extends JPanel {
 							  Labels.WRONG_EHA_FORMAT,
 							  Labels.ERROR,
 							  JOptionPane.ERROR_MESSAGE);
-					exception.printStackTrace();
+					//exception.printStackTrace();
 				} catch (Exception exception) {
 					JOptionPane.showMessageDialog(
 							  this,

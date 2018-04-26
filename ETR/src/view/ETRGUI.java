@@ -98,7 +98,7 @@ public class ETRGUI extends JFrame {
 				/*new ReferentFrame(controller, null);
 				dispose();*/
 				try {
-					currentAccount = controller.logIn(userName.getText(), String.valueOf(password.getPassword()));
+					currentAccount = controller.logIn(userName.getText().toUpperCase(), String.valueOf(password.getPassword()));
 					if(currentAccount instanceof Referent) {
 						new ReferentFrame(controller, currentAccount);
 						dispose();

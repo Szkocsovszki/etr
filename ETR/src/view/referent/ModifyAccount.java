@@ -65,7 +65,7 @@ public class ModifyAccount extends JPanel {
 						  JOptionPane.ERROR_MESSAGE);
 			} else {
 				try {
-					Account account = controller.getAccountToModify(ehaTextField.getText());
+					Account account = controller.getAccountToModify(ehaTextField.getText().toUpperCase());
 					
 					removeAll();
 					wrongEHA = "";

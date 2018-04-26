@@ -46,7 +46,7 @@ public class DeleteAccount extends JPanel {
 						  JOptionPane.ERROR_MESSAGE);
 			} else {
 				try {
-					controller.deleteAccount(deleteAccountTextField.getText());
+					controller.deleteAccount(deleteAccountTextField.getText().toUpperCase());
 					JOptionPane.showMessageDialog(
 							  this,
 							  Labels.USER_SUCCESSFULLY_DELETED,
