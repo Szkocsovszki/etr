@@ -21,6 +21,7 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import javax.swing.SwingUtilities;
 
 import controller.ETRController;
 import dao.model.Professor;
@@ -49,6 +50,11 @@ public class CreateAccount extends JPanel {
 		JTextField addressTextField = new JTextField(Labels.DEFAULT_ADDRESS);
 		JTextField departmentTextField = new JTextField(Labels.DEFAULT_DEPARTMENT);
 		
+		SwingUtilities.invokeLater(new Runnable() {
+	        public void run() {
+	            nameTextField.requestFocus();
+	        }
+        });
 		nameTextField.setForeground(Color.GRAY);
 
 		nameTextField.addFocusListener(new FocusListener() {
@@ -292,16 +298,24 @@ public class CreateAccount extends JPanel {
 							  Labels.USER_SUCCESSFULLY_CREATED,
 							  Labels.INFORMATION,
 							  JOptionPane.INFORMATION_MESSAGE);
-					nameTextField.setText("");
-					ehaTextField.setText("");
+					nameTextField.setText(Labels.DEFAULT_NAME);
+					nameTextField.setForeground(Color.GRAY);
+					ehaTextField.setText(Labels.DEFAULT_EHA);
+					ehaTextField.setForeground(Color.GRAY);
 					birthDateTextField.setText(Labels.DEFAULT_BIRTH_DATE);
 					birthDateTextField.setForeground(Color.GRAY);
-					addressTextField.setText("");
+					addressTextField.setText(Labels.DEFAULT_ADDRESS);
+					addressTextField.setForeground(Color.GRAY);
 					departmentTextField.setText(Labels.DEFAULT_DEPARTMENT);
 					departmentTextField.setForeground(Color.GRAY);
 					departmentTextField.setEditable(true);
 					departmentTextField.setFocusable(true);
 					buttonGroup.clearSelection();
+					SwingUtilities.invokeLater(new Runnable() {
+				        public void run() {
+				            nameTextField.requestFocus();
+				        }
+			        });
 				} catch(SQLException exception) {
 					JOptionPane.showMessageDialog(
 							  this,

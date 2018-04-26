@@ -8,6 +8,7 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
+import javax.swing.SwingUtilities;
 
 import controller.ETRController;
 import dao.model.Account;
@@ -28,6 +29,11 @@ public class ChangePassword extends JPanel {
 		JPasswordField oldPasswordField = new JPasswordField();
 		JPasswordField newPasswordField = new JPasswordField();
 		JPasswordField confirmPasswordField = new JPasswordField();
+		SwingUtilities.invokeLater(new Runnable() {
+	        public void run() {
+	            oldPasswordField.requestFocus();
+	        }
+        });
 		inputPanel.add(oldPasswordLabel);
 		inputPanel.add(oldPasswordField);
 		inputPanel.add(newPasswordLabel);
@@ -64,6 +70,11 @@ public class ChangePassword extends JPanel {
 						oldPasswordField.setText("");
 						newPasswordField.setText("");
 						confirmPasswordField.setText("");
+						SwingUtilities.invokeLater(new Runnable() {
+					        public void run() {
+					            oldPasswordField.requestFocus();
+					        }
+				        });
 					} catch (Exception exception) {
 						JOptionPane.showMessageDialog(
 								  this,

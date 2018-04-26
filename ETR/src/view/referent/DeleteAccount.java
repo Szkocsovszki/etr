@@ -9,6 +9,7 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import javax.swing.SwingUtilities;
 
 import controller.ETRController;
 import view.Labels;
@@ -23,6 +24,11 @@ public class DeleteAccount extends JPanel {
 		inputPanel.setLayout(new GridLayout(1, 2));
 		JLabel deleteAccountLabel = new JLabel(Labels.EHA);
 		JTextField deleteAccountTextField = new JTextField();
+		SwingUtilities.invokeLater(new Runnable() {
+			public void run() {
+				deleteAccountTextField.requestFocus();
+	        }
+        });
 		inputPanel.add(deleteAccountLabel);
 		inputPanel.add(deleteAccountTextField);
 		
@@ -47,12 +53,22 @@ public class DeleteAccount extends JPanel {
 							  Labels.INFORMATION,
 							  JOptionPane.INFORMATION_MESSAGE);
 					deleteAccountTextField.setText("");
+					SwingUtilities.invokeLater(new Runnable() {
+				        public void run() {
+				            deleteAccountTextField.requestFocus();
+				        }
+			        });
 				} catch(SQLException exception) {
 					JOptionPane.showMessageDialog(
 							  this,
 							  Labels.USER_DOES_NOT_EXIST,
 							  Labels.WARNING,
 							  JOptionPane.WARNING_MESSAGE);
+					SwingUtilities.invokeLater(new Runnable() {
+				        public void run() {
+				            deleteAccountTextField.requestFocus();
+				        }
+			        });
 				} catch(Exception exception) {
 					JOptionPane.showMessageDialog(
 							  this,

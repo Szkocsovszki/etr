@@ -17,6 +17,7 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import javax.swing.SwingUtilities;
 
 import controller.ETRController;
 import dao.model.Account;
@@ -25,6 +26,7 @@ import view.Labels;
 
 public class ModifyAccount extends JPanel {
 	private static final long serialVersionUID = 2027648580170751858L;
+	private String wrongEHA = "";
 
 	public ModifyAccount(ETRController controller) {
 		modify(controller);
@@ -38,6 +40,14 @@ public class ModifyAccount extends JPanel {
 		inputPanel.setLayout(new GridLayout(1, 2));
 		JLabel ehaLabel = new JLabel(Labels.EHA);
 		JTextField ehaTextField = new JTextField();
+		if(!wrongEHA.isEmpty()) {
+			ehaTextField.setText(wrongEHA);
+		}
+		SwingUtilities.invokeLater(new Runnable() {
+	        public void run() {
+	            ehaTextField.requestFocus();
+	        }
+        });
 		inputPanel.add(ehaLabel);
 		inputPanel.add(ehaTextField);
 		
@@ -58,6 +68,7 @@ public class ModifyAccount extends JPanel {
 					Account account = controller.getAccountToModify(ehaTextField.getText());
 					
 					removeAll();
+					wrongEHA = "";
 					
 					JPanel inputPanel2 = new JPanel();
 					inputPanel2.setLayout(new GridLayout(5, 2));
@@ -274,9 +285,10 @@ public class ModifyAccount extends JPanel {
 					JOptionPane.showMessageDialog(
 							  this,
 							  Labels.USER_DOES_NOT_EXIST,
-							  Labels.ERROR,
-							  JOptionPane.ERROR_MESSAGE);
-					exception.printStackTrace();
+							  Labels.WARNING,
+							  JOptionPane.WARNING_MESSAGE);
+					//exception.printStackTrace();
+					wrongEHA = ehaTextField.getText();
 					modify(controller);
 				}
 			}
