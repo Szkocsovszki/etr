@@ -59,5 +59,13 @@ public class Labels {
 	public static final String DEFAULT_ADDRESS = "Ország, irányítószám, város, utca, házszám";
 	public static final String ACCOUNT_DOES_NOT_EXIST = "Érvénytelen felhasználónév vagy jelszó!";
 	public static final String ETR = "Egységes Tanulmányi Rendszer";
+	public static final String COURSES = "Kurzusok";
+	public static final String EXAMS = "Vizsgák";
+	public static final String LIST_COURSES = "Kurzusok listázása";
+	public static final String LIST_REGISTRATED_COURSES = "Felvett kurzusok listázása";
+	public static final String TIMETABLE = "Órarend";
+	public static final String LIST_EXAMS = "Vizsgák listázása";
+	public static final String LIST_REGISTRATED_EXAMS = "Felvett vizsgák listázása";
+	public static final String EXAM_FEE = "Vizsgadíj befizetés";
 
 }

@@ -27,7 +27,7 @@ public class ProfessorFrame extends JFrame {
 	public ProfessorFrame(ETRController controller, Account account) {
 		this.controller = controller;
 		this.currentAccount = account;
-		setTitle(Labels.ETR);
+		setTitle(Labels.ETR + " - " + currentAccount.getEha());
 		setSize(
 				(int)Toolkit.getDefaultToolkit().getScreenSize().getWidth() - 752,
 				(int) Toolkit.getDefaultToolkit().getScreenSize().getHeight() - 400

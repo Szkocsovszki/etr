@@ -8,7 +8,9 @@ import java.awt.Toolkit;
 import javax.swing.Box;
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JMenu;
 import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 
 import controller.ETRController;
@@ -27,7 +29,7 @@ public class StudentFrame extends JFrame {
 	public StudentFrame(ETRController controller, Account account) {
 		this.controller = controller;
 		this.currentAccount = account;
-		setTitle(Labels.ETR);
+		setTitle(Labels.ETR + " - " + currentAccount.getEha());
 		setSize(
 				(int)Toolkit.getDefaultToolkit().getScreenSize().getWidth() - 752,
 				(int) Toolkit.getDefaultToolkit().getScreenSize().getHeight() - 400
@@ -46,8 +48,18 @@ public class StudentFrame extends JFrame {
 
 	private JMenuBar createMenuBar() {
 		JMenuBar menuBar = new JMenuBar();
+		JMenu courseMenu = new JMenu(Labels.COURSES);
+		JMenu examMenu = new JMenu(Labels.EXAMS);
 		JButton changePassword = new JButton(Labels.CHANGE_PASSWORD);
 		JButton signOut = new JButton(Labels.SIGN_OUT);
+		
+		JMenuItem listCourses = new JMenuItem(Labels.LIST_COURSES);
+		JMenuItem listRegistratedCourses = new JMenuItem(Labels.LIST_REGISTRATED_COURSES);
+		JMenuItem timetable = new JMenuItem(Labels.TIMETABLE);
+		
+		JMenuItem listExams = new JMenuItem(Labels.LIST_EXAMS);
+		JMenuItem listRegistratedExams = new JMenuItem(Labels.LIST_REGISTRATED_EXAMS);
+		JMenuItem examFee = new JMenuItem(Labels.EXAM_FEE);
 		
 		changePassword.addActionListener(e -> {
 			workingPanel.removeAll();
@@ -62,6 +74,16 @@ public class StudentFrame extends JFrame {
 			gui.startGUI();
 		});
 		
+		courseMenu.add(listCourses);
+		courseMenu.add(listRegistratedCourses);
+		courseMenu.add(timetable);
+		
+		examMenu.add(listExams);
+		examMenu.add(listRegistratedExams);
+		examMenu.add(examFee);
+		
+		menuBar.add(courseMenu);
+		menuBar.add(examMenu);
 		signOut.setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
 		menuBar.add(Box.createHorizontalGlue());
 		menuBar.add(changePassword);
