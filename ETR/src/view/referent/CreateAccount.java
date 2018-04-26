@@ -91,10 +91,10 @@ public class CreateAccount extends JPanel {
 					ehaTextField.setForeground(Color.GRAY);
 					ehaTextField.setText(Labels.DEFAULT_EHA);
 				} else {
+					ehaTextField.setText(ehaTextField.getText().toUpperCase());
 					if(!ehaTextField.getText().endsWith(Labels.DEFAULT_EHA_ENDING)) {
 						ehaTextField.setText(ehaTextField.getText() + Labels.DEFAULT_EHA_ENDING);
 					}
-					ehaTextField.setText(ehaTextField.getText().toUpperCase());
 				}
 			}
 		});

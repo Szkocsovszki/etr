@@ -6,8 +6,6 @@ public class Labels {
 	public static final String USER_NAME = "Felhasználónév";
 	public static final String PASSWORD = "Jelszó";
 	public static final String LOG_IN = "Bejelentkezés";
-	//public static final String REGISTRATION = "Regisztrálás";
-	//public static final String CONFIRM_PASSWORD = "Jelszó megerősítése";
 	public static final String WARNING = "Figyelmeztetés!";
 	public static final String ERROR = "Hiba!";
 	public static final String MISSING_USERNAME = "A felhasználónevet kötelező megadni!";
@@ -59,6 +57,7 @@ public class Labels {
 	public static final String WRONG_EHA_FORMAT = "Az EHA kód nem felel meg az elvárt formátumnak!";
 	public static final String DEFAULT_NAME = "Vezetéknév Keresztnév";
 	public static final String DEFAULT_ADDRESS = "Ország, irányítószám, város, utca, házszám";
-	public static final String ACCOUNT_DOES_NOT_EXIST = "Nem létezik ilyen felhasználó!";
+	public static final String ACCOUNT_DOES_NOT_EXIST = "Érvénytelen felhasználónév vagy jelszó!";
+	public static final String ETR = "Egységes Tanulmányi Rendszer";
 
 }

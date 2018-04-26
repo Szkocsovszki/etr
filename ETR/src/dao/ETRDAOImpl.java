@@ -7,11 +7,13 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
+import javax.swing.JOptionPane;
+
 import dao.model.Account;
 import dao.model.Professor;
 import dao.model.Referent;
 import dao.model.Student;
-//import oracle.jdbc.pool.OracleDataSource;
+import view.Labels;
 
 public class ETRDAOImpl implements ETRDAO {
 
@@ -26,7 +28,12 @@ public class ETRDAOImpl implements ETRDAO {
 			conn.setAutoCommit(false);
 
 		} catch (Exception ex) {
-			ex.printStackTrace();
+			//ex.printStackTrace();
+			JOptionPane.showMessageDialog(
+					  null,
+					  ex.getMessage(),
+					  Labels.ERROR,
+					  JOptionPane.ERROR_MESSAGE);
 		}
 	}
 
@@ -43,7 +50,6 @@ public class ETRDAOImpl implements ETRDAO {
 			st.close();
 			return null;
 		}
-		
 	}
 
 	@Override

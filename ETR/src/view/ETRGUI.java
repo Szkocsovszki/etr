@@ -7,7 +7,6 @@ import java.awt.FlowLayout;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.Toolkit;
-import java.sql.SQLException;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -46,8 +45,6 @@ public class ETRGUI extends JFrame {
 
 	private void createStartingPage() {
 		setTitle(Labels.STARTING_PAGE);
-		// setExtendedState(JFrame.MAXIMIZED_BOTH);
-		// setLocationRelativeTo(null);
 		Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
 		setLocation(2 * dim.width / 5 - 2 * getSize().width / 5, dim.height / 3 - getSize().height / 3);
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -63,28 +60,6 @@ public class ETRGUI extends JFrame {
 		setVisible(true);
 	}
 
-	/*
-	 * private JPanel createRegistrationPanel() { JPanel panel = new JPanel();
-	 * panel.setLayout(new GridLayout(2, 1));
-	 * 
-	 * JPanel dataPanel = new JPanel(); dataPanel.setLayout(new GridLayout(3, 2));
-	 * JLabel userNameLabel = new JLabel(Labels.USER_NAME); JTextField userName =
-	 * new JTextField(20); JLabel passwordLabel = new JLabel(Labels.PASSWORD);
-	 * JPasswordField password = new JPasswordField(); JLabel confirmPasswordLabel =
-	 * new JLabel(Labels.CONFIRM_PASSWORD); JPasswordField confirmPassword = new
-	 * JPasswordField(); dataPanel.add(userNameLabel); dataPanel.add(userName);
-	 * dataPanel.add(passwordLabel); dataPanel.add(password);
-	 * dataPanel.add(confirmPasswordLabel); dataPanel.add(confirmPassword);
-	 * 
-	 * JPanel buttonPanel = new JPanel(); buttonPanel.setLayout(new
-	 * FlowLayout(FlowLayout.CENTER)); JButton registrationButton = new
-	 * JButton(Labels.REGISTRATION); buttonPanel.add(registrationButton);
-	 * 
-	 * panel.add(dataPanel); panel.add(buttonPanel);
-	 * 
-	 * return panel; }
-	 */
-
 	private JPanel createSignInPanel() {
 		JPanel panel = new JPanel();
 		panel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
@@ -92,7 +67,7 @@ public class ETRGUI extends JFrame {
 
 		JPanel dataPanel = new JPanel();
 		dataPanel.setLayout(new GridLayout(2, 2));
-		JLabel userNameLabel = new JLabel(Labels.USER_NAME);
+		JLabel userNameLabel = new JLabel(Labels.EHA);
 		JTextField userName = new JTextField(10);
 		JLabel passwordLabel = new JLabel(Labels.PASSWORD);
 		JPasswordField password = new JPasswordField();
@@ -120,7 +95,8 @@ public class ETRGUI extends JFrame {
 						  Labels.ERROR,
 						  JOptionPane.ERROR_MESSAGE);
 			} else {
-				
+				/*new ReferentFrame(controller, null);
+				dispose();*/
 				try {
 					currentAccount = controller.logIn(userName.getText(), String.valueOf(password.getPassword()));
 					if(currentAccount instanceof Referent) {
@@ -141,13 +117,12 @@ public class ETRGUI extends JFrame {
 								  Labels.WARNING,
 								  JOptionPane.WARNING_MESSAGE);
 					}
-				} catch (SQLException exception) {
+				} catch (Exception exception) {
 					JOptionPane.showMessageDialog(
 							  this,
 							  exception.getMessage(),
 							  Labels.ERROR,
 							  JOptionPane.ERROR_MESSAGE);
-					exception.printStackTrace();
 				}
 			}
 
