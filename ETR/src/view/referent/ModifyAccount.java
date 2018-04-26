@@ -80,6 +80,11 @@ public class ModifyAccount extends JPanel {
 					JLabel departmentLabel = new JLabel(Labels.DEPARTMENT);
 
 					JTextField nameTextField = new JTextField(account.getName());
+					SwingUtilities.invokeLater(new Runnable() {
+				        public void run() {
+				            nameTextField.requestFocus();
+				        }
+			        });
 					
 					nameTextField.addFocusListener(new FocusListener() {
 						public void focusGained(FocusEvent e) {
