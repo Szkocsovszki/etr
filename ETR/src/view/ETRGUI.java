@@ -19,18 +19,22 @@ import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 
 import controller.ETRController;
+import dao.model.Account;
+import dao.model.Professor;
+import dao.model.Referent;
+import dao.model.Student;
+import view.professor.ProfessorFrame;
+import view.referent.ReferentFrame;
+import view.student.StudentFrame;
 
 public class ETRGUI extends JFrame {
 
 	private static final long serialVersionUID = -6123017900301369195L;
 	private ETRController controller;
+	private Account currentAccount;
 
 	public ETRGUI(ETRController controller) {
 		this.controller = controller;
-	}
-
-	public ETRController getController() {
-		return controller;
 	}
 
 	public void startGUI() {
@@ -41,8 +45,6 @@ public class ETRGUI extends JFrame {
 
 	private void createStartingPage() {
 		setTitle(Labels.STARTING_PAGE);
-		// setExtendedState(JFrame.MAXIMIZED_BOTH);
-		// setLocationRelativeTo(null);
 		Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
 		setLocation(2 * dim.width / 5 - 2 * getSize().width / 5, dim.height / 3 - getSize().height / 3);
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -58,28 +60,6 @@ public class ETRGUI extends JFrame {
 		setVisible(true);
 	}
 
-	/*
-	 * private JPanel createRegistrationPanel() { JPanel panel = new JPanel();
-	 * panel.setLayout(new GridLayout(2, 1));
-	 * 
-	 * JPanel dataPanel = new JPanel(); dataPanel.setLayout(new GridLayout(3, 2));
-	 * JLabel userNameLabel = new JLabel(Labels.USER_NAME); JTextField userName =
-	 * new JTextField(20); JLabel passwordLabel = new JLabel(Labels.PASSWORD);
-	 * JPasswordField password = new JPasswordField(); JLabel confirmPasswordLabel =
-	 * new JLabel(Labels.CONFIRM_PASSWORD); JPasswordField confirmPassword = new
-	 * JPasswordField(); dataPanel.add(userNameLabel); dataPanel.add(userName);
-	 * dataPanel.add(passwordLabel); dataPanel.add(password);
-	 * dataPanel.add(confirmPasswordLabel); dataPanel.add(confirmPassword);
-	 * 
-	 * JPanel buttonPanel = new JPanel(); buttonPanel.setLayout(new
-	 * FlowLayout(FlowLayout.CENTER)); JButton registrationButton = new
-	 * JButton(Labels.REGISTRATION); buttonPanel.add(registrationButton);
-	 * 
-	 * panel.add(dataPanel); panel.add(buttonPanel);
-	 * 
-	 * return panel; }
-	 */
-
 	private JPanel createSignInPanel() {
 		JPanel panel = new JPanel();
 		panel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
@@ -87,7 +67,7 @@ public class ETRGUI extends JFrame {
 
 		JPanel dataPanel = new JPanel();
 		dataPanel.setLayout(new GridLayout(2, 2));
-		JLabel userNameLabel = new JLabel(Labels.USER_NAME);
+		JLabel userNameLabel = new JLabel(Labels.EHA);
 		JTextField userName = new JTextField(10);
 		JLabel passwordLabel = new JLabel(Labels.PASSWORD);
 		JPasswordField password = new JPasswordField();
@@ -101,24 +81,52 @@ public class ETRGUI extends JFrame {
 		JButton logInButton = new JButton(Labels.LOG_IN);
 		buttonPanel.add(logInButton);
 
-		/*logInButton.addActionListener(e -> {
+		logInButton.addActionListener(e -> {
 			if (userName.getText().isEmpty()) {
 				JOptionPane.showMessageDialog(
 						  this,
 						  Labels.MISSING_USERNAME,
 						  Labels.ERROR,
 						  JOptionPane.ERROR_MESSAGE);
-			} else if (password.getText().isEmpty()) {
+			} else if (String.valueOf(password.getPassword()).isEmpty()) {
 				JOptionPane.showMessageDialog(
 						  this,
 						  Labels.MISSING_PASSWORD,
 						  Labels.ERROR,
 						  JOptionPane.ERROR_MESSAGE);
 			} else {
-				System.out.println(userName.getText() + " " + password.getText());
+				/*new ReferentFrame(controller, null);
+				dispose();*/
+				try {
+					currentAccount = controller.logIn(userName.getText().toUpperCase(), String.valueOf(password.getPassword()));
+					if(currentAccount instanceof Referent) {
+						new ReferentFrame(controller, currentAccount);
+						dispose();
+					}
+					else if(currentAccount instanceof Professor) {
+						new ProfessorFrame(controller, currentAccount);
+						dispose();
+					}
+					else if(currentAccount instanceof Student) {
+						new StudentFrame(controller, currentAccount);
+						dispose();
+					} else {
+						JOptionPane.showMessageDialog(
+								  this,
+								  Labels.ACCOUNT_DOES_NOT_EXIST,
+								  Labels.WARNING,
+								  JOptionPane.WARNING_MESSAGE);
+					}
+				} catch (Exception exception) {
+					JOptionPane.showMessageDialog(
+							  this,
+							  exception.getMessage(),
+							  Labels.ERROR,
+							  JOptionPane.ERROR_MESSAGE);
+				}
 			}
 
-		});*/
+		});
 
 		panel.add(dataPanel);
 		panel.add(buttonPanel);
