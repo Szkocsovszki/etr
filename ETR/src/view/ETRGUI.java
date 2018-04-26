@@ -24,7 +24,9 @@ import dao.model.Account;
 import dao.model.Professor;
 import dao.model.Referent;
 import dao.model.Student;
+import view.professor.ProfessorFrame;
 import view.referent.ReferentFrame;
+import view.student.StudentFrame;
 
 public class ETRGUI extends JFrame {
 
@@ -34,11 +36,6 @@ public class ETRGUI extends JFrame {
 
 	public ETRGUI(ETRController controller) {
 		this.controller = controller;
-	}
-
-	public ETRController getController() {
-		return controller;
-		
 	}
 
 	public void startGUI() {
@@ -123,19 +120,20 @@ public class ETRGUI extends JFrame {
 						  Labels.ERROR,
 						  JOptionPane.ERROR_MESSAGE);
 			} else {
-				dispose();
-				new ReferentFrame(controller, null);
+				
 				try {
-					// hibakezelés, ha null-lal térek vissza !!!
 					currentAccount = controller.logIn(userName.getText(), String.valueOf(password.getPassword()));
 					if(currentAccount instanceof Referent) {
-						//new ReferentFrame(controller, currentAccount);
+						new ReferentFrame(controller, currentAccount);
+						dispose();
 					}
 					else if(currentAccount instanceof Professor) {
-						//new ProfessorFrame(controller, currentAccount);
+						new ProfessorFrame(controller, currentAccount);
+						dispose();
 					}
 					else if(currentAccount instanceof Student) {
-						//new StudentFrame(controller, currentAccount);
+						new StudentFrame(controller, currentAccount);
+						dispose();
 					} else {
 						JOptionPane.showMessageDialog(
 								  this,

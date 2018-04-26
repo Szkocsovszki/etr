@@ -21,11 +21,8 @@ public class ETRDAOImpl implements ETRDAO {
 
 		super();
 		try {
-			// OracleDataSource ods = new OracleDataSource();
 			Class.forName("oracle.jdbc.OracleDriver");
 			conn = DriverManager.getConnection("jdbc:oracle:thin:@localhost:4000:kabinet", "h675353", "geniusos123");
-			// ods.setURL("jdbc:oracle:thin:@localhost:4000:kabinet");
-			// conn = ods.getConnection("h675353", "geniusos123");
 			conn.setAutoCommit(false);
 
 		} catch (Exception ex) {
@@ -43,7 +40,6 @@ public class ETRDAOImpl implements ETRDAO {
 			st.close();
 			return getAccountToModify(eha);
 		}else {
-			System.out.println("rossz");
 			st.close();
 			return null;
 		}
@@ -105,12 +101,13 @@ public class ETRDAOImpl implements ETRDAO {
 
 	@Override
 	public void createAccount(Account account) throws SQLException {
-		PreparedStatement st = conn.prepareStatement("INSERT INTO szemely VALUES (?,?,to_date(?, 'YYYY-MM-DD'),?,?)");
+		PreparedStatement st = conn.prepareStatement("INSERT INTO szemely VALUES (?,?,to_date(?, 'YYYY-MM-DD'),?,?,ora_hash(concat(?,'etr')))");
 		st.setString(1, account.getEha());
 		st.setString(2, account.getName());
 		st.setString(3, account.getBirthDate());
 		st.setString(4, account.getAddress());
 		st.setString(5, account.getEha());
+		st.setString(6, account.getEha());
 		st.executeUpdate();
 		
 		st = conn.prepareStatement("INSERT INTO szak VALUES (?,?)");
@@ -184,6 +181,30 @@ public class ETRDAOImpl implements ETRDAO {
 		updatePass.executeUpdate();
 		updatePass.close();
 		conn.commit();
+	}
+
+	@Override
+	public ArrayList<String> getCourses() throws SQLException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public ArrayList<String> getExams() throws SQLException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public ArrayList<String> pickUpACourse(String eha, String courseCode) throws SQLException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public ArrayList<String> pickUpAnExam(String eha, String examCode) throws SQLException {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 	
