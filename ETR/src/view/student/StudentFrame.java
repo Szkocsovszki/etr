@@ -29,7 +29,8 @@ public class StudentFrame extends JFrame {
 	public StudentFrame(ETRController controller, Account account) {
 		this.controller = controller;
 		this.currentAccount = account;
-		setTitle(Labels.ETR + " - " + currentAccount.getEha());
+		
+		setTitle(Labels.ETR + " - "/* + currentAccount.getEha()*/);
 		setSize(
 				(int)Toolkit.getDefaultToolkit().getScreenSize().getWidth() - 752,
 				(int) Toolkit.getDefaultToolkit().getScreenSize().getHeight() - 400
@@ -48,10 +49,15 @@ public class StudentFrame extends JFrame {
 
 	private JMenuBar createMenuBar() {
 		JMenuBar menuBar = new JMenuBar();
+		JMenu ownDataMenu = new JMenu(Labels.OWN_DATA);
 		JMenu courseMenu = new JMenu(Labels.COURSES);
 		JMenu examMenu = new JMenu(Labels.EXAMS);
+		//JMenu statisticsMenu = new JMenu(Labels.STATISTICS);
 		JButton changePassword = new JButton(Labels.CHANGE_PASSWORD);
 		JButton signOut = new JButton(Labels.SIGN_OUT);
+		
+		JMenuItem gradePointAverage = new JMenuItem(Labels.GRADE_POINT_AVERAGE);
+		JMenuItem weightedAverage = new JMenuItem(Labels.WEIGHTED_AVERAGE);
 		
 		JMenuItem listCourses = new JMenuItem(Labels.LIST_COURSES);
 		JMenuItem listRegistratedCourses = new JMenuItem(Labels.LIST_REGISTRATED_COURSES);
@@ -60,6 +66,51 @@ public class StudentFrame extends JFrame {
 		JMenuItem listExams = new JMenuItem(Labels.LIST_EXAMS);
 		JMenuItem listRegistratedExams = new JMenuItem(Labels.LIST_REGISTRATED_EXAMS);
 		JMenuItem examFee = new JMenuItem(Labels.EXAM_FEE);
+		
+		listCourses.setMnemonic('K');
+		listCourses.addActionListener(e -> {
+			workingPanel.removeAll();
+			workingPanel.add(new ListCourses(controller, currentAccount));
+			revalidate();
+			repaint();
+		});
+		
+		listRegistratedCourses.setMnemonic('F');
+		listRegistratedCourses.addActionListener(e -> {
+			workingPanel.removeAll();
+			//workingPanel.add(new ChangePassword(controller, currentAccount));
+			revalidate();
+			repaint();
+		});
+		
+		timetable.setMnemonic('r');
+		timetable.addActionListener(e -> {
+			workingPanel.removeAll();
+			//workingPanel.add(new ChangePassword(controller, currentAccount));
+			revalidate();
+			repaint();
+		});
+		
+		listExams.addActionListener(e -> {
+			workingPanel.removeAll();
+			//workingPanel.add(new ChangePassword(controller, currentAccount));
+			revalidate();
+			repaint();
+		});
+		
+		listRegistratedExams.addActionListener(e -> {
+			workingPanel.removeAll();
+			//workingPanel.add(new ChangePassword(controller, currentAccount));
+			revalidate();
+			repaint();
+		});
+		
+		examFee.addActionListener(e -> {
+			workingPanel.removeAll();
+			//workingPanel.add(new ChangePassword(controller, currentAccount));
+			revalidate();
+			repaint();
+		});
 		
 		changePassword.addActionListener(e -> {
 			workingPanel.removeAll();
@@ -74,6 +125,9 @@ public class StudentFrame extends JFrame {
 			gui.startGUI();
 		});
 		
+		ownDataMenu.add(gradePointAverage);
+		ownDataMenu.add(weightedAverage);
+		
 		courseMenu.add(listCourses);
 		courseMenu.add(listRegistratedCourses);
 		courseMenu.add(timetable);
@@ -82,6 +136,10 @@ public class StudentFrame extends JFrame {
 		examMenu.add(listRegistratedExams);
 		examMenu.add(examFee);
 		
+		ownDataMenu.setMnemonic('S');
+		courseMenu.setMnemonic('K');
+		examMenu.setMnemonic('V');
+		menuBar.add(ownDataMenu);
 		menuBar.add(courseMenu);
 		menuBar.add(examMenu);
 		signOut.setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
