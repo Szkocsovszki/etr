@@ -2,6 +2,9 @@ package dao;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
+
+import dao.course.Course;
+import dao.course.Exam;
 import dao.model.Account;
 
 public interface ETRDAO {
@@ -17,13 +20,28 @@ public interface ETRDAO {
 
 	public void changePassword(String eha, String jelszo) throws SQLException;
 	
-	public ArrayList<String> getCourses() throws SQLException ;
+	/**
+	 * Get all the courses.
+	 * @return
+	 * @throws SQLException
+	 */
+	public ArrayList<Course> getCourses() throws SQLException ;
 	
-	public ArrayList<String> getExams() throws SQLException;
+	public ArrayList<Exam> getExams() throws SQLException;
 	
-	public ArrayList<String> pickUpACourse(String eha, String courseCode) throws SQLException;
+	/**
+	 * Get picked up courses.
+	 * @param eha
+	 * @return
+	 * @throws SQLException
+	 */
+	public ArrayList<Course> getCourses(String eha) throws SQLException ;
 	
-	public ArrayList<String> pickUpAnExam(String eha, String examCode) throws SQLException;
+	public ArrayList<Exam> getExams(String eha) throws SQLException;
+	
+	public void pickUpACourse(String eha, Course course) throws SQLException;
+	
+	public void pickUpAnExam(String eha, Exam exam) throws SQLException;
 	
 	
 }
