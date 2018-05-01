@@ -195,7 +195,6 @@ public class ETRDAOImpl implements ETRDAO {
 			Course c = new Course(course.getString(1), course.getString(2), course.getString(3), course.getString(4),
 					course.getString(5), course.getInt(6), course.getString(7), course.getString(8));
 			courses.add(c);
-			System.out.println(c);
 		}
 		
 		updatePass.close();
@@ -210,8 +209,22 @@ public class ETRDAOImpl implements ETRDAO {
 
 	@Override
 	public ArrayList<Course> getCourses(String eha) throws SQLException {
-		// TODO Auto-generated method stub
-		return null;
+		ArrayList<Course> courses = new ArrayList<>();
+		PreparedStatement updatePass = conn.prepareStatement(""
+				+ "SELECT * "
+				+ "FROM kurzus INNER JOIN hallgatja ON kurzus.kurzuskod = hallgatja.kurzuskod "
+				+ "WHERE hallgatja.eha = ? "
+				+ "ORDER BY kurzus.nev");
+		updatePass.setString(1, eha);
+		ResultSet course = updatePass.executeQuery();
+		while(course.next()) {
+			Course c = new Course(course.getString(1), course.getString(2), course.getString(3), course.getString(4),
+					course.getString(5), course.getInt(6), course.getString(7), course.getString(8));
+			courses.add(c);
+		}
+		
+		updatePass.close();
+		return courses;
 	}
 
 	@Override

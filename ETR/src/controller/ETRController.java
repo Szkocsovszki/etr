@@ -47,4 +47,9 @@ public class ETRController {
 	public ArrayList<Course> getCourses() throws SQLException{
 		return dao.getCourses();
 	}
+	
+	public ArrayList<Course> getCourses(String eha) throws SQLException{
+		return dao.getCourses(eha);
+	}
+	
 }
