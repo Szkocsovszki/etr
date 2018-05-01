@@ -1,9 +1,11 @@
 package controller;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 import dao.ETRDAO;
 import dao.ETRDAOImpl;
+import dao.course.Course;
 import dao.model.Account;
 import view.ETRGUI;
 
@@ -40,5 +42,9 @@ public class ETRController {
 	
 	public void changePassword(String eha, String password) throws SQLException{
 		dao.changePassword(eha, password);
+	}
+	
+	public ArrayList<Course> getCourses() throws SQLException{
+		return dao.getCourses();
 	}
 }
