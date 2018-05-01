@@ -9,6 +9,8 @@ import java.util.ArrayList;
 
 import javax.swing.JOptionPane;
 
+import dao.course.Course;
+import dao.course.Exam;
 import dao.model.Account;
 import dao.model.Professor;
 import dao.model.Referent;
@@ -190,27 +192,39 @@ public class ETRDAOImpl implements ETRDAO {
 	}
 
 	@Override
-	public ArrayList<String> getCourses() throws SQLException {
+	public ArrayList<Course> getCourses() throws SQLException {
+		ArrayList<Course> courses = new ArrayList<>();
+		return courses;
+	}
+
+	@Override
+	public ArrayList<Exam> getExams() throws SQLException {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public ArrayList<String> getExams() throws SQLException {
+	public ArrayList<Course> getCourses(String eha) throws SQLException {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public ArrayList<String> pickUpACourse(String eha, String courseCode) throws SQLException {
+	public ArrayList<Exam> getExams(String eha) throws SQLException {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public ArrayList<String> pickUpAnExam(String eha, String examCode) throws SQLException {
+	public void pickUpACourse(String eha, Course course) throws SQLException {
 		// TODO Auto-generated method stub
-		return null;
+		
+	}
+
+	@Override
+	public void pickUpAnExam(String eha, Exam exam) throws SQLException {
+		// TODO Auto-generated method stub
+		
 	}
 
 	
