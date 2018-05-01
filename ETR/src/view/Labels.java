@@ -67,5 +67,13 @@ public class Labels {
 	public static final String LIST_EXAMS = "Vizsgák listázása";
 	public static final String LIST_REGISTRATED_EXAMS = "Felvett vizsgák listázása";
 	public static final String EXAM_FEE = "Vizsgadíj befizetés";
+	public static final String STATISTICS = "Statisztikák";
+	public static final String OWN_DATA = "Saját adatok";
+	public static final String GRADE_POINT_AVERAGE = "Tanulmányi átlag";
+	public static final String WEIGHTED_AVERAGE = "Súlyozott átlag";
+	public static final String COURSE_CODE = "Kurzuskód";
+	public static final String COURSE_NAME = "Kurzusnév";
+	public static final String CAPACITY = "Kapacitás";
+	public static final String REGISTRATE = "Jelentkezés";
 
 }

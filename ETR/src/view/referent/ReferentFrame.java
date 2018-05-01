@@ -27,6 +27,7 @@ public class ReferentFrame extends JFrame {
 	public ReferentFrame(ETRController controller, Account account) {
 		this.controller = controller;
 		this.currentAccount = account;
+		
 		setTitle(Labels.ETR + " - " + currentAccount.getEha());
 		setSize(
 				(int)Toolkit.getDefaultToolkit().getScreenSize().getWidth() - 752,

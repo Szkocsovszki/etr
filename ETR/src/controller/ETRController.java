@@ -1,6 +1,7 @@
 package controller;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 import dao.ETRDAO;
 import dao.ETRDAOImpl;
@@ -41,4 +42,21 @@ public class ETRController {
 	public void changePassword(String eha, String password) throws SQLException{
 		dao.changePassword(eha, password);
 	}
+	
+	public ArrayList<String> getCourses() throws SQLException {
+		return dao.getCourses();
+	}
+
+	public ArrayList<String> getExams() throws SQLException {
+		return dao.getExams();
+	}
+
+	public ArrayList<String> pickUpACourse(String eha, String courseCode) throws SQLException {
+		return dao.pickUpACourse(eha, courseCode);
+	}
+
+	public ArrayList<String> pickUpAnExam(String eha, String examCode) throws SQLException {
+		return dao.pickUpAnExam(eha, examCode);
+	}
+	
 }
