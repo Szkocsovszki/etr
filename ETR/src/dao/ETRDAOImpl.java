@@ -64,7 +64,6 @@ public class ETRDAOImpl implements ETRDAO {
 			String accEHA = accExists.getString(1);
 			String accBirth = (accExists.getString(3).split(" "))[0];
 			String accAddress = accExists.getString(4);
-			accExists.close();
 
 			ArrayList<String> departmentStore = new ArrayList<String>();
 			st = conn.prepareStatement("SELECT szaknev FROM szak WHERE EHA = ?");
@@ -72,13 +71,11 @@ public class ETRDAOImpl implements ETRDAO {
 			ResultSet departments = st.executeQuery();
 			while (departments.next())
 				departmentStore.add(departments.getString(1));
-			departments.close();
 			
 			st = conn.prepareStatement("SELECT * FROM referens WHERE EHA = ?");
 			st.setString(1, eha);
 			ResultSet accTypeCheck = st.executeQuery();
 			if (accTypeCheck.next()) {
-				accTypeCheck.close();
 				st.close();
 				return new Referent(accName, accEHA, accBirth, accAddress, departmentStore);
 			} else {
@@ -86,7 +83,6 @@ public class ETRDAOImpl implements ETRDAO {
 				st.setString(1, eha);
 				accTypeCheck = st.executeQuery();
 				if (accTypeCheck.next()) {
-					accTypeCheck.close();
 					st.close();
 					return new Professor(accName, accEHA, accBirth, accAddress, departmentStore);
 				} else {
@@ -94,7 +90,6 @@ public class ETRDAOImpl implements ETRDAO {
 					st.setString(1, eha);
 					accTypeCheck = st.executeQuery();
 					if (accTypeCheck.next()) {
-						accTypeCheck.close();
 						st.close();
 						return new Student(accName, accEHA, accBirth, accAddress, departmentStore);
 					}
@@ -194,6 +189,16 @@ public class ETRDAOImpl implements ETRDAO {
 	@Override
 	public ArrayList<Course> getCourses() throws SQLException {
 		ArrayList<Course> courses = new ArrayList<>();
+		PreparedStatement updatePass = conn.prepareStatement("SELECT * FROM kurzus ORDER BY nev");
+		ResultSet course = updatePass.executeQuery();
+		while(course.next()) {
+			Course c = new Course(course.getString(1), course.getString(2), course.getString(3), course.getString(4),
+					course.getString(5), course.getInt(6), course.getString(7), course.getString(8));
+			courses.add(c);
+			System.out.println(c);
+		}
+		
+		updatePass.close();
 		return courses;
 	}
 
@@ -226,6 +231,5 @@ public class ETRDAOImpl implements ETRDAO {
 		// TODO Auto-generated method stub
 		
 	}
-
 	
 }
