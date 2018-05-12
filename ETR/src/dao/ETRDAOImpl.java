@@ -12,9 +12,6 @@ import javax.swing.JOptionPane;
 import dao.course.Course;
 import dao.course.Exam;
 import dao.model.Account;
-import dao.model.Professor;
-import dao.model.Referent;
-import dao.model.Student;
 import view.Labels;
 
 public class ETRDAOImpl implements ETRDAO {
@@ -60,57 +57,33 @@ public class ETRDAOImpl implements ETRDAO {
 		st.setString(1, eha);
 		ResultSet accExists = st.executeQuery();
 		if (accExists.next()) {
-			String accName = accExists.getString(2);
-			String accEHA = accExists.getString(1);
-			String accBirth = (accExists.getString(3).split(" "))[0];
-			String accAddress = accExists.getString(4);
-
+			
 			ArrayList<String> departmentStore = new ArrayList<String>();
 			st = conn.prepareStatement("SELECT szaknev FROM szak WHERE EHA = ?");
 			st.setString(1, eha);
 			ResultSet departments = st.executeQuery();
 			while (departments.next())
 				departmentStore.add(departments.getString(1));
+
+			Account account = new Account(accExists.getString(1), accExists.getString(2), (accExists.getString(3).split(" "))[0], accExists.getString(4), departmentStore, accExists.getInt(7));
+			st.close();
+			return account;
 			
-			st = conn.prepareStatement("SELECT * FROM referens WHERE EHA = ?");
-			st.setString(1, eha);
-			ResultSet accTypeCheck = st.executeQuery();
-			if (accTypeCheck.next()) {
-				st.close();
-				return new Referent(accName, accEHA, accBirth, accAddress, departmentStore);
-			} else {
-				st = conn.prepareStatement("SELECT * FROM oktato WHERE EHA = ?");
-				st.setString(1, eha);
-				accTypeCheck = st.executeQuery();
-				if (accTypeCheck.next()) {
-					st.close();
-					return new Professor(accName, accEHA, accBirth, accAddress, departmentStore);
-				} else {
-					st = conn.prepareStatement("SELECT * FROM hallgato WHERE EHA = ?");
-					st.setString(1, eha);
-					accTypeCheck = st.executeQuery();
-					if (accTypeCheck.next()) {
-						st.close();
-						return new Student(accName, accEHA, accBirth, accAddress, departmentStore);
-					}
-				}
-			}
-			accTypeCheck.close();
 		}
-		accExists.close();
 		st.close();
 		return null;
 	}
 
 	@Override
 	public void createAccount(Account account) throws SQLException {
-		PreparedStatement st = conn.prepareStatement("INSERT INTO szemely VALUES (?,?,to_date(?, 'YYYY-MM-DD'),?,?,ora_hash(concat(?,'etr')))");
+		PreparedStatement st = conn.prepareStatement("INSERT INTO szemely VALUES (?,?,to_date(?, 'YYYY-MM-DD'),?,?,ora_hash(concat(?,'etr')),?)");
 		st.setString(1, account.getEha());
 		st.setString(2, account.getName());
 		st.setString(3, account.getBirthDate());
 		st.setString(4, account.getAddress());
 		st.setString(5, account.getEha());
 		st.setString(6, account.getEha());
+		st.setInt(7, account.getType());
 		st.executeUpdate();
 		
 		st = conn.prepareStatement("INSERT INTO szak VALUES (?,?)");
@@ -120,9 +93,6 @@ public class ETRDAOImpl implements ETRDAO {
 			st.executeQuery();
 		}
 
-		st = conn.prepareStatement("INSERT INTO "+account.tableName()+"(eha) VALUES (?)");
-		st.setString(1, account.getEha());
-		st.executeQuery();
 		conn.commit();
 		st.close();
 
@@ -137,15 +107,6 @@ public class ETRDAOImpl implements ETRDAO {
 		st.close();
 		if(deleted == 0)
 			throw new SQLException();
-	}
-
-	public void updateStudentBalance(Account acc, int balance) throws SQLException {
-		PreparedStatement st = conn.prepareStatement("UPDATE hallgato SET egyenleg = ? WHERE eha = ?");
-		st.setInt(1, balance);
-		st.setString(2, acc.getEha());
-		st.executeUpdate();
-		st.close();
-		conn.commit();
 	}
 
 	@Override
@@ -189,15 +150,32 @@ public class ETRDAOImpl implements ETRDAO {
 	@Override
 	public ArrayList<Course> getCourses() throws SQLException {
 		ArrayList<Course> courses = new ArrayList<>();
-		PreparedStatement updatePass = conn.prepareStatement("SELECT * FROM kurzus ORDER BY nev");
-		ResultSet course = updatePass.executeQuery();
+		PreparedStatement getCourse = conn.prepareStatement(""
+				+ "SELECT  egy.kurzuskod, egy.nev, egy.het_napja, egy.mettol, egy.meddig, egy.kredit, terem.nev, terem.kapacitas, ketto.kurzuskod "
+				+ "FROM (kurzus egy LEFT JOIN kurzus ketto ON egy.eloadasa = ketto.kurzuskod) INNER JOIN terem ON egy.teremkod = terem.teremkod "
+				+ "ORDER BY egy.nev");
+		ResultSet course = getCourse.executeQuery();
 		while(course.next()) {
-			Course c = new Course(course.getString(1), course.getString(2), course.getString(3), course.getString(4),
-					course.getString(5), course.getInt(6), course.getString(7), course.getString(8));
+			String kurzusKod = course.getString(1);
+			PreparedStatement getOnit = conn.prepareStatement("SELECT count(*) FROM hallgatja WHERE kurzuskod = ?");
+			getOnit.setString(1, kurzusKod);
+			ResultSet onIt = getOnit.executeQuery();
+			onIt.next();
+			
+			PreparedStatement getProff = conn.prepareStatement(""
+					+ "SELECT nev "
+					+ "FROM szemely INNER JOIN tanitja ON szemely.eha = tanitja.eha "
+					+ "WHERE tanitja.KURZUSKOD = ?");
+			getProff.setString(1, kurzusKod);
+			ResultSet proff = getProff.executeQuery();
+			proff.next();
+			
+			Course c = new Course(kurzusKod, course.getString(2), course.getString(3), course.getString(4),
+					course.getString(5), course.getInt(6), course.getString(7), onIt.getInt(1), course.getInt(8), course.getString(9), proff.getString(1));
 			courses.add(c);
 		}
 		
-		updatePass.close();
+		getCourse.close();
 		return courses;
 	}
 
@@ -209,22 +187,7 @@ public class ETRDAOImpl implements ETRDAO {
 
 	@Override
 	public ArrayList<Course> getCourses(String eha) throws SQLException {
-		ArrayList<Course> courses = new ArrayList<>();
-		PreparedStatement updatePass = conn.prepareStatement(""
-				+ "SELECT * "
-				+ "FROM kurzus INNER JOIN hallgatja ON kurzus.kurzuskod = hallgatja.kurzuskod "
-				+ "WHERE hallgatja.eha = ? "
-				+ "ORDER BY kurzus.nev");
-		updatePass.setString(1, eha);
-		ResultSet course = updatePass.executeQuery();
-		while(course.next()) {
-			Course c = new Course(course.getString(1), course.getString(2), course.getString(3), course.getString(4),
-					course.getString(5), course.getInt(6), course.getString(7), course.getString(8));
-			courses.add(c);
-		}
-		
-		updatePass.close();
-		return courses;
+		return null;
 	}
 
 	@Override

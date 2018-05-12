@@ -24,9 +24,7 @@ import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 
 import controller.ETRController;
-import dao.model.Professor;
-import dao.model.Referent;
-import dao.model.Student;
+import dao.model.Account;
 import view.Labels;
 
 public class CreateAccount extends JPanel {
@@ -263,33 +261,24 @@ public class CreateAccount extends JPanel {
 						department.add(pieces[i]);
 					}
 
+					Account newAccount = new Account(
+							ehaTextField.getText(),
+							nameTextField.getText(),
+							birthDateTextField.getText(),
+							addressTextField.getText(),
+							department,
+							0
+						);
+					
 					if(referentCheckBox.isSelected()) {
-						Referent referent = new Referent(
-							nameTextField.getText(),
-							ehaTextField.getText(),
-							birthDateTextField.getText(),
-							addressTextField.getText(),
-							new ArrayList<String>()
-						);
-						controller.createAccount(referent);
+						newAccount.setDepartment(new ArrayList<String>());
+						controller.createAccount(newAccount);
 					} else if(professorCheckBox.isSelected()) {
-						Professor professor = new Professor(
-							nameTextField.getText(),
-							ehaTextField.getText(),
-							birthDateTextField.getText(),
-							addressTextField.getText(),
-							department
-						);
-						controller.createAccount(professor);
+						newAccount.setType(1);
+						controller.createAccount(newAccount);
 					} else if(studentCheckBox.isSelected()) {
-						Student student = new Student(
-							nameTextField.getText(),
-							ehaTextField.getText(),
-							birthDateTextField.getText(),
-							addressTextField.getText(),
-							department
-						);
-						controller.createAccount(student);
+						newAccount.setType(2);
+						controller.createAccount(newAccount);
 					} else {
 						throw new NullPointerException(Labels.NO_CHECKBOX_SELECTED);
 					}

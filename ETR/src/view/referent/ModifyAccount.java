@@ -21,7 +21,6 @@ import javax.swing.SwingUtilities;
 
 import controller.ETRController;
 import dao.model.Account;
-import dao.model.Referent;
 import view.Labels;
 
 public class ModifyAccount extends JPanel {
@@ -174,7 +173,7 @@ public class ModifyAccount extends JPanel {
 						}
 					});
 					
-					if(account instanceof Referent) {
+					if(account.getType() == 0) {
 						departmentTextField.setEditable(false);
 						departmentTextField.setFocusable(false);
 						
@@ -251,7 +250,7 @@ public class ModifyAccount extends JPanel {
 								account.setName(nameTextField.getText());
 								account.setBirthDate(birthDateTextField.getText());
 								account.setAddress(addressTextField.getText());
-								if(account instanceof Referent) {
+								if(account.getType() == 0) {
 									account.setDepartment(new ArrayList<String>());
 								} else {
 									account.setDepartment(department);
