@@ -3,12 +3,31 @@ package dao.model;
 import java.util.ArrayList;
 
 
-public abstract class Account {
-	protected String name;
+public class Account {
+
 	protected String eha;
+	protected String name;
 	protected String birthDate;
 	protected String address;
 	protected ArrayList<String> department;
+	protected Integer type;
+
+	public Account(String eha, String name, String birthDate, String address, ArrayList<String> department, Integer type) {
+		this.name = name;
+		this.eha = eha;
+		this.birthDate = birthDate;
+		this.address = address;
+		this.department = department;
+		this.type = type;
+	}
+	
+	public Integer getType() {
+		return type;
+	}
+
+	public void setType(Integer type) {
+		this.type = type;
+	}
 
 	public String getName() {
 		return name;
@@ -49,7 +68,5 @@ public abstract class Account {
 	public void setDepartment(ArrayList<String> department) {
 		this.department = department;
 	}
-	
-	public abstract String tableName();
 
 }
