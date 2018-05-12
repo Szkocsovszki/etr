@@ -20,9 +20,6 @@ import javax.swing.SwingUtilities;
 
 import controller.ETRController;
 import dao.model.Account;
-import dao.model.Professor;
-import dao.model.Referent;
-import dao.model.Student;
 import view.professor.ProfessorFrame;
 import view.referent.ReferentFrame;
 import view.student.StudentFrame;
@@ -99,24 +96,25 @@ public class ETRGUI extends JFrame {
 				dispose();*/
 				try {
 					currentAccount = controller.logIn(userName.getText().toUpperCase(), String.valueOf(password.getPassword()));
-					if(currentAccount instanceof Referent) {
-						new ReferentFrame(controller, currentAccount);
-						dispose();
-					}
-					else if(currentAccount instanceof Professor) {
-						new ProfessorFrame(controller, currentAccount);
-						dispose();
-					}
-					else if(currentAccount instanceof Student) {
-						new StudentFrame(controller, currentAccount);
-						dispose();
-					} else {
+					if(currentAccount == null)
 						JOptionPane.showMessageDialog(
 								  this,
 								  Labels.ACCOUNT_DOES_NOT_EXIST,
 								  Labels.WARNING,
 								  JOptionPane.WARNING_MESSAGE);
+					else if(currentAccount.getType() == 0) {
+						new ReferentFrame(controller, currentAccount);
+						dispose();
 					}
+					else if(currentAccount.getType() == 1) {
+						new ProfessorFrame(controller, currentAccount);
+						dispose();
+					}
+					else{
+						new StudentFrame(controller, currentAccount);
+						dispose();
+					}
+					
 				} catch (Exception exception) {
 					JOptionPane.showMessageDialog(
 							  this,
