@@ -75,5 +75,8 @@ public class Labels {
 	public static final String COURSE_NAME = "Kurzusnév";
 	public static final String CAPACITY = "Kapacitás";
 	public static final String REGISTRATE = "Jelentkezés";
+	public static final String CREDIT = "Kredit";
+	public static final String PLACE = "Hely";
+	public static final String TIME = "Időpont";
 
 }

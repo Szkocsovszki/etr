@@ -95,8 +95,8 @@ public class ETRGUI extends JFrame {
 						  Labels.ERROR,
 						  JOptionPane.ERROR_MESSAGE);
 			} else {
-				/*new ReferentFrame(controller, null);
-				dispose();*/
+				new StudentFrame(controller, null);
+				dispose();
 				try {
 					currentAccount = controller.logIn(userName.getText().toUpperCase(), String.valueOf(password.getPassword()));
 					if(currentAccount instanceof Referent) {
