@@ -10,6 +10,8 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableCellRenderer;
+import javax.swing.table.TableColumn;
 
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
@@ -21,7 +23,6 @@ import view.Labels;
 
 public class ListCourses extends JPanel {
 	private static final long serialVersionUID = 5440133217803163112L;
-
 	private ETRController controller;
 	//private Account account;
 	
@@ -141,6 +142,7 @@ public class ListCourses extends JPanel {
 		
 		/*table.setPreferredScrollableViewportSize(new Dimension(1000, 500));
 		table.setFillsViewportHeight(true);*/
+
 		add(new JScrollPane(table), BorderLayout.CENTER);
 		
 		JButton registrate = new JButton(Labels.REGISTRATE);
@@ -148,7 +150,6 @@ public class ListCourses extends JPanel {
 		registrate.addActionListener(e -> {
 			for(int i=0; i<table.getRowCount(); i++) {
 				if(Boolean.valueOf(table.getValueAt(i, 7).toString())) {
-
 					JOptionPane.showMessageDialog(null, table.getValueAt(i, 1).toString());
 				}
 			}
