@@ -80,5 +80,6 @@ public class Labels {
 	public static final String TIME = "Időpont";
 	public static final String SUCCESSFULLY_REGISTRADED_COURSES = "Sikeresen felvett kurusok:\n";
 	public static final String UNSUCCESSFULLY_REGISTRATED_COURSE = " kurzust nem sikerült felvenni.";
+	public static final String NO_COURSES_TO_SHOW = "Nincsenek megjeleníthető kurzusok.";
 
 }

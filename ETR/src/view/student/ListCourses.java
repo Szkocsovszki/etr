@@ -6,6 +6,7 @@ import java.awt.Dimension;
 import java.util.ArrayList;
 
 import javax.swing.JButton;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -122,6 +123,13 @@ public class ListCourses extends JPanel {
 			}
 			
 			courses.removeAll(toDelete);
+			
+			if(courses.isEmpty()) {
+				add(new JLabel(Labels.NO_COURSES_TO_SHOW), BorderLayout.CENTER);
+				repaint();
+				revalidate();
+				return;
+			}
 			
 			int row = 0;
 			for(Course course : courses) {
