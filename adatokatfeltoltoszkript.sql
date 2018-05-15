@@ -1,5 +1,5 @@
 INSERT INTO SZEMELY VALUES ('TEBYAAT.SZE', 'Terhes Balázs', to_date('1997-08-24', 'YYYY-MM-DD'), 'Fruskagora u. 9', 'bla', null, 0);
-INSERT INTO SZEMELY VALUES ('SZZYADT.SZE','Szkocsovszki Zsolt',to_date('01-JAN-00', 'YYYY-MM-DD'),'Szabadka','asd',null,0);
+INSERT INTO SZEMELY VALUES ('SZZYADT.SZE','Szkocsovszki Zsolt',to_date('1997-03-30', 'YYYY-MM-DD'),'Szabadka','asd',null,0);
 INSERT INTO SZEMELY VALUES ('BUDOHUD.SZE', 'Toth Csaba', to_date('1993-07-02', 'YYYY-MM-DD'), 'Sunset Avenue 76', 'discuss', null, 1);
 INSERT INTO SZEMELY VALUES ('CGZNXBU.SZE', 'Csatar Renato', to_date('1993-09-07', 'YYYY-MM-DD'), 'Vine Street 78', 'license', null, 1);  
 INSERT INTO SZEMELY VALUES ('KOCSVGP.SZE', 'Virag aron', to_date('1993-10-28', 'YYYY-MM-DD'), 'Williams Street 81', 'society', null, 1);  
