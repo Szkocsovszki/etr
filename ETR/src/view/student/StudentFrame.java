@@ -31,7 +31,7 @@ public class StudentFrame extends JFrame {
 		this.controller = controller;
 		this.currentAccount = account;
 		
-		setTitle(Labels.ETR + " - "/* + currentAccount.getEha()*/);
+		setTitle(Labels.ETR + " - " + currentAccount.getEha());
 		setSize(
 				(int)Toolkit.getDefaultToolkit().getScreenSize().getWidth() - 752,
 				(int) Toolkit.getDefaultToolkit().getScreenSize().getHeight() - 400
