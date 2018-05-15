@@ -228,15 +228,30 @@ public class ETRDAOImpl implements ETRDAO {
 	}
 
 	@Override
-	public void pickUpACourse(String eha, Course course) throws SQLException {
-		// TODO Auto-generated method stub
-		
+	public void pickUpACourse(String eha, String courseCode) throws SQLException {
+		PreparedStatement pickUp = conn.prepareStatement("INSERT INTO HALLGATJA VALUES (?, ?, 0, Sysdate)");
+		pickUp.setString(1, eha);
+		pickUp.setString(2, courseCode);
+		pickUp.executeQuery();
+		conn.commit();
+		pickUp.close();
 	}
 
 	@Override
 	public void pickUpAnExam(String eha, Exam exam) throws SQLException {
 		// TODO Auto-generated method stub
 		
+	}
+
+	@Override
+	public void giveMarkOnCourse(String eha, String courseCode, int mark) throws SQLException {
+		PreparedStatement giveMark = conn.prepareStatement("UPDATE hallgatja SET osztalyzat = ? WHERE eha = ? AND kurzuskod = ?");
+		giveMark.setInt(1, mark);		
+		giveMark.setString(2, eha);
+		giveMark.setString(3, courseCode);
+		giveMark.executeQuery();
+		conn.commit();
+		giveMark.close();
 	}
 	
 }

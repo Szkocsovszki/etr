@@ -27,8 +27,6 @@ public interface ETRDAO {
 	 */
 	public ArrayList<Course> getCourses() throws SQLException ;
 	
-	public ArrayList<Exam> getExams() throws SQLException;
-	
 	/**
 	 * Get picked up courses.
 	 * @param eha
@@ -37,9 +35,13 @@ public interface ETRDAO {
 	 */
 	public ArrayList<Course> getCourses(String eha) throws SQLException ;
 	
+	public void giveMarkOnCourse(String eha, String courseCode, int mark) throws SQLException;
+	
+	public ArrayList<Exam> getExams() throws SQLException;
+	
 	public ArrayList<Exam> getExams(String eha) throws SQLException;
 	
-	public void pickUpACourse(String eha, Course course) throws SQLException;
+	public void pickUpACourse(String eha, String courseCode) throws SQLException;
 	
 	public void pickUpAnExam(String eha, Exam exam) throws SQLException;
 	

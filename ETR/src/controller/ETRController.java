@@ -52,4 +52,12 @@ public class ETRController {
 		return dao.getCourses(eha);
 	}
 	
+	public void pickUpACourse(String eha, String courseCode) throws SQLException{
+		dao.pickUpACourse(eha, courseCode);
+	};
+	
+	public void giveMarkONCourse(String eha, String courseCode, int mark) throws SQLException{
+		dao.giveMarkOnCourse(eha, courseCode, mark);
+	};
+	
 }
