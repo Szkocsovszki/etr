@@ -7,6 +7,7 @@ import java.awt.Toolkit;
 
 import javax.swing.Box;
 import javax.swing.JButton;
+import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
@@ -67,50 +68,12 @@ public class StudentFrame extends JFrame {
 		JMenuItem listRegistratedExams = new JMenuItem(Labels.LIST_REGISTRATED_EXAMS);
 		JMenuItem examFee = new JMenuItem(Labels.EXAM_FEE);
 		
-		listCourses.setMnemonic('K');
-		listCourses.addActionListener(e -> {
-			workingPanel.removeAll();
-			workingPanel.add(new ListCourses(controller, currentAccount));
-			revalidate();
-			repaint();
-		});
-		
-		listRegistratedCourses.setMnemonic('F');
-		listRegistratedCourses.addActionListener(e -> {
-			workingPanel.removeAll();
-			//workingPanel.add(new ChangePassword(controller, currentAccount));
-			revalidate();
-			repaint();
-		});
-		
-		timetable.setMnemonic('r');
-		timetable.addActionListener(e -> {
-			workingPanel.removeAll();
-			//workingPanel.add(new ChangePassword(controller, currentAccount));
-			revalidate();
-			repaint();
-		});
-		
-		listExams.addActionListener(e -> {
-			workingPanel.removeAll();
-			//workingPanel.add(new ChangePassword(controller, currentAccount));
-			revalidate();
-			repaint();
-		});
-		
-		listRegistratedExams.addActionListener(e -> {
-			workingPanel.removeAll();
-			//workingPanel.add(new ChangePassword(controller, currentAccount));
-			revalidate();
-			repaint();
-		});
-		
-		examFee.addActionListener(e -> {
-			workingPanel.removeAll();
-			//workingPanel.add(new ChangePassword(controller, currentAccount));
-			revalidate();
-			repaint();
-		});
+		actionOfTheMenuItem(listCourses, 'K', new ListCourses(controller, gui, currentAccount));
+		//actionOfTheMenuItem(listRegistratedCourses, 'F', new ListCourses(controller, currentAccount));
+		//actionOfTheMenuItem(timetable, 'r', new ListCourses(controller, currentAccount));
+		//actionOfTheMenuItem(listExams, 'K', new ListCourses(controller, currentAccount));
+		//actionOfTheMenuItem(listRegistratedExams, 'K', new ListCourses(controller, currentAccount));
+		//actionOfTheMenuItem(examFee, 'K', new ListCourses(controller, currentAccount));
 		
 		changePassword.addActionListener(e -> {
 			workingPanel.removeAll();
@@ -147,6 +110,16 @@ public class StudentFrame extends JFrame {
 		menuBar.add(changePassword);
 		menuBar.add(signOut);
 		return menuBar;
+	}
+	
+	public void actionOfTheMenuItem(JMenuItem menuItem, char mnemonic, JComponent content) {
+		menuItem.setMnemonic(mnemonic);
+		menuItem.addActionListener(e -> {
+			workingPanel.removeAll();
+			workingPanel.add(content);
+			revalidate();
+			repaint();
+		});
 	}
 
 }

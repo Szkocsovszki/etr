@@ -2,10 +2,10 @@ package view.student;
 
 import java.awt.BorderLayout;
 import java.awt.Component;
+import java.awt.Dimension;
 import java.util.ArrayList;
 
 import javax.swing.JButton;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -13,27 +13,28 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 
-import javax.swing.table.TableCellRenderer;
-import javax.swing.table.TableColumn;
-
 import controller.ETRController;
 import dao.course.Course;
 import dao.model.Account;
+import view.ETRGUI;
 import view.Labels;
 
 public class ListCourses extends JPanel {
 	private static final long serialVersionUID = 5440133217803163112L;
 	private ETRController controller;
-	//private Account account;
+	private ETRGUI gui;
+	private Account currentAccount;
 	
-	public ListCourses(ETRController controller, Account currentAccount) {
-		this.controller = controller;/*
-		this.account = currentAccount;*/
+	public ListCourses(ETRController controller, ETRGUI gui, Account currentAccount) {
+		this.controller = controller;
+		this.gui = gui;
+		this.currentAccount = currentAccount;
 		
 		createCoursesList();
 	}
 
 	private void createCoursesList() {
+		removeAll();
 		setLayout(new BorderLayout());
 		
 		JTable table = new JTable();
@@ -71,6 +72,15 @@ public class ListCourses extends JPanel {
 						return String.class;
 				}
 			}
+			
+			@Override
+			public boolean isCellEditable(int row, int column) {
+	            if(column == 7) {
+	                return true;
+	            } else {
+	            	return false;
+	            }
+	        }
 		};
 		
 		//table.setCellSelectionEnabled(true);
@@ -91,35 +101,43 @@ public class ListCourses extends JPanel {
 		model.addColumn(Labels.PROFESSOR);
 		model.addColumn(Labels.REGISTRATE);
 		
-		/*for(int i=0; i<100; i++) {
-			model.addRow(new Object[0]);
-			model.setValueAt("k"+(i+1), i, 0);
-			model.setValueAt("Kurzus "+(i+1), i, 1);
-			model.setValueAt((200-i)+"/200", i, 2);
-			model.setValueAt(false, i, 3);
-		}*/
-		
 		try {
 			ArrayList<Course> courses = controller.getCourses();
+			ArrayList<Course> pickedUpCourses = controller.getCourses(currentAccount.getEha());
+			ArrayList<Course> toDelete = new ArrayList<>();
+			
+			for(Course course : courses) {
+				for(Course pickedUpCourse : pickedUpCourses) {
+					if(pickedUpCourse.getCode() != null &&
+					   course.getCode() != null &&
+					   pickedUpCourse.getCode().toString().equals(course.getCode().toString())) {
+						toDelete.add(course);
+					}
+					if(pickedUpCourse.getLecture() != null &&
+					   course.getLecture() != null &&
+					   pickedUpCourse.getLecture().toString().equals(course.getLecture().toString())) {
+						toDelete.add(course);
+					}
+				}
+			}
+			
+			courses.removeAll(toDelete);
+			
 			int row = 0;
 			for(Course course : courses) {
 				model.addRow(new Object[0]);
 				model.setValueAt(course.getCode(), row, 0);
 				model.setValueAt(course.getName(), row, 1);
-				model.setValueAt("0/200", row, 2);
-				model.setValueAt(course.getCredit().toString(), row, 3);
+				model.setValueAt(course.getOnIt() + "/" + course.getCapacity(), row, 2);
+				model.setValueAt(course.getCredit(), row, 3);
 				model.setValueAt(course.getPlace(), row, 4);
 				model.setValueAt(course.getWeekday() + ", " + course.getStart() + " - " + course.getEnd(), row, 5);
-				model.setValueAt("Előadó", row, 6);
+				model.setValueAt(course.getProfessor(), row, 6);
 				model.setValueAt(false, row, 7);
 				row++;
 			}
 		} catch (Exception exception) {
-			JOptionPane.showMessageDialog(
-					  this,
-					  exception.getMessage(),
-					  Labels.ERROR,
-					  JOptionPane.ERROR_MESSAGE);
+			ETRGUI.createMessage(gui, exception.getMessage(), Labels.ERROR);
 		}
 		
 		for(int column = 0; column < table.getColumnCount(); column++) {
@@ -140,25 +158,46 @@ public class ListCourses extends JPanel {
 		    tableColumn.setPreferredWidth(defaultWidth);
 		}
 		
-		/*table.setPreferredScrollableViewportSize(new Dimension(1000, 500));
-		table.setFillsViewportHeight(true);*/
-
+		table.setPreferredScrollableViewportSize(new Dimension(table.getPreferredSize().width, table.getPreferredSize().height));
+		//JAVÍTANI, MERT EZ VÁLTOZÓ, ÉS ÁLLANDÓ KELL!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+		table.setFillsViewportHeight(true);
+		
 		add(new JScrollPane(table), BorderLayout.CENTER);
 		
 		JButton registrate = new JButton(Labels.REGISTRATE);
 		
 		registrate.addActionListener(e -> {
+			String successfullyRegistratedCourses = Labels.SUCCESSFULLY_REGISTRADED_COURSES;
 			for(int i=0; i<table.getRowCount(); i++) {
 				if(Boolean.valueOf(table.getValueAt(i, 7).toString())) {
-					JOptionPane.showMessageDialog(null, table.getValueAt(i, 1).toString());
+					try {
+						//ArrayList<Course> pickedUpCourses = controller.getCourses(currentAccount.getEha());
+						/*for(Course course : controller.getCourses(account.getEha())) {
+							if(course.getLecture().equals(controller.getCourses(table.getValueAt(i, 0)).getLecture())) {
+								throw new Exception();
+							}
+						}*/
+						controller.pickUpACourse(currentAccount.getEha(), table.getValueAt(i, 0).toString());
+						successfullyRegistratedCourses += table.getValueAt(i, 1) + "\n";
+					} catch (Exception exception) {
+						ETRGUI.createMessage(gui, table.getValueAt(i, 1) + Labels.UNSUCCESSFULLY_REGISTRATED_COURSE, Labels.ERROR);
+					}
 				}
 			}
+			
+			if(!successfullyRegistratedCourses.equals(Labels.SUCCESSFULLY_REGISTRADED_COURSES)) { 
+				ETRGUI.createMessage(gui, successfullyRegistratedCourses, Labels.INFORMATION);
+			}
+			
+			createCoursesList();
 		});
 		
 		JPanel buttonPanel = new JPanel();
 		buttonPanel.add(registrate);
 		
 		add(buttonPanel, BorderLayout.SOUTH);
+		repaint();
+		revalidate();
 	}
 
 }

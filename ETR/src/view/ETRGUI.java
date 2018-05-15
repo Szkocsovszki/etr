@@ -92,8 +92,8 @@ public class ETRGUI extends JFrame {
 						  Labels.ERROR,
 						  JOptionPane.ERROR_MESSAGE);
 			} else {
-				new StudentFrame(controller, null);
-				dispose();
+				/*ew StudentFrame(controller, null);
+				dispose();*/
 				try {
 					currentAccount = controller.logIn(userName.getText().toUpperCase(), String.valueOf(password.getPassword()));
 					if(currentAccount == null)
@@ -130,5 +130,24 @@ public class ETRGUI extends JFrame {
 		panel.add(buttonPanel);
 
 		return panel;
+	}
+	
+	public static void createMessage(ETRGUI ancestor, String message, String type) {
+		int messageType;
+		switch(type) {
+			case Labels.ERROR:
+				messageType = JOptionPane.ERROR_MESSAGE;
+				break;
+			case Labels.WARNING:
+				messageType = JOptionPane.WARNING_MESSAGE;
+				break;
+			case Labels.INFORMATION:
+				messageType = JOptionPane.INFORMATION_MESSAGE;
+				break;
+			default:
+				messageType = JOptionPane.ERROR_MESSAGE;
+		}
+		
+		JOptionPane.showMessageDialog(ancestor, message, type, messageType);
 	}
 }

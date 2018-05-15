@@ -78,5 +78,7 @@ public class Labels {
 	public static final String CREDIT = "Kredit";
 	public static final String PLACE = "Hely";
 	public static final String TIME = "Időpont";
+	public static final String SUCCESSFULLY_REGISTRADED_COURSES = "Sikeresen felvett kurusok:\n";
+	public static final String UNSUCCESSFULLY_REGISTRATED_COURSE = " kurzust nem sikerült felvenni.";
 
 }

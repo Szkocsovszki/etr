@@ -64,8 +64,20 @@ public class Course {
 		return place;
 	}
 
+	public String getProfessor() {
+		return professor;
+	}
+
 	public String getLecture() {
 		return lecture;
+	}
+	
+	public Integer getOnIt() {
+		return onIt;
+	}
+
+	public Integer getCapacity() {
+		return capacity;
 	}
 
 }
