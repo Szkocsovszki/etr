@@ -23,7 +23,8 @@ public class ETRDAOImpl implements ETRDAO {
 		super();
 		try {
 			Class.forName("oracle.jdbc.OracleDriver");
-			conn = DriverManager.getConnection("jdbc:oracle:thin:@localhost:4000:kabinet", "h675353", "geniusos123");
+			//conn = DriverManager.getConnection("jdbc:oracle:thin:@localhost:4000:kabinet", "h675353", "geniusos123");
+			conn = DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521:xe", "SYSTEM", "geniusos");
 			conn.setAutoCommit(false);
 
 		} catch (Exception ex) {
@@ -151,9 +152,43 @@ public class ETRDAOImpl implements ETRDAO {
 	public ArrayList<Course> getCourses() throws SQLException {
 		ArrayList<Course> courses = new ArrayList<>();
 		PreparedStatement getCourse = conn.prepareStatement(""
-				+ "SELECT  egy.kurzuskod, egy.nev, egy.het_napja, egy.mettol, egy.meddig, egy.kredit, terem.nev, terem.kapacitas, ketto.kurzuskod "
+				+ "SELECT egy.kurzuskod, egy.nev, egy.het_napja, egy.mettol, egy.meddig, egy.kredit, terem.nev, terem.kapacitas, ketto.kurzuskod "
 				+ "FROM (kurzus egy LEFT JOIN kurzus ketto ON egy.eloadasa = ketto.kurzuskod) INNER JOIN terem ON egy.teremkod = terem.teremkod "
-				+ "ORDER BY egy.nev");
+				+ "ORDER BY egy.kurzuskod");
+		ResultSet course = getCourse.executeQuery();
+		while(course.next()) {
+			String kurzusKod = course.getString(1);
+			PreparedStatement getOnit = conn.prepareStatement("SELECT count(*) FROM hallgatja WHERE kurzuskod = ?");
+			getOnit.setString(1, kurzusKod);
+			ResultSet onIt = getOnit.executeQuery();
+			onIt.next();
+			
+			PreparedStatement getProff = conn.prepareStatement(""
+					+ "SELECT nev "
+					+ "FROM szemely INNER JOIN tanitja ON szemely.eha = tanitja.eha "
+					+ "WHERE tanitja.KURZUSKOD = ?");
+			getProff.setString(1, kurzusKod);
+			ResultSet proff = getProff.executeQuery();
+			proff.next();
+			
+			Course c = new Course(kurzusKod, course.getString(2), course.getString(3), course.getString(4),
+					course.getString(5), course.getInt(6), course.getString(7), onIt.getInt(1), course.getInt(8), course.getString(9), proff.getString(1));
+			courses.add(c);
+		}
+		
+		getCourse.close();
+		return courses;
+	}
+	
+	@Override
+	public ArrayList<Course> getCourses(String eha) throws SQLException {
+		ArrayList<Course> courses = new ArrayList<>();
+		PreparedStatement getCourse = conn.prepareStatement(""
+				+ "SELECT egy.kurzuskod, egy.nev, egy.het_napja, egy.mettol, egy.meddig, egy.kredit, terem.nev, terem.kapacitas, ketto.kurzuskod "
+				+ "FROM ((hallgatja INNER JOIN kurzus egy ON hallgatja.kurzuskod = egy.kurzuskod) LEFT JOIN kurzus ketto ON egy.eloadasa = ketto.kurzuskod) INNER JOIN terem ON egy.teremkod = terem.teremkod "
+				+ "WHERE hallgatja.eha = ? "
+				+ "ORDER BY egy.kurzuskod ");
+		getCourse.setString(1, eha);
 		ResultSet course = getCourse.executeQuery();
 		while(course.next()) {
 			String kurzusKod = course.getString(1);
@@ -185,10 +220,6 @@ public class ETRDAOImpl implements ETRDAO {
 		return null;
 	}
 
-	@Override
-	public ArrayList<Course> getCourses(String eha) throws SQLException {
-		return null;
-	}
 
 	@Override
 	public ArrayList<Exam> getExams(String eha) throws SQLException {
