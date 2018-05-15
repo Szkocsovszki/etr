@@ -171,16 +171,24 @@ public class ListCourses extends JPanel {
 			for(int i=0; i<table.getRowCount(); i++) {
 				if(Boolean.valueOf(table.getValueAt(i, 7).toString())) {
 					try {
-						//ArrayList<Course> pickedUpCourses = controller.getCourses(currentAccount.getEha());
-						/*for(Course course : controller.getCourses(account.getEha())) {
-							if(course.getLecture().equals(controller.getCourses(table.getValueAt(i, 0)).getLecture())) {
-								throw new Exception();
+						ArrayList<Course> courses = controller.getCourses();
+						ArrayList<Course> pickedUpCourses = controller.getCourses(currentAccount.getEha());
+						for(Course course : courses) {
+							if(course.getCode().toString().equals(table.getValueAt(i, 0).toString())) {
+								for(Course pickedUpCourse : pickedUpCourses) {
+									if(pickedUpCourse.getLecture() != null &&
+									   course.getLecture() != null &&
+									   pickedUpCourse.getLecture().toString().equals(course.getLecture().toString())) {
+										throw new Exception();
+									}
+								}
 							}
-						}*/
+						}
 						controller.pickUpACourse(currentAccount.getEha(), table.getValueAt(i, 0).toString());
 						successfullyRegistratedCourses += table.getValueAt(i, 1) + "\n";
 					} catch (Exception exception) {
-						ETRGUI.createMessage(gui, table.getValueAt(i, 1) + Labels.UNSUCCESSFULLY_REGISTRATED_COURSE, Labels.ERROR);
+						ETRGUI.createMessage(gui, table.getValueAt(i, 1) + "(" + table.getValueAt(i, 0) + ")" + 
+											 Labels.UNSUCCESSFULLY_REGISTRATED_COURSE, Labels.ERROR);
 					}
 				}
 			}
