@@ -75,9 +75,12 @@ INSERT INTO TEREM VALUES ('8','Rhodes',10);
 INSERT INTO TEREM VALUES ('9','Campbell',10);
 INSERT INTO TEREM VALUES ('10','Parker',10);
 
-INSERT INTO KURZUS VALUES ('1', 'Adatbázisok', 'Hétfő','15:00','16:30',2,'5',NULL);
-INSERT INTO KURZUS VALUES ('2', 'Adatbázisok gyakorlat', 'Hétfő','17:00','18:30',2,'1','1');
-INSERT INTO KURZUS VALUES ('3', 'Adatbázisok gyakorlat', 'Hétfő','8:00','9:30',2,'1','1');
+INSERT INTO KURZUS VALUES (1, 'Adatbázisok', 'Hétfő','15:00','16:30',3,'5',null);
+INSERT INTO KURZUS VALUES (2, 'Adatbázisok gyakorlat', 'Hétfő','17:00','18:30',2,'1','1');
+INSERT INTO KURZUS VALUES (3, 'Adatbázisok gyakorlat', 'Hétfő','8:00','9:30',2,'1','1');
+INSERT INTO KURZUS VALUES (4, 'Programozás alapjai', 'Hétfő','17:00','18:30',3,'5',null);
+INSERT INTO KURZUS VALUES (5, 'Programozás alapjai gyakorlat', 'Kedd','8:00','9:30',3,'8','4');
+INSERT INTO KURZUS VALUES (6, 'Programozás alapjai gyakorlat', 'Szerda','8:00','9:30',3,'8','4');
 
 INSERT INTO VIZSGA VALUES ('1', 0, to_timestamp('2018-06-01 15:00:00', 'YYYY-MM-DD HH24:MI:SS'), '1');
 INSERT INTO VIZSGA VALUES ('2', 0, to_timestamp('2018-06-02 15:00:00', 'YYYY-MM-DD HH24:MI:SS'), '1');
