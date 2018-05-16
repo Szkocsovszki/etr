@@ -51,5 +51,8 @@ public interface ETRDAO {
 	
 	public void takeOffAnExam(String eha, String examCode) throws SQLException;
 	
+	public void makeACourse(Course course) throws SQLException;
+	
+	public void makeAnExam(Exam exam) throws SQLException;
 	
 }

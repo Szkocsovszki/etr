@@ -238,6 +238,7 @@ public class ETRDAOImpl implements ETRDAO {
 			
 			Exam e = new Exam(examCode, exam.getString(3), time, exam.getString(4), exam.getInt(5), exam.getInt(6), countOnIt, exam.getInt(7));
 			exams.add(e);
+			getOnit.close();
 		}
 		ps.close();
 		return exams;
@@ -275,7 +276,6 @@ public class ETRDAOImpl implements ETRDAO {
 		giveMark.setString(2, eha);
 		giveMark.setString(3, examCode);
 		executeStatement(giveMark);
-		
 	}
 
 	@Override
@@ -284,6 +284,18 @@ public class ETRDAOImpl implements ETRDAO {
 		takeOff.setString(1, eha);
 		takeOff.setString(2, courseCode);
 		executeStatement(takeOff);
+		PreparedStatement takeOffExam = conn.prepareStatement(""
+				+ "SELECT vizsgazik.vizsgakod "
+				+ "FROM vizsgazik INNER JOIN vizsga ON vizsgazik.vizsgakod = vizsga.vizsgakod "
+				+ "WHERE vizsga.kurzuskod = ? AND vizsgazik.eha = ?");
+		takeOffExam.setString(1, courseCode);
+		takeOffExam.setString(2, eha);
+		ResultSet deletableExam = takeOffExam.executeQuery();
+		while(deletableExam.next()) {
+			takeOffAnExam(eha, deletableExam.getString(1));
+		}
+		takeOff.close();
+			
 	}
 
 	@Override
@@ -298,6 +310,18 @@ public class ETRDAOImpl implements ETRDAO {
 		ps.executeUpdate();
 		conn.commit();
 		ps.close();
+	}
+
+	@Override
+	public void makeACourse(Course course) throws SQLException {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void makeAnExam(Exam exam) throws SQLException {
+		// TODO Auto-generated method stub
+		
 	}
 	
 }

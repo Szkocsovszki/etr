@@ -2,7 +2,7 @@ INSERT INTO SZEMELY VALUES ('TEBYAAT.SZE', 'Terhes Balázs', to_date('1997-08-24
 INSERT INTO SZEMELY VALUES ('SZZYADT.SZE','Szkocsovszki Zsolt',to_date('1997-03-30', 'YYYY-MM-DD'),'Szabadka','asd',null,0);
 INSERT INTO SZEMELY VALUES ('BUDOHUD.SZE', 'Toth Csaba', to_date('1993-07-02', 'YYYY-MM-DD'), 'Sunset Avenue 76', 'discuss', null, 1);
 INSERT INTO SZEMELY VALUES ('CGZNXBU.SZE', 'Csatar Renato', to_date('1993-09-07', 'YYYY-MM-DD'), 'Vine Street 78', 'license', null, 1);  
-INSERT INTO SZEMELY VALUES ('KOCSVGP.SZE', 'Virag aron', to_date('1993-10-28', 'YYYY-MM-DD'), 'Williams Street 81', 'society', null, 1);  
+INSERT INTO SZEMELY VALUES ('KOCSVGP.SZE', 'Virag Aron', to_date('1993-10-28', 'YYYY-MM-DD'), 'Williams Street 81', 'society', null, 1);  
 INSERT INTO SZEMELY VALUES ('UYIHISP.SZE', 'Jonas Endre', to_date('1994-05-25', 'YYYY-MM-DD'), 'Mulberry Lane 9', 'variety', null, 2);  
 INSERT INTO SZEMELY VALUES ('CNRSDEJ.SZE', 'Pataki Geza', to_date('1994-06-23', 'YYYY-MM-DD'), 'Fawn Lane 31', 'retiree', null, 2);  
 INSERT INTO SZEMELY VALUES ('QUZUNBX.SZE', 'Balazs Mark', to_date('1994-06-30', 'YYYY-MM-DD'), 'Virginia Street 27', 'glimpse', null, 2);  
