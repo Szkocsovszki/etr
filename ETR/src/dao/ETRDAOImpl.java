@@ -91,7 +91,7 @@ public class ETRDAOImpl implements ETRDAO {
 		st.setString(1, account.getEha());
 		for(String sz : account.getDepartment()) {
 			st.setString(2, sz);
-			st.executeQuery();
+			st.executeUpdate();
 		}
 
 		conn.commit();
@@ -143,9 +143,7 @@ public class ETRDAOImpl implements ETRDAO {
 		updatePass.setString(1, password);
 		updatePass.setString(2, password);
 		updatePass.setString(3, eha);
-		updatePass.executeUpdate();
-		updatePass.close();
-		conn.commit();
+		executeStatement(updatePass);
 	}
 
 	@Override
@@ -173,9 +171,9 @@ public class ETRDAOImpl implements ETRDAO {
 		ArrayList<Course> courses = new ArrayList<>();
 		ResultSet course = ps.executeQuery();
 		while(course.next()) {
-			String kurzusKod = course.getString(1);
+			String courseCode = course.getString(1);
 			PreparedStatement getOnit = conn.prepareStatement("SELECT count(*) FROM hallgatja WHERE kurzuskod = ?");
-			getOnit.setString(1, kurzusKod);
+			getOnit.setString(1, courseCode);
 			ResultSet onIt = getOnit.executeQuery();
 			int countOnIt = 0;
 			while(onIt.next())
@@ -185,13 +183,13 @@ public class ETRDAOImpl implements ETRDAO {
 					+ "SELECT nev "
 					+ "FROM szemely INNER JOIN tanitja ON szemely.eha = tanitja.eha "
 					+ "WHERE tanitja.KURZUSKOD = ?");
-			getProff.setString(1, kurzusKod);
+			getProff.setString(1, courseCode);
 			ResultSet proff = getProff.executeQuery();
 			String profs = "";
 			while(proff.next())
 				profs += proff.getString(1) + " ";
 			
-			Course c = new Course(kurzusKod, course.getString(2), course.getString(3), course.getString(4),
+			Course c = new Course(courseCode, course.getString(2), course.getString(3), course.getString(4),
 					course.getString(5), course.getInt(6), course.getString(7), countOnIt, course.getInt(8), course.getString(9), profs, course.getInt(10));
 			courses.add(c);
 			getOnit.close();
@@ -205,7 +203,7 @@ public class ETRDAOImpl implements ETRDAO {
 	@Override
 	public ArrayList<Exam> getExams() throws SQLException {
 		PreparedStatement getExam = conn.prepareStatement(""
-				+ "SELECT vizsga.idopont, vizsga.vizsgakod, kurzus.nev, terem.nev, vizsga.ar, 0 "
+				+ "SELECT vizsga.idopont, vizsga.vizsgakod, kurzus.nev, terem.nev, vizsga.ar, 0, terem.kapacitas "
 				+ "FROM (vizsga INNER JOIN kurzus ON vizsga.kurzuskod = kurzus.kurzuskod) INNER JOIN terem ON vizsga.teremkod = terem.teremkod "
 				+ "ORDER BY vizsga.vizsgakod");
 		return examGetter(getExam);
@@ -215,7 +213,7 @@ public class ETRDAOImpl implements ETRDAO {
 	@Override
 	public ArrayList<Exam> getExams(String eha) throws SQLException {
 		PreparedStatement getExam = conn.prepareStatement(""
-				+ "SELECT vizsga.idopont, vizsga.vizsgakod, kurzus.nev, terem.nev, vizsga.ar , vizsgazik.vizsgajegy "
+				+ "SELECT vizsga.idopont, vizsga.vizsgakod, kurzus.nev, terem.nev, vizsga.ar , vizsgazik.vizsgajegy, terem.kapacitas "
 				+ "FROM ((vizsgazik INNER JOIN vizsga ON vizsgazik.vizsgakod = vizsga.vizsgakod) INNER JOIN kurzus ON vizsga.kurzuskod = kurzus.kurzuskod) INNER JOIN terem ON vizsga.teremkod = terem.teremkod "
 				+ "WHERE vizsgazik.eha = ?"
 				+ "ORDER BY vizsga.vizsgakod");
@@ -229,7 +227,16 @@ public class ETRDAOImpl implements ETRDAO {
 		while(exam.next()) {
 			String timestamp = exam.getString(1);
 			String time = (timestamp.split("\\."))[0] + ", " + (timestamp.split("\\."))[1] + ":" + (((timestamp.split("\\."))[2].length() == 1) ? "0" : "") + (timestamp.split("\\."))[2];
-			Exam e = new Exam(exam.getString(2), exam.getString(3), time, exam.getString(4), exam.getInt(5), exam.getInt(6));
+
+			String examCode = exam.getString(2);
+			PreparedStatement getOnit = conn.prepareStatement("SELECT count(*) FROM vizsgazik WHERE vizsgakod = ?");
+			getOnit.setString(1, examCode);
+			ResultSet onIt = getOnit.executeQuery();
+			int countOnIt = 0;
+			while(onIt.next())
+				countOnIt = onIt.getInt(1);
+			
+			Exam e = new Exam(examCode, exam.getString(3), time, exam.getString(4), exam.getInt(5), exam.getInt(6), countOnIt, exam.getInt(7));
 			exams.add(e);
 		}
 		ps.close();
@@ -238,18 +245,18 @@ public class ETRDAOImpl implements ETRDAO {
 
 	@Override
 	public void pickUpACourse(String eha, String courseCode) throws SQLException {
-		PreparedStatement pickUp = conn.prepareStatement("INSERT INTO HALLGATJA VALUES (?, ?, 0, Sysdate)");
+		PreparedStatement pickUp = conn.prepareStatement("INSERT INTO hallgatja VALUES (?, ?, 0, Sysdate)");
 		pickUp.setString(1, eha);
 		pickUp.setString(2, courseCode);
-		pickUp.executeQuery();
-		conn.commit();
-		pickUp.close();
+		executeStatement(pickUp);
 	}
 
 	@Override
-	public void pickUpAnExam(String eha, Exam exam) throws SQLException {
-		// TODO Auto-generated method stub
-		
+	public void pickUpAnExam(String eha, String examCode) throws SQLException {
+		PreparedStatement pickUp = conn.prepareStatement("INSERT INTO vizsgazik VALUES (?, ?, 0)");
+		pickUp.setString(1, eha);
+		pickUp.setString(2, examCode);
+		executeStatement(pickUp);
 	}
 
 	@Override
@@ -258,9 +265,39 @@ public class ETRDAOImpl implements ETRDAO {
 		giveMark.setInt(1, mark);		
 		giveMark.setString(2, eha);
 		giveMark.setString(3, courseCode);
-		giveMark.executeQuery();
+		executeStatement(giveMark);
+	}
+	
+	@Override
+	public void giveMarkOnExam(String eha, String examCode, int mark) throws SQLException {
+		PreparedStatement giveMark = conn.prepareStatement("UPDATE vizsgazik SET vizsgajegy = ? WHERE eha = ? AND vizsgakod = ?");
+		giveMark.setInt(1, mark);		
+		giveMark.setString(2, eha);
+		giveMark.setString(3, examCode);
+		executeStatement(giveMark);
+		
+	}
+
+	@Override
+	public void takeOffACourse(String eha, String courseCode) throws SQLException {
+		PreparedStatement takeOff = conn.prepareStatement("DELETE FROM hallgatja WHERE eha = ? AND kurzuskod = ?");
+		takeOff.setString(1, eha);
+		takeOff.setString(2, courseCode);
+		executeStatement(takeOff);
+	}
+
+	@Override
+	public void takeOffAnExam(String eha, String examCode) throws SQLException {
+		PreparedStatement takeOff = conn.prepareStatement("DELETE FROM vizsgazik WHERE eha = ? AND vizsgakod = ?");
+		takeOff.setString(1, eha);
+		takeOff.setString(2, examCode);
+		executeStatement(takeOff);
+	}
+	
+	private void executeStatement(PreparedStatement ps) throws SQLException  {
+		ps.executeUpdate();
 		conn.commit();
-		giveMark.close();
+		ps.close();
 	}
 	
 }

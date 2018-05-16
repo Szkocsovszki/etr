@@ -41,9 +41,15 @@ public interface ETRDAO {
 	
 	public ArrayList<Exam> getExams(String eha) throws SQLException;
 	
+	public void giveMarkOnExam(String eha, String examCode, int mark) throws SQLException;
+	
 	public void pickUpACourse(String eha, String courseCode) throws SQLException;
 	
-	public void pickUpAnExam(String eha, Exam exam) throws SQLException;
+	public void pickUpAnExam(String eha, String examCode) throws SQLException;
+	
+	public void takeOffACourse(String eha, String courseCode) throws SQLException;
+	
+	public void takeOffAnExam(String eha, String examCode) throws SQLException;
 	
 	
 }

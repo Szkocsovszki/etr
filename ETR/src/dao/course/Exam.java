@@ -3,28 +3,33 @@ package dao.course;
 public class Exam {
 	
 	private String code;
-	private String course;
+	private String name;
 	private String time;
 	private String place;
 	private Integer price;
 	private Integer mark;
+	private Integer onIt;
+	private Integer capacity;
 	
-	public Exam(String code, String course, String time, String place, Integer price, Integer mark) {
+	public Exam(String code, String name, String time, String place, Integer price, Integer mark, Integer onIt,
+			Integer capacity) {
 		super();
 		this.code = code;
-		this.course = course;
+		this.name = name;
 		this.time = time;
 		this.place = place;
 		this.price = price;
 		this.mark = mark;
+		this.onIt = onIt;
+		this.capacity = capacity;
 	}
 	
 	public String getCode() {
 		return code;
 	}
 	
-	public String getCourse() {
-		return course;
+	public String getName() {
+		return name;
 	}
 	
 	public String getTime() {
@@ -42,11 +47,19 @@ public class Exam {
 	public Integer getMark() {
 		return mark;
 	}
+	
+	public Integer getOnIt() {
+		return onIt;
+	}
+
+	public Integer getCapacity() {
+		return capacity;
+	}
 
 	@Override
 	public String toString() {
-		return "Exam [code=" + code + ", course=" + course + ", time=" + time + ", place=" + place + ", price=" + price
-				+ ", mark=" + mark + "]\n";
+		return "Exam [code=" + code + ", name=" + name + ", time=" + time + ", place=" + place + ", price=" + price
+				+ ", mark=" + mark + ", onIt=" + onIt + ", capacity=" + capacity + "]\n";
 	}
 	
 }

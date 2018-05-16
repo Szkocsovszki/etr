@@ -118,7 +118,7 @@ BEGIN
 END;
 /
 
-create or replace TRIGGER vizsgajegy
+CREATE OR REPLACE TRIGGER vizsgajegy
 AFTER UPDATE ON vizsgazik
 FOR EACH ROW
 DECLARE
