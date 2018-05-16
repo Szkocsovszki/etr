@@ -117,3 +117,16 @@ BEGIN
     :NEW.kurzuskod := KURZUSAI.NEXTVAL;
 END;
 /
+
+create or replace TRIGGER vizsgajegy
+AFTER UPDATE ON vizsgazik
+FOR EACH ROW
+DECLARE
+    exam VIZSGA.KURZUSKOD%TYPE;
+BEGIN
+    SELECT vizsga.KURZUSKOD INTO exam
+    FROM vizsga 
+    WHERE VIZSGAKOD = :NEW.vizsgakod;
+    UPDATE hallgatja SET osztalyzat = :NEW.vizsgajegy WHERE eha = :NEW.eha AND kurzuskod = exam;
+END;
+/

@@ -150,52 +150,28 @@ public class ETRDAOImpl implements ETRDAO {
 
 	@Override
 	public ArrayList<Course> getCourses() throws SQLException {
-		ArrayList<Course> courses = new ArrayList<>();
 		PreparedStatement getCourse = conn.prepareStatement(""
-				+ "SELECT egy.kurzuskod, egy.nev, egy.het_napja, egy.mettol, egy.meddig, egy.kredit, terem.nev, terem.kapacitas, ketto.kurzuskod "
+				+ "SELECT egy.kurzuskod, egy.nev, egy.het_napja, egy.mettol, egy.meddig, egy.kredit, terem.nev, terem.kapacitas, ketto.kurzuskod, 0 "
 				+ "FROM (kurzus egy LEFT JOIN kurzus ketto ON egy.eloadasa = ketto.kurzuskod) INNER JOIN terem ON egy.teremkod = terem.teremkod "
 				+ "ORDER BY egy.kurzuskod");
-		ResultSet course = getCourse.executeQuery();
-		while(course.next()) {
-			String kurzusKod = course.getString(1);
-			PreparedStatement getOnit = conn.prepareStatement("SELECT count(*) FROM hallgatja WHERE kurzuskod = ?");
-			getOnit.setString(1, kurzusKod);
-			ResultSet onIt = getOnit.executeQuery();
-			int countOnIt = 0;
-			while(onIt.next())
-				countOnIt = onIt.getInt(1);
-			
-			PreparedStatement getProff = conn.prepareStatement(""
-					+ "SELECT nev "
-					+ "FROM szemely INNER JOIN tanitja ON szemely.eha = tanitja.eha "
-					+ "WHERE tanitja.KURZUSKOD = ?");
-			getProff.setString(1, kurzusKod);
-			ResultSet proff = getProff.executeQuery();
-			String profs = "";
-			while(proff.next())
-				profs += proff.getString(1) + " ";
-			
-			Course c = new Course(kurzusKod, course.getString(2), course.getString(3), course.getString(4),
-					course.getString(5), course.getInt(6), course.getString(7), countOnIt, course.getInt(8), course.getString(9), profs);
-			courses.add(c);
-			getOnit.close();
-			getProff.close();
-		}
-		
-		getCourse.close();
-		return courses;
+		return courseGetter(getCourse);
 	}
 	
 	@Override
 	public ArrayList<Course> getCourses(String eha) throws SQLException {
-		ArrayList<Course> courses = new ArrayList<>();
 		PreparedStatement getCourse = conn.prepareStatement(""
-				+ "SELECT egy.kurzuskod, egy.nev, egy.het_napja, egy.mettol, egy.meddig, egy.kredit, terem.nev, terem.kapacitas, ketto.kurzuskod "
+				+ "SELECT egy.kurzuskod, egy.nev, egy.het_napja, egy.mettol, egy.meddig, egy.kredit, terem.nev, terem.kapacitas, ketto.kurzuskod, hallgatja.osztalyzat "
 				+ "FROM ((hallgatja INNER JOIN kurzus egy ON hallgatja.kurzuskod = egy.kurzuskod) LEFT JOIN kurzus ketto ON egy.eloadasa = ketto.kurzuskod) INNER JOIN terem ON egy.teremkod = terem.teremkod "
 				+ "WHERE hallgatja.eha = ? "
 				+ "ORDER BY egy.kurzuskod ");
 		getCourse.setString(1, eha);
-		ResultSet course = getCourse.executeQuery();
+		return courseGetter(getCourse);
+		
+	}
+	
+	private ArrayList<Course> courseGetter(PreparedStatement ps) throws SQLException{
+		ArrayList<Course> courses = new ArrayList<>();
+		ResultSet course = ps.executeQuery();
 		while(course.next()) {
 			String kurzusKod = course.getString(1);
 			PreparedStatement getOnit = conn.prepareStatement("SELECT count(*) FROM hallgatja WHERE kurzuskod = ?");
@@ -216,27 +192,48 @@ public class ETRDAOImpl implements ETRDAO {
 				profs += proff.getString(1) + " ";
 			
 			Course c = new Course(kurzusKod, course.getString(2), course.getString(3), course.getString(4),
-					course.getString(5), course.getInt(6), course.getString(7), countOnIt, course.getInt(8), course.getString(9), profs);
+					course.getString(5), course.getInt(6), course.getString(7), countOnIt, course.getInt(8), course.getString(9), profs, course.getInt(10));
 			courses.add(c);
 			getOnit.close();
 			getProff.close();
 		}
 		
-		getCourse.close();
+		ps.close();
 		return courses;
 	}
 
 	@Override
 	public ArrayList<Exam> getExams() throws SQLException {
-		// TODO Auto-generated method stub
-		return null;
+		PreparedStatement getExam = conn.prepareStatement(""
+				+ "SELECT vizsga.idopont, vizsga.vizsgakod, kurzus.nev, terem.nev, vizsga.ar, 0 "
+				+ "FROM (vizsga INNER JOIN kurzus ON vizsga.kurzuskod = kurzus.kurzuskod) INNER JOIN terem ON vizsga.teremkod = terem.teremkod "
+				+ "ORDER BY vizsga.vizsgakod");
+		return examGetter(getExam);
 	}
 
 
 	@Override
 	public ArrayList<Exam> getExams(String eha) throws SQLException {
-		// TODO Auto-generated method stub
-		return null;
+		PreparedStatement getExam = conn.prepareStatement(""
+				+ "SELECT vizsga.idopont, vizsga.vizsgakod, kurzus.nev, terem.nev, vizsga.ar , vizsgazik.vizsgajegy "
+				+ "FROM ((vizsgazik INNER JOIN vizsga ON vizsgazik.vizsgakod = vizsga.vizsgakod) INNER JOIN kurzus ON vizsga.kurzuskod = kurzus.kurzuskod) INNER JOIN terem ON vizsga.teremkod = terem.teremkod "
+				+ "WHERE vizsgazik.eha = ?"
+				+ "ORDER BY vizsga.vizsgakod");
+		getExam.setString(1, eha);
+		return examGetter(getExam);
+	}
+	
+	private ArrayList<Exam> examGetter(PreparedStatement ps) throws SQLException{
+		ArrayList<Exam> exams = new ArrayList<>();
+		ResultSet exam = ps.executeQuery();
+		while(exam.next()) {
+			String timestamp = exam.getString(1);
+			String time = (timestamp.split("\\."))[0] + ", " + (timestamp.split("\\."))[1] + ":" + (((timestamp.split("\\."))[2].length() == 1) ? "0" : "") + (timestamp.split("\\."))[2];
+			Exam e = new Exam(exam.getString(2), exam.getString(3), time, exam.getString(4), exam.getInt(5), exam.getInt(6));
+			exams.add(e);
+		}
+		ps.close();
+		return exams;
 	}
 
 	@Override

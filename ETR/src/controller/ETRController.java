@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import dao.ETRDAO;
 import dao.ETRDAOImpl;
 import dao.course.Course;
+import dao.course.Exam;
 import dao.model.Account;
 import view.ETRGUI;
 
@@ -56,8 +57,16 @@ public class ETRController {
 		dao.pickUpACourse(eha, courseCode);
 	};
 	
-	public void giveMarkONCourse(String eha, String courseCode, int mark) throws SQLException{
+	public void giveMarkOnCourse(String eha, String courseCode, int mark) throws SQLException{
 		dao.giveMarkOnCourse(eha, courseCode, mark);
+	};
+	
+	public ArrayList<Exam> getExams() throws SQLException{
+		return dao.getExams();
+	};
+	
+	public ArrayList<Exam> getExams(String eha) throws SQLException{
+		return dao.getExams(eha);
 	};
 	
 }

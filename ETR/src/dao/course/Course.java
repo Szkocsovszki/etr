@@ -2,20 +2,21 @@ package dao.course;
 
 public class Course {
 
-	protected String code;
-	protected String name;
-	protected String weekday;
-	protected String start;
-	protected String end;
-	protected Integer credit;
-	protected String place;
-	protected Integer onIt;
-	protected Integer capacity;
-	protected String lecture;
-	protected String professor;
+	private String code;
+	private String name;
+	private String weekday;
+	private String start;
+	private String end;
+	private Integer credit;
+	private String place;
+	private Integer onIt;
+	private Integer capacity;
+	private String lecture;
+	private String professor;
+	private Integer mark;
 
 	public Course(String code, String name, String weekday, String start, String end, Integer credit, String place,
-			Integer onIt, Integer capacity, String lecture, String professor) {
+			Integer onIt, Integer capacity, String lecture, String professor, Integer mark) {
 		this.name = name;
 		this.code = code;
 		this.weekday = weekday;
@@ -27,13 +28,14 @@ public class Course {
 		this.capacity = capacity;
 		this.lecture = lecture;
 		this.professor = professor;
+		this.mark = mark;
 	}
 
 	@Override
 	public String toString() {
 		return "Course [code=" + code + ", name=" + name + ", weekday=" + weekday + ", start=" + start + ", end=" + end
 				+ ", credit=" + credit + ", place=" + place + ", onIt=" + onIt + ", capacity=" + capacity + ", lecture="
-				+ lecture + ", professor=" + professor + "]\n";
+				+ lecture + ", professor=" + professor + ", mark=" + mark + "]\n";
 	}
 
 	public String getName() {
@@ -80,4 +82,9 @@ public class Course {
 		return capacity;
 	}
 
+	public Integer getMark() {
+		return mark;
+	}
+
+	
 }
