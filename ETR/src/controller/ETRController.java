@@ -57,6 +57,10 @@ public class ETRController {
 		dao.pickUpACourse(eha, courseCode);
 	};
 	
+	public void takeOffACourse(String eha, String courseCode) throws SQLException{
+		dao.takeOffACourse(eha, courseCode);
+	};
+	
 	public void giveMarkOnCourse(String eha, String courseCode, int mark) throws SQLException{
 		dao.giveMarkOnCourse(eha, courseCode, mark);
 	};
@@ -67,6 +71,14 @@ public class ETRController {
 	
 	public ArrayList<Exam> getExams(String eha) throws SQLException{
 		return dao.getExams(eha);
+	};
+	
+	public void pickUpAnExam(String eha, String examCode) throws SQLException{
+		dao.pickUpAnExam(eha, examCode);
+	};
+	
+	public void takeOffAnExam(String eha, String examCode) throws SQLException{
+		dao.takeOffAnExam(eha, examCode);
 	};
 	
 }
