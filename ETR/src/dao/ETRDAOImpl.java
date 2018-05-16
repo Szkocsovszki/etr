@@ -161,7 +161,9 @@ public class ETRDAOImpl implements ETRDAO {
 			PreparedStatement getOnit = conn.prepareStatement("SELECT count(*) FROM hallgatja WHERE kurzuskod = ?");
 			getOnit.setString(1, kurzusKod);
 			ResultSet onIt = getOnit.executeQuery();
-			onIt.next();
+			int countOnIt = 0;
+			while(onIt.next())
+				countOnIt = onIt.getInt(1);
 			
 			PreparedStatement getProff = conn.prepareStatement(""
 					+ "SELECT nev "
@@ -169,11 +171,15 @@ public class ETRDAOImpl implements ETRDAO {
 					+ "WHERE tanitja.KURZUSKOD = ?");
 			getProff.setString(1, kurzusKod);
 			ResultSet proff = getProff.executeQuery();
-			proff.next();
+			String profs = "";
+			while(proff.next())
+				profs += proff.getString(1) + " ";
 			
 			Course c = new Course(kurzusKod, course.getString(2), course.getString(3), course.getString(4),
-					course.getString(5), course.getInt(6), course.getString(7), onIt.getInt(1), course.getInt(8), course.getString(9), proff.getString(1));
+					course.getString(5), course.getInt(6), course.getString(7), countOnIt, course.getInt(8), course.getString(9), profs);
 			courses.add(c);
+			getOnit.close();
+			getProff.close();
 		}
 		
 		getCourse.close();
@@ -195,7 +201,9 @@ public class ETRDAOImpl implements ETRDAO {
 			PreparedStatement getOnit = conn.prepareStatement("SELECT count(*) FROM hallgatja WHERE kurzuskod = ?");
 			getOnit.setString(1, kurzusKod);
 			ResultSet onIt = getOnit.executeQuery();
-			onIt.next();
+			int countOnIt = 0;
+			while(onIt.next())
+				countOnIt = onIt.getInt(1);
 			
 			PreparedStatement getProff = conn.prepareStatement(""
 					+ "SELECT nev "
@@ -203,11 +211,15 @@ public class ETRDAOImpl implements ETRDAO {
 					+ "WHERE tanitja.KURZUSKOD = ?");
 			getProff.setString(1, kurzusKod);
 			ResultSet proff = getProff.executeQuery();
-			proff.next();
+			String profs = "";
+			while(proff.next())
+				profs += proff.getString(1) + " ";
 			
 			Course c = new Course(kurzusKod, course.getString(2), course.getString(3), course.getString(4),
-					course.getString(5), course.getInt(6), course.getString(7), onIt.getInt(1), course.getInt(8), course.getString(9), proff.getString(1));
+					course.getString(5), course.getInt(6), course.getString(7), countOnIt, course.getInt(8), course.getString(9), profs);
 			courses.add(c);
+			getOnit.close();
+			getProff.close();
 		}
 		
 		getCourse.close();
