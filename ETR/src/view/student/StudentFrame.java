@@ -7,7 +7,6 @@ import java.awt.Toolkit;
 
 import javax.swing.Box;
 import javax.swing.JButton;
-import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
@@ -68,10 +67,10 @@ public class StudentFrame extends JFrame {
 		JMenuItem listRegistratedExams = new JMenuItem(Labels.LIST_REGISTRATED_EXAMS);
 		JMenuItem examFee = new JMenuItem(Labels.EXAM_FEE);
 		
-		actionOfTheMenuItem(listCourses, 'K', new CreateTable(controller, gui, currentAccount, false));
-		//actionOfTheMenuItem(listRegistratedCourses, 'F', new ListCourses(controller, currentAccount));
+		actionOfTheMenuItem(listCourses, 'K', 0);
+		actionOfTheMenuItem(listRegistratedCourses, 'F', 1);
 		//actionOfTheMenuItem(timetable, 'r', new ListCourses(controller, currentAccount));
-		//actionOfTheMenuItem(listExams, 'K', new ListCourses(controller, currentAccount));
+		actionOfTheMenuItem(listExams, 'V', 3);
 		//actionOfTheMenuItem(listRegistratedExams, 'K', new ListCourses(controller, currentAccount));
 		//actionOfTheMenuItem(examFee, 'K', new ListCourses(controller, currentAccount));
 		
@@ -112,11 +111,11 @@ public class StudentFrame extends JFrame {
 		return menuBar;
 	}
 	
-	public void actionOfTheMenuItem(JMenuItem menuItem, char mnemonic, JComponent content) {
+	public void actionOfTheMenuItem(JMenuItem menuItem, char mnemonic, int action) {
 		menuItem.setMnemonic(mnemonic);
 		menuItem.addActionListener(e -> {
 			workingPanel.removeAll();
-			workingPanel.add(content);
+			workingPanel.add(new CreateTable(controller, gui, currentAccount, action));
 			revalidate();
 			repaint();
 		});

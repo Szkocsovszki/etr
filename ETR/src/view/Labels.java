@@ -81,5 +81,14 @@ public class Labels {
 	public static final String SUCCESSFULLY_REGISTRADED_COURSES = "Sikeresen felvett kurusok:\n";
 	public static final String UNSUCCESSFULLY_REGISTRATED_COURSE = " kurzust nem sikerült felvenni.";
 	public static final String NO_COURSES_TO_SHOW = "Nincsenek megjeleníthető kurzusok.";
+	public static final String MARK = "Jegy";
+	public static final String UNREGISTRATION = "Lejelentkezés";
+	public static final String NOT_AVAILABLE = "Nem elérhető";
+	public static final String EXAM_CODE = "Vizsga kód";
+	public static final String EXAM_NAME = "Vizsga név";
+	public static final String PRICE = "Vizsgadíj";
+	public static final String NO_EXAMS_TO_SHOW = "Nincsenek megjeleníthető vizsgák.";
+	public static final String SUCCESSFULLY_REGISTRADED_EXAMS = "Sikeresen felvett vizsgák:\n";
+	public static final String UNSUCCESSFULLY_REGISTRATED_EXAM = " vizsgát nem sikerült felvenni.";
 
 }
