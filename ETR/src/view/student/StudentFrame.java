@@ -68,7 +68,7 @@ public class StudentFrame extends JFrame {
 		JMenuItem listRegistratedExams = new JMenuItem(Labels.LIST_REGISTRATED_EXAMS);
 		JMenuItem examFee = new JMenuItem(Labels.EXAM_FEE);
 		
-		actionOfTheMenuItem(listCourses, 'K', new ListCourses(controller, gui, currentAccount));
+		actionOfTheMenuItem(listCourses, 'K', new CreateTable(controller, gui, currentAccount, false));
 		//actionOfTheMenuItem(listRegistratedCourses, 'F', new ListCourses(controller, currentAccount));
 		//actionOfTheMenuItem(timetable, 'r', new ListCourses(controller, currentAccount));
 		//actionOfTheMenuItem(listExams, 'K', new ListCourses(controller, currentAccount));

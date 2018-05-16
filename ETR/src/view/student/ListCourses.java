@@ -21,87 +21,18 @@ import dao.model.Account;
 import view.ETRGUI;
 import view.Labels;
 
-public class ListCourses extends JPanel {
-	private static final long serialVersionUID = 5440133217803163112L;
-	private ETRController controller;
-	private ETRGUI gui;
-	private Account currentAccount;
+public class ListCourses {
+	private int deletedRowCount; 
 	
-	public ListCourses(ETRController controller, ETRGUI gui, Account currentAccount) {
-		this.controller = controller;
-		this.gui = gui;
-		this.currentAccount = currentAccount;
-		
-		createCoursesList();
+	public ListCourses(JPanel panel, ETRController controller, ETRGUI gui, Account currentAccount, JTable table, DefaultTableModel model) {
+		deletedRowCount = 0;
+		createRecords(panel, controller, gui, currentAccount, table, model);
 	}
-
-	private void createCoursesList() {
-		removeAll();
-		setLayout(new BorderLayout());
-		
-		JTable table = new JTable();
-		
-		DefaultTableModel model = new DefaultTableModel() {
-			private static final long serialVersionUID = 1402343006560426665L;
-
-			public Class<?> getColumnClass(int column) {
-				switch(column) {
-					//Kurzuskód
-					case 0:
-						return String.class;
-					//Kurzusnév
-					case 1:
-						return String.class;
-					//Kapacitás
-					case 2:
-						return String.class;
-					//Kredit
-					case 3:
-						return Integer.class;
-					//Hely
-					case 4:
-						return Integer.class;
-					//Időpont
-					case 5:
-						return String.class;
-					//Előadó
-					case 6:
-						return String.class;
-					//Jelentkezés
-					case 7:
-						return Boolean.class;
-					default:
-						return String.class;
-				}
-			}
-			
-			@Override
-			public boolean isCellEditable(int row, int column) {
-	            if(column == 7) {
-	                return true;
-	            } else {
-	            	return false;
-	            }
-	        }
-		};
-		
-		//table.setCellSelectionEnabled(true);
-		table.getTableHeader().setReorderingAllowed(false);
-		table.setDefaultEditor(Object.class, null);
-		//table.getTableHeader().setResizingAllowed(false);
-		table.setRowSelectionAllowed(false);
-		table.setAutoCreateRowSorter(true);
-		table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);		
+	
+	private void createRecords(JPanel panel, ETRController controller, ETRGUI gui, Account currentAccount, JTable table,
+			DefaultTableModel model) {
+		panel.removeAll();
 		table.setModel(model);
-		
-		model.addColumn(Labels.COURSE_CODE);
-		model.addColumn(Labels.COURSE_NAME);
-		model.addColumn(Labels.CAPACITY);
-		model.addColumn(Labels.CREDIT);
-		model.addColumn(Labels.PLACE);
-		model.addColumn(Labels.TIME);
-		model.addColumn(Labels.PROFESSOR);
-		model.addColumn(Labels.REGISTRATE);
 		
 		try {
 			ArrayList<Course> courses = controller.getCourses();
@@ -126,9 +57,9 @@ public class ListCourses extends JPanel {
 			courses.removeAll(toDelete);
 			
 			if(courses.isEmpty()) {
-				add(new JLabel(Labels.NO_COURSES_TO_SHOW), BorderLayout.CENTER);
-				repaint();
-				revalidate();
+				panel.add(new JLabel(Labels.NO_COURSES_TO_SHOW), BorderLayout.CENTER);
+				panel.repaint();
+				panel.revalidate();
 				return;
 			}
 			
@@ -169,21 +100,25 @@ public class ListCourses extends JPanel {
 		int width = table.getPreferredSize().width < (Toolkit.getDefaultToolkit().getScreenSize().width - 50) ?
 				(Toolkit.getDefaultToolkit().getScreenSize().width - 50) : table.getPreferredSize().width;
 				
-		/*int height = table.getPreferredSize().height < (Toolkit.getDefaultToolkit().getScreenSize().height - 200) ?
-		(Toolkit.getDefaultToolkit().getScreenSize().height - 200) : table.getPreferredSize().height;*/
-		
 		if(table.getWidth() < width) {
 			table.setPreferredSize(new Dimension(width, table.getPreferredSize().height));
 		}
+		/*int height = table.getPreferredSize().height < (Toolkit.getDefaultToolkit().getScreenSize().height - 200) ?
+		(Toolkit.getDefaultToolkit().getScreenSize().height - 200) : table.getPreferredSize().height;*/
+		
+		int height = table.getPreferredSize().height - deletedRowCount * table.getRowHeight();
+		deletedRowCount = 0;
+		table.setPreferredSize(new Dimension(table.getPreferredSize().width, height));
+				
 		table.setPreferredScrollableViewportSize(new Dimension(width, table.getPreferredSize().height));
 		//JAVÍTANI, MERT EZ VÁLTOZÓ, ÉS ÁLLANDÓ KELL!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 		table.setFillsViewportHeight(true);
 		
-		add(new JScrollPane(table), BorderLayout.CENTER);
+		panel.add(new JScrollPane(table), BorderLayout.CENTER);
 		
-		JButton registrate = new JButton(Labels.REGISTRATE);
+		JButton button = new JButton(Labels.REGISTRATE);
 		
-		registrate.addActionListener(e -> {
+		button.addActionListener(e -> {
 			String successfullyRegistratedCourses = Labels.SUCCESSFULLY_REGISTRADED_COURSES;
 			for(int i=0; i<table.getRowCount(); i++) {
 				if(Boolean.valueOf(table.getValueAt(i, 7).toString())) {
@@ -203,6 +138,22 @@ public class ListCourses extends JPanel {
 						}
 						controller.pickUpACourse(currentAccount.getEha(), table.getValueAt(i, 0).toString());
 						successfullyRegistratedCourses += table.getValueAt(i, 1) + "\n";
+						
+						for(Course course : courses) {
+							if(course.getCode().toString().equals(table.getValueAt(i, 0).toString())) {
+								deletedRowCount++;
+								for(Course course2 : courses) {
+									if(!course.getCode().toString().equals(course2.getCode().toString())) {
+										if(course.getLecture() != null && course2.getLecture() != null) {
+											if(course.getLecture().toString().equals(course2.getLecture().toString())) {
+												deletedRowCount++;
+											}
+										}
+									}
+								}
+								break;
+							}
+						}
 					} catch (Exception exception) {
 						ETRGUI.createMessage(gui, table.getValueAt(i, 1) + "(" + table.getValueAt(i, 0) + ")" + 
 											 Labels.UNSUCCESSFULLY_REGISTRATED_COURSE, Labels.ERROR);
@@ -214,15 +165,18 @@ public class ListCourses extends JPanel {
 				ETRGUI.createMessage(gui, successfullyRegistratedCourses, Labels.INFORMATION);
 			}
 			
-			createCoursesList();
+			DefaultTableModel tableModel = (DefaultTableModel)table.getModel();
+			tableModel.getDataVector().removeAllElements();
+			createRecords(panel, controller, gui, currentAccount, table, model);
 		});
 		
 		JPanel buttonPanel = new JPanel();
-		buttonPanel.add(registrate);
+		buttonPanel.add(button);
 		
-		add(buttonPanel, BorderLayout.SOUTH);
-		repaint();
-		revalidate();
+		panel.add(buttonPanel, BorderLayout.SOUTH);
+		
+		panel.repaint();
+		panel.revalidate();
 	}
 
 }
