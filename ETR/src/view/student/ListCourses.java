@@ -185,7 +185,7 @@ public class ListCourses {
 							}
 						}
 						controller.pickUpACourse(currentAccount.getEha(), table.getValueAt(i, 0).toString());
-						successfullyRegistratedCourses += table.getValueAt(i, 1) + "(" + table.getValueAt(i, 0) + ")" + "\n";
+						successfullyRegistratedCourses += table.getValueAt(i, 1) + "(" + table.getValueAt(i, 0) + ")\n";
 					} catch (Exception exception) {
 						ETRGUI.createMessage(gui, table.getValueAt(i, 1) + "(" + table.getValueAt(i, 0) + ")" + 
 											 Labels.UNSUCCESSFULLY_REGISTRATED_COURSE, Labels.ERROR);

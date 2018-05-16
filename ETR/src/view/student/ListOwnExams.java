@@ -21,60 +21,60 @@ import dao.model.Account;
 import view.ETRGUI;
 import view.Labels;
 
-public class ListExams {
+public class ListOwnExams {
 	
-	public ListExams(JPanel panel, ETRController controller, ETRGUI gui, Account currentAccount, JTable table) {
+	public ListOwnExams(JPanel panel, ETRController controller, ETRGUI gui, Account currentAccount, JTable table) {
 		DefaultTableModel model = new DefaultTableModel() {
 			private static final long serialVersionUID = 1402343006560426665L;
 
 			public Class<?> getColumnClass(int column) {
 				switch(column) {
-					//Vizsgakód
-					case 0:
-						return String.class;
-					//Vizsganév
-					case 1:
-						return String.class;
-					//Kapacitás
-					case 2:
-						return String.class;
-					//Hely
-					case 3:
-						return String.class;
-					//Időpont
-					case 4:
-						return String.class;
-					//Ár
-					case 5:
-						return Integer.class;
-					//Jelentkezés
-					case 6:
-						return Boolean.class;
-					default:
-						return String.class;
-				}
+				//Vizsgakód
+				case 0:
+					return String.class;
+				//Vizsganév
+				case 1:
+					return String.class;
+				//Hely
+				case 2:
+					return String.class;
+				//Időpont
+				case 3:
+					return String.class;
+				//Ár
+				case 4:
+					return Integer.class;
+				//Osztályzat
+				case 5:
+					return String.class;
+				//Lejelentkezés
+				case 6:
+					return Boolean.class;
+				default:
+					return String.class;
 			}
-			
-			@Override
-			public boolean isCellEditable(int row, int column) {
-	            if(column == 6) {
-	            	if(getValueAt(row, 2).toString().split("/")[0].equals(getValueAt(row, 2).toString().split("/")[1])) {
-	            		return false;
-	            	}
-	            	return true;
-	            } else {
-	            	return false;
-	            }
-	        }
+		}
+		
+		@Override
+		public boolean isCellEditable(int row, int column) {
+            if(column == 6) {
+                if(!getValueAt(row, 5).equals(Labels.NOT_AVAILABLE)) {
+                	return false;
+                }
+                return true;
+            } else {
+            	return false;
+            }
+        }
 		};
 		
 		model.addColumn(Labels.EXAM_CODE);
 		model.addColumn(Labels.EXAM_NAME);
-		model.addColumn(Labels.CAPACITY);
 		model.addColumn(Labels.PLACE);
 		model.addColumn(Labels.TIME);
 		model.addColumn(Labels.PRICE);
-		model.addColumn(Labels.REGISTRATE);
+		model.addColumn(Labels.MARK);
+		model.addColumn(Labels.UNREGISTRATION);
 		
 		createRecords(panel, controller, gui, currentAccount, table, model);
 	}
@@ -87,34 +87,27 @@ public class ListExams {
 		int rowCount = 0;
 		
 		try {
-			ArrayList<Exam> exams = controller.getExams();
-			ArrayList<Exam> toDelete = new ArrayList<>();
+			ArrayList<Exam> pickedUpExams = controller.getExams(currentAccount.getEha());
 			
-			for(Exam exam : exams) {
-				for(Exam pickedUpExam : controller.getExams(currentAccount.getEha())) {
-					if(pickedUpExam.getCode().equals(exam.getCode())) {
-						toDelete.add(exam);
-					}
-				}
-			}
-			
-			exams.removeAll(toDelete);
-			
-			if(exams.isEmpty()) {
+			if(pickedUpExams.isEmpty()) {
 				panel.add(new JLabel(Labels.NO_EXAMS_TO_SHOW), BorderLayout.CENTER);
 				panel.repaint();
 				panel.revalidate();
 				return;
 			}
 			
-			for(Exam exam : exams) {
+			for(Exam exam : pickedUpExams) {
 				model.addRow(new Object[0]);
 				model.setValueAt(exam.getCode(), rowCount, 0);
 				model.setValueAt(exam.getName(), rowCount, 1);
-				model.setValueAt(exam.getOnIt() + "/" + exam.getCapacity(), rowCount, 2);
-				model.setValueAt(exam.getPlace(), rowCount, 3);
-				model.setValueAt(exam.getTime(), rowCount, 4);
-				model.setValueAt(exam.getPrice(), rowCount, 5);
+				model.setValueAt(exam.getPlace(), rowCount, 2);
+				model.setValueAt(exam.getTime(), rowCount, 3);
+				model.setValueAt(exam.getPrice(), rowCount, 4);
+				if(exam.getMark() == 0) {
+					model.setValueAt(Labels.NOT_AVAILABLE, rowCount, 5);
+				} else {
+					model.setValueAt(exam.getMark(), rowCount, 5);
+				}
 				model.setValueAt(false, rowCount, 6);
 				rowCount++;
 			}
@@ -153,28 +146,15 @@ public class ListExams {
 		
 		panel.add(new JScrollPane(table), BorderLayout.CENTER);
 		
-		JButton button = new JButton(Labels.REGISTRATE);
+		JButton button = new JButton(Labels.UNREGISTRATION);
 		
 		button.addActionListener(e -> {
-			String successfullyRegistratedExams = Labels.SUCCESSFULLY_REGISTRADED_EXAMS;
+			String successfullyTakenOffExams = Labels.SUCCESSFULLY_TAKEN_OFF_EXAMS;
 			for(int i=0; i<table.getRowCount(); i++) {
 				if(Boolean.valueOf(table.getValueAt(i, 6).toString())) {
 					try {
-						for(Exam exam : controller.getExams()) {
-							if(exam.getCode().equals(table.getValueAt(i, 0).toString())) {
-								for(Exam pickedUpExam : controller.getExams(currentAccount.getEha())) {
-									if(pickedUpExam.getName() != null &&
-									   exam.getName() != null &&
-									   pickedUpExam.getName().equals(exam.getName()) &&
-									   pickedUpExam.getMark() == 0) {
-										throw new Exception();
-									}
-								}
-							}
-						}
-						
-						controller.pickUpAnExam(currentAccount.getEha(), table.getValueAt(i, 0).toString());
-						successfullyRegistratedExams += table.getValueAt(i, 1) + "(" + table.getValueAt(i, 0) + ")\n";
+						controller.takeOffAnExam(currentAccount.getEha(), table.getValueAt(i, 0).toString());
+						successfullyTakenOffExams += table.getValueAt(i, 1) + "(" + table.getValueAt(i, 0) + ")\n";
 					} catch (Exception exception) {
 						ETRGUI.createMessage(gui, table.getValueAt(i, 1) + "(" + table.getValueAt(i, 0) + ")" + 
 											 Labels.UNSUCCESSFULLY_REGISTRATED_EXAM, Labels.ERROR);
@@ -182,8 +162,8 @@ public class ListExams {
 				}
 			}
 			
-			if(!successfullyRegistratedExams.equals(Labels.SUCCESSFULLY_REGISTRADED_EXAMS)) {
-				ETRGUI.createMessage(gui, successfullyRegistratedExams, Labels.INFORMATION);
+			if(!successfullyTakenOffExams.equals(Labels.SUCCESSFULLY_TAKEN_OFF_EXAMS)) { 
+				ETRGUI.createMessage(gui, successfullyTakenOffExams, Labels.INFORMATION);
 			}
 			
 			DefaultTableModel tableModel = (DefaultTableModel)table.getModel();

@@ -90,5 +90,8 @@ public class Labels {
 	public static final String NO_EXAMS_TO_SHOW = "Nincsenek megjeleníthető vizsgák.";
 	public static final String SUCCESSFULLY_REGISTRADED_EXAMS = "Sikeresen felvett vizsgák:\n";
 	public static final String UNSUCCESSFULLY_REGISTRATED_EXAM = " vizsgát nem sikerült felvenni.";
+	public static final String SUCCESSFULLY_TAKEN_OFF_COURSES = "Sikeresen leadott kurzusok:\n";
+	public static final String UNSUCCESSFULLY_TAKEN_OFF_COURSE = " kurzust nem sikerült leadni.";
+	public static final String SUCCESSFULLY_TAKEN_OFF_EXAMS = "Sikeresen leadott vizsgák:\n";
 
 }

@@ -54,7 +54,10 @@ public class ListOwnCourses {
 		
 		@Override
 		public boolean isCellEditable(int row, int column) {
-            if(column == 5) {
+			if(column == 5) {
+                if(!getValueAt(row, 4).equals(Labels.NOT_AVAILABLE)) {
+                	return false;
+                }
                 return true;
             } else {
             	return false;
@@ -141,32 +144,21 @@ public class ListOwnCourses {
 		JButton button = new JButton(Labels.UNREGISTRATION);
 		
 		button.addActionListener(e -> {
-			String successfullyRegistratedCourses = Labels.SUCCESSFULLY_REGISTRADED_COURSES;
+			String successfullyTakenOffCourses = Labels.SUCCESSFULLY_TAKEN_OFF_COURSES;
 			for(int i=0; i<table.getRowCount(); i++) {
-				if(Boolean.valueOf(table.getValueAt(i, 7).toString())) {
+				if(Boolean.valueOf(table.getValueAt(i, 5).toString())) {
 					try {
-						for(Course course : controller.getCourses()) {
-							if(course.getCode().toString().equals(table.getValueAt(i, 0).toString())) {
-								for(Course pickedUpCourse : controller.getCourses(currentAccount.getEha())) {
-									if(pickedUpCourse.getLecture() != null &&
-									   course.getLecture() != null &&
-									   pickedUpCourse.getLecture().toString().equals(course.getLecture().toString())) {
-										throw new Exception();
-									}
-								}
-							}
-						}
-						controller.pickUpACourse(currentAccount.getEha(), table.getValueAt(i, 0).toString());
-						successfullyRegistratedCourses += table.getValueAt(i, 1) + "\n";
+						controller.takeOffACourse(currentAccount.getEha(), table.getValueAt(i, 0).toString());
+						successfullyTakenOffCourses += table.getValueAt(i, 1) + "(" + table.getValueAt(i, 0) + ")\n";
 					} catch (Exception exception) {
 						ETRGUI.createMessage(gui, table.getValueAt(i, 1) + "(" + table.getValueAt(i, 0) + ")" + 
-											 Labels.UNSUCCESSFULLY_REGISTRATED_COURSE, Labels.ERROR);
+											 Labels.UNSUCCESSFULLY_TAKEN_OFF_COURSE, Labels.ERROR);
 					}
 				}
 			}
 			
-			if(!successfullyRegistratedCourses.equals(Labels.SUCCESSFULLY_REGISTRADED_COURSES)) { 
-				ETRGUI.createMessage(gui, successfullyRegistratedCourses, Labels.INFORMATION);
+			if(!successfullyTakenOffCourses.equals(Labels.SUCCESSFULLY_TAKEN_OFF_COURSES)) { 
+				ETRGUI.createMessage(gui, successfullyTakenOffCourses, Labels.INFORMATION);
 			}
 			
 			DefaultTableModel tableModel = (DefaultTableModel)table.getModel();

@@ -71,7 +71,7 @@ public class StudentFrame extends JFrame {
 		actionOfTheMenuItem(listRegistratedCourses, 'F', 1);
 		//actionOfTheMenuItem(timetable, 'r', new ListCourses(controller, currentAccount));
 		actionOfTheMenuItem(listExams, 'V', 3);
-		//actionOfTheMenuItem(listRegistratedExams, 'K', new ListCourses(controller, currentAccount));
+		actionOfTheMenuItem(listRegistratedExams, 'F', 4);
 		//actionOfTheMenuItem(examFee, 'K', new ListCourses(controller, currentAccount));
 		
 		changePassword.addActionListener(e -> {
