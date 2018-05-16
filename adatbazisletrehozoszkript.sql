@@ -118,12 +118,28 @@ BEGIN
 END;
 /
 
-CREATE OR REPLACE TRIGGER vizsgajegy
-AFTER UPDATE ON vizsgazik
+CREATE OR REPLACE TRIGGER VIZSGAJEGY
+BEFORE UPDATE ON vizsgazik
 FOR EACH ROW
 DECLARE
     exam VIZSGA.KURZUSKOD%TYPE;
+    lecture KURZUS.KURZUSKOD%TYPE;
+    mark HALLGATJA.OSZTALYZAT%TYPE;
 BEGIN
+    SELECT kurzus.KURZUSKOD INTO lecture
+    FROM kurzus INNER JOIN vizsga ON KURZUS.KURZUSKOD = VIZSGA.KURZUSKOD
+    WHERE VIZSGAKOD = :NEW.vizsgakod;
+
+    IF NOT(lecture is NULL)
+    THEN
+        SELECT HALLGATJA.OSZTALYZAT INTO mark
+        FROM hallgatja INNER JOIN kurzus ON HALLGATJA.KURZUSKOD = kurzus.KURZUSKOD
+        WHERE kurzus.ELOADASA = lecture;
+        IF MARK < 2
+        THEN
+            RAISE_APPLICATION_ERROR(-20001, 'Nem adhato jegy a vizsgara, meg nincs atmeno jegy a gyakorlatra.');
+        END IF;
+    END IF;
     SELECT vizsga.KURZUSKOD INTO exam
     FROM vizsga 
     WHERE VIZSGAKOD = :NEW.vizsgakod;
