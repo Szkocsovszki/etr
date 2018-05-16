@@ -3,6 +3,7 @@ package view.student;
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.Toolkit;
 import java.util.ArrayList;
 
 import javax.swing.JButton;
@@ -159,14 +160,22 @@ public class ListCourses extends JPanel {
 		        
 		        if(width >= defaultWidth) {
 		            defaultWidth = width;
-		            break;
 		        }
 		    }
 		 
 		    tableColumn.setPreferredWidth(defaultWidth);
 		}
 		
-		table.setPreferredScrollableViewportSize(new Dimension(table.getPreferredSize().width, table.getPreferredSize().height));
+		int width = table.getPreferredSize().width < (Toolkit.getDefaultToolkit().getScreenSize().width - 50) ?
+				(Toolkit.getDefaultToolkit().getScreenSize().width - 50) : table.getPreferredSize().width;
+				
+		/*int height = table.getPreferredSize().height < (Toolkit.getDefaultToolkit().getScreenSize().height - 200) ?
+		(Toolkit.getDefaultToolkit().getScreenSize().height - 200) : table.getPreferredSize().height;*/
+		
+		if(table.getWidth() < width) {
+			table.setPreferredSize(new Dimension(width, table.getPreferredSize().height));
+		}
+		table.setPreferredScrollableViewportSize(new Dimension(width, table.getPreferredSize().height));
 		//JAVÍTANI, MERT EZ VÁLTOZÓ, ÉS ÁLLANDÓ KELL!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 		table.setFillsViewportHeight(true);
 		
