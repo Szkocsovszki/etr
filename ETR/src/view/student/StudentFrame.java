@@ -69,7 +69,7 @@ public class StudentFrame extends JFrame {
 		
 		actionOfTheMenuItem(listCourses, 'K', 0);
 		actionOfTheMenuItem(listRegistratedCourses, 'F', 1);
-		//actionOfTheMenuItem(timetable, 'r', new ListCourses(controller, currentAccount));
+		actionOfTheMenuItem(timetable, 'r', 2);
 		actionOfTheMenuItem(listExams, 'V', 3);
 		actionOfTheMenuItem(listRegistratedExams, 'F', 4);
 		//actionOfTheMenuItem(examFee, 'K', new ListCourses(controller, currentAccount));

@@ -93,5 +93,11 @@ public class Labels {
 	public static final String SUCCESSFULLY_TAKEN_OFF_COURSES = "Sikeresen leadott kurzusok:\n";
 	public static final String UNSUCCESSFULLY_TAKEN_OFF_COURSE = " kurzust nem sikerült leadni.";
 	public static final String SUCCESSFULLY_TAKEN_OFF_EXAMS = "Sikeresen leadott vizsgák:\n";
+	public static final String MONDAY = "Hétfő";
+	public static final String TUESDAY = "Kedd";
+	public static final String WEDNESDAY = "Szerda";
+	public static final String THURSDAY = "Csütörtök";
+	public static final String FRIDAY = "Péntek";
+	public static final String DAY_OF_THE_WEEK = "Hét napja";
 
 }

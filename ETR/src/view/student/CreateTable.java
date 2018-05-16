@@ -46,6 +46,9 @@ public class CreateTable extends JPanel {
 			case 1:
 				new ListOwnCourses(this, controller, gui, currentAccount, table);
 				break;
+			case 2:
+				new Timetable(this, controller, gui, currentAccount, table);
+				break;
 			case 3:
 				new ListExams(this, controller, gui, currentAccount, table);
 				break;
