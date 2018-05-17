@@ -81,4 +81,8 @@ public class ETRController {
 		dao.takeOffAnExam(eha, examCode);
 	};
 	
+	public void payment(String eha, String examCode) throws SQLException{
+		dao.payment(eha, examCode);
+	};
+	
 }

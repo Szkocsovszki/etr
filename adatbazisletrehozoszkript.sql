@@ -66,7 +66,7 @@ CREATE TABLE TANITJA(
 CREATE TABLE HALLGATJA(
     EHA VARCHAR2(11),
     Kurzuskod VARCHAR2(20),
-    Osztalyzat NUMBER(1),
+    Osztalyzat NUMBER(1) NOT NULL,
     Felvetel_idopontja DATE NOT NULL,
     PRIMARY KEY (EHA, Kurzuskod),
     FOREIGN KEY (EHA) REFERENCES SZEMELY(EHA) ON DELETE CASCADE,
@@ -86,7 +86,8 @@ CREATE TABLE FORUM(
 CREATE TABLE VIZSGAZIK(
     EHA VARCHAR2(11),
     Vizsgakod VARCHAR2(20),
-    Vizsgajegy NUMBER(1),
+    Vizsgajegy NUMBER(1) NOT NULL,
+    Tartozas NUMBER(5) NOT NULL,
     PRIMARY KEY (EHA, Vizsgakod),
     FOREIGN KEY (EHA) REFERENCES SZEMELY(EHA) ON DELETE CASCADE,
     FOREIGN KEY (Vizsgakod) REFERENCES VIZSGA(Vizsgakod) ON DELETE CASCADE
@@ -137,12 +138,25 @@ BEGIN
         WHERE kurzus.ELOADASA = lecture;
         IF MARK < 2
         THEN
-            RAISE_APPLICATION_ERROR(-20001, 'Nem adhato jegy a vizsgara, meg nincs atmeno jegy a gyakorlatra.');
+            RAISE_APPLICATION_ERROR(-20001, 'Nem adható jegy a vizsgára, mert nincs átmenő jegy a gyakorlatra.');
         END IF;
     END IF;
     SELECT vizsga.KURZUSKOD INTO exam
     FROM vizsga 
     WHERE VIZSGAKOD = :NEW.vizsgakod;
     UPDATE hallgatja SET osztalyzat = :NEW.vizsgajegy WHERE eha = :NEW.eha AND kurzuskod = exam;
+END;
+/
+
+CREATE OR REPLACE TRIGGER VIZSGAPENZ
+BEFORE INSERT ON vizsgazik
+FOR EACH ROW
+DECLARE
+    money VIZSGA.AR%TYPE;
+BEGIN
+    SELECT VIZSGA.AR INTO money
+    FROM vizsga 
+    WHERE VIZSGAKOD = :NEW.vizsgakod;
+    :NEW.tartozas := money;
 END;
 /

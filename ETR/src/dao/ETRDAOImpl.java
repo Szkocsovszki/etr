@@ -213,7 +213,7 @@ public class ETRDAOImpl implements ETRDAO {
 	@Override
 	public ArrayList<Exam> getExams(String eha) throws SQLException {
 		PreparedStatement getExam = conn.prepareStatement(""
-				+ "SELECT vizsga.idopont, vizsga.vizsgakod, kurzus.nev, terem.nev, vizsga.ar , vizsgazik.vizsgajegy, terem.kapacitas "
+				+ "SELECT vizsga.idopont, vizsga.vizsgakod, kurzus.nev, terem.nev, vizsgazik.tartozas , vizsgazik.vizsgajegy, terem.kapacitas "
 				+ "FROM ((vizsgazik INNER JOIN vizsga ON vizsgazik.vizsgakod = vizsga.vizsgakod) INNER JOIN kurzus ON vizsga.kurzuskod = kurzus.kurzuskod) INNER JOIN terem ON vizsga.teremkod = terem.teremkod "
 				+ "WHERE vizsgazik.eha = ?"
 				+ "ORDER BY vizsga.vizsgakod");
@@ -322,6 +322,14 @@ public class ETRDAOImpl implements ETRDAO {
 	public void makeAnExam(Exam exam) throws SQLException {
 		// TODO Auto-generated method stub
 		
+	}
+
+	@Override
+	public void payment(String eha, String examCode) throws SQLException {
+		PreparedStatement pay = conn.prepareStatement("UPDATE vizsgazik SET tartozas = 0 WHERE eha = ? AND vizsgakod = ?");
+		pay.setString(1, eha);
+		pay.setString(2, examCode);
+		executeStatement(pay);
 	}
 	
 }
