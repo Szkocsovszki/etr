@@ -170,9 +170,12 @@ public class Forum implements TableModelListener {
 			int rowCount = 0; 
 			for(ForumMessage message : messages) {
 				messageModel.addRow(new Object[0]);
-				messageModel.setValueAt(message.getMessage(), rowCount, 0);
+				messageModel.setValueAt(message.getName() + ", " + message.getTime() +": " + message.getMessage(), rowCount, 0);
 				rowCount++;
-			}
+				
+			}table.setPreferredSize(new Dimension(table.getPreferredSize().width, rowCount * table.getRowHeight()));
+			table.setPreferredScrollableViewportSize(new Dimension(table.getPreferredSize().width, table.getPreferredSize().height));
+			table.setFillsViewportHeight(true);
 			table.setModel(messageModel);
 			table.getModel().addTableModelListener(null);
 			panel.add(new JScrollPane(table));
@@ -196,6 +199,7 @@ public class Forum implements TableModelListener {
 		submitButton.addActionListener(e -> {
 			try {
 				controller.writeMessage(currentAccount.getEha(), courseName.split("\\(")[1].split("\\)")[0], commentTextField.getText());
+				showCourseForum(courseName);
 			} catch (SQLException e1) {
 				ETRGUI.createMessage(gui, e1.getMessage(), Labels.ERROR);
 			}

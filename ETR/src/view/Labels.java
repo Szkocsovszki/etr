@@ -109,5 +109,6 @@ public class Labels {
 	public static final String BACK = "Vissza";
 	public static final String SUBMIT = "Megosztás";
 	public static final String AVERAGE = "Átlag";
+	public static final String WRITE_MARK = "Osztályzat beírása";
 
 }

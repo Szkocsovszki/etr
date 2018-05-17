@@ -3,13 +3,16 @@ package view.professor;
 import java.awt.BorderLayout;
 import java.awt.ComponentOrientation;
 import java.awt.GridBagLayout;
+import java.awt.GridLayout;
 import java.awt.Toolkit;
 
 import javax.swing.Box;
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JMenuBar;
 import javax.swing.JPanel;
+import javax.swing.JTextField;
 
 import controller.ETRController;
 import dao.model.Account;
@@ -46,8 +49,41 @@ public class ProfessorFrame extends JFrame {
 
 	private JMenuBar createMenuBar() {
 		JMenuBar menuBar = new JMenuBar();
+		JButton writeMark = new JButton(Labels.WRITE_MARK);
 		JButton changePassword = new JButton(Labels.CHANGE_PASSWORD);
 		JButton signOut = new JButton(Labels.SIGN_OUT);
+		
+		writeMark.addActionListener(e -> {
+			workingPanel.removeAll();
+			
+			JPanel panel = new JPanel();
+			panel.setLayout(new GridLayout(4, 2));
+			
+			JLabel ehaLabel = new JLabel("Hallgató EHA: ");
+			JLabel courseLabel = new JLabel("Kurzuskód: ");
+			JLabel markLabel = new JLabel("Osztályzat: ");
+			JTextField ehaTexBox = new JTextField();
+			JTextField courseTexBox = new JTextField();
+			JTextField markTexBox = new JTextField();
+			JButton button = new JButton("Felvitel");
+			
+			panel.add(ehaLabel);
+			panel.add(ehaTexBox);
+			panel.add(courseLabel);
+			panel.add(courseTexBox);
+			panel.add(markLabel);
+			panel.add(markTexBox);
+			panel.add(button);
+			
+			/*button.addActionListener(e -> {
+				
+			});*/
+			
+			workingPanel.add(panel);
+			
+			revalidate();
+			repaint();
+		});
 		
 		changePassword.addActionListener(e -> {
 			workingPanel.removeAll();
@@ -61,7 +97,8 @@ public class ProfessorFrame extends JFrame {
 			gui = new ETRGUI(controller);
 			gui.startGUI();
 		});
-
+		
+		menuBar.add(writeMark);
 		signOut.setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
 		menuBar.add(Box.createHorizontalGlue());
 		menuBar.add(changePassword);
