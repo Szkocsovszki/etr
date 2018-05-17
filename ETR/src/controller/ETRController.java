@@ -86,8 +86,8 @@ public class ETRController {
 		dao.payment(eha, examCode);
 	};
 	
-	public void makeACourse(Course course) throws SQLException{
-		dao.makeACourse(course);
+	public void makeACourse(String eha, Course course) throws SQLException{
+		dao.makeACourse(eha, course);
 	};
 	
 	public void makeAnExam(Exam exam) throws SQLException{
@@ -104,6 +104,10 @@ public class ETRController {
 	
 	public Double getAvg(String eha) throws SQLException{
 		return dao.getAvg(eha);
+	}
+	
+	public Double getSulyAvg(String eha) throws SQLException{
+		return dao.getSulyAvg(eha);
 	}
 	
 }

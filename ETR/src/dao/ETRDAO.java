@@ -52,7 +52,7 @@ public interface ETRDAO {
 	
 	public void takeOffAnExam(String eha, String examCode) throws SQLException;
 	
-	public void makeACourse(Course course) throws SQLException;
+	public void makeACourse(String eha, Course course) throws SQLException;
 	
 	public void makeAnExam(Exam exam) throws SQLException;
 	
@@ -63,5 +63,6 @@ public interface ETRDAO {
 	public void writeMessage(String eha, String courseCode, String message) throws SQLException;
 	
 	public Double getAvg(String eha) throws SQLException;
-	
+
+	public Double getSulyAvg(String eha) throws SQLException;
 }

@@ -314,7 +314,7 @@ public class ETRDAOImpl implements ETRDAO {
 	}
 
 	@Override
-	public void makeACourse(Course course) throws SQLException {
+	public void makeACourse(String eha, Course course) throws SQLException {
 		PreparedStatement makeC = conn.prepareStatement("INSERT INTO KURZUS VALUES (?, ?, ?,?,?,?,?,null)");
 		makeC.setString(1, course.getCode());
 		makeC.setString(2, course.getName());
@@ -325,6 +325,10 @@ public class ETRDAOImpl implements ETRDAO {
 		makeC.setString(7, course.getPlace());
 		makeC.setString(8, course.getLecture());
 		executeStatement(makeC);
+		PreparedStatement oktat = conn.prepareStatement("INSERT INTO oktatja VALUES (?, ?)");
+		oktat.setString(1, eha);
+		oktat.setString(2, course.getCode());
+		executeStatement(oktat);
 	}
 	
 	@Override
@@ -367,7 +371,6 @@ public class ETRDAOImpl implements ETRDAO {
 	
 	public Double getAvg(String eha) throws SQLException{
 		Double avarage = 0.0;
-		Integer c = 0;
 		PreparedStatement getAVG = conn.prepareStatement(""
 				+ "SELECT AVG(osztalyzat) "
 				+ "FROM hallgatja "
@@ -376,21 +379,39 @@ public class ETRDAOImpl implements ETRDAO {
 		ResultSet avg = getAVG.executeQuery();
 		while(avg.next()) {
 			avarage = avg.getDouble(1);
+		}
+		getAVG.close();
+		return avarage;
+			
+	}
+	
+	
+	public Double getSulyAvg(String eha) throws SQLException{
+		Double avarage = 0.0;
+		Integer c = 0;
+		PreparedStatement getSulySUM = conn.prepareStatement(""
+				+ "SELECT SUM(osztalyzat * kredit) "
+				+ "FROM hallgatja INNER JOIN kurzus ON hallgatja.kurzuskod = kurzus.kurzuskod"
+				+ "WHERE eha = ?");
+		getSulySUM.setString(1, eha);
+		ResultSet sulyAvg = getSulySUM.executeQuery();
+		while(sulyAvg.next()) {
+			avarage = sulyAvg.getDouble(1);
 			PreparedStatement getCount = conn.prepareStatement(""
 					+ "SELECT COUNT(*) "
 					+ "FROM hallgatja "
 					+ "WHERE eha = ?");
 			getCount.setString(1, eha);
-			ResultSet count = getAVG.executeQuery();
+			ResultSet count = getCount.executeQuery();
 			while(count.next()) {
 				c = count.getInt(1);
 			}
+			getCount.close();
 				
 		}
 		avarage = avarage / c;
-		getAVG.close();
+		getSulySUM.close();
 		return avarage;
-			
 	}
 	
 }
