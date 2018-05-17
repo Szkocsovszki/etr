@@ -391,7 +391,7 @@ public class ETRDAOImpl implements ETRDAO {
 		Integer c = 0;
 		PreparedStatement getSulySUM = conn.prepareStatement(""
 				+ "SELECT SUM(osztalyzat * kredit) "
-				+ "FROM hallgatja INNER JOIN kurzus ON hallgatja.kurzuskod = kurzus.kurzuskod"
+				+ "FROM hallgatja INNER JOIN kurzus ON hallgatja.kurzuskod = kurzus.kurzuskod "
 				+ "WHERE eha = ?");
 		getSulySUM.setString(1, eha);
 		ResultSet sulyAvg = getSulySUM.executeQuery();
@@ -413,5 +413,7 @@ public class ETRDAOImpl implements ETRDAO {
 		getSulySUM.close();
 		return avarage;
 	}
+	
+	
 	
 }
