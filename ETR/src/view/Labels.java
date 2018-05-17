@@ -107,5 +107,7 @@ public class Labels {
 	public static final String NO_FORUM_TO_SHOW = "Nincs megjeleníthető fórum.";
 	public static final String OPEN = "Megnyitás";
 	public static final String BACK = "Vissza";
+	public static final String SUBMIT = "Megosztás";
+	public static final String AVERAGE = "Átlag";
 
 }

@@ -3,11 +3,13 @@ package view.student;
 import java.awt.BorderLayout;
 import java.awt.ComponentOrientation;
 import java.awt.GridBagLayout;
+import java.awt.GridLayout;
 import java.awt.Toolkit;
 
 import javax.swing.Box;
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
@@ -56,8 +58,9 @@ public class StudentFrame extends JFrame {
 		JButton changePassword = new JButton(Labels.CHANGE_PASSWORD);
 		JButton signOut = new JButton(Labels.SIGN_OUT);
 		
-		JMenuItem gradePointAverage = new JMenuItem(Labels.GRADE_POINT_AVERAGE);
-		JMenuItem weightedAverage = new JMenuItem(Labels.WEIGHTED_AVERAGE);
+		JMenuItem average = new JMenuItem(Labels.AVERAGE);
+		/*JMenuItem gradePointAverage = new JMenuItem(Labels.GRADE_POINT_AVERAGE);
+		JMenuItem weightedAverage = new JMenuItem(Labels.WEIGHTED_AVERAGE);*/
 		
 		JMenuItem listCourses = new JMenuItem(Labels.LIST_COURSES);
 		JMenuItem listRegistratedCourses = new JMenuItem(Labels.LIST_REGISTRATED_COURSES);
@@ -76,6 +79,24 @@ public class StudentFrame extends JFrame {
 		actionOfTheMenuItem(listRegistratedExams, 'F', 5);
 		actionOfTheMenuItem(examFee, 'b', 6);
 		
+		average.setMnemonic('t');
+		average.addActionListener(e -> {
+			workingPanel.removeAll();
+			
+			JLabel gradePointAverage = new JLabel(Labels.GRADE_POINT_AVERAGE + ": asd");
+			JLabel weightedAverage = new JLabel(Labels.WEIGHTED_AVERAGE + ": qwe");
+			
+			JPanel panel = new JPanel();
+			panel.setLayout(new GridLayout(2, 1));
+			panel.add(gradePointAverage);
+			panel.add(weightedAverage);
+			
+			workingPanel.add(panel);
+			
+			revalidate();
+			repaint();
+		});
+		
 		changePassword.addActionListener(e -> {
 			workingPanel.removeAll();
 			workingPanel.add(new ChangePassword(controller, currentAccount));
@@ -89,8 +110,9 @@ public class StudentFrame extends JFrame {
 			gui.startGUI();
 		});
 		
-		ownDataMenu.add(gradePointAverage);
-		ownDataMenu.add(weightedAverage);
+		ownDataMenu.add(average);
+		/*ownDataMenu.add(gradePointAverage);
+		ownDataMenu.add(weightedAverage);*/
 		
 		courseMenu.add(listCourses);
 		courseMenu.add(listRegistratedCourses);

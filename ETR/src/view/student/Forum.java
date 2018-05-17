@@ -3,6 +3,7 @@ package view.student;
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.awt.Toolkit;
 import java.sql.SQLException;
@@ -13,6 +14,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.JTextField;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.DefaultTableModel;
@@ -22,6 +24,7 @@ import javax.swing.table.TableModel;
 
 import controller.ETRController;
 import dao.course.Course;
+import dao.course.ForumMessage;
 import dao.model.Account;
 import view.ETRGUI;
 import view.Labels;
@@ -32,7 +35,6 @@ public class Forum implements TableModelListener {
 	private ETRGUI gui;
 	private Account currentAccount;
 	private JTable table;
-	private DefaultTableModel model;
 
 	public Forum(JPanel panel, ETRController controller, ETRGUI gui, Account currentAccount, JTable table) {
 		this.panel = panel;
@@ -63,8 +65,6 @@ public class Forum implements TableModelListener {
 	        }
 		};
 		
-		this.model = model;
-		
 		model.addColumn(Labels.COURSE_NAME);
 		model.addColumn(Labels.FORUM);
 		
@@ -79,7 +79,7 @@ public class Forum implements TableModelListener {
 		int rowCount = 0;
 		
 		try {
-			ArrayList<Course> courses = controller.getCourses();
+			ArrayList<Course> courses = controller.getCourses(currentAccount.getEha());
 			
 			if(courses.isEmpty()) {
 				panel.add(new JLabel(Labels.NO_FORUM_TO_SHOW), BorderLayout.CENTER);
@@ -140,35 +140,71 @@ public class Forum implements TableModelListener {
 	public void tableChanged(TableModelEvent e) {
 	        TableModel tableModel = (TableModel) e.getSource();
 	        if(e.getColumn() == 1) {
-	        	showCourseForum(tableModel.getValueAt(e.getFirstRow(), 0).toString(), model);
+	        	showCourseForum(tableModel.getValueAt(e.getFirstRow(), 0).toString());
 	        }
 	}
 
-	private void showCourseForum(String courseName, DefaultTableModel model) {
+	private void showCourseForum(String courseName) {
 		table.getModel().addTableModelListener(null);
 		panel.removeAll();
 		
 		panel.setLayout(new GridLayout(3, 1));
 		
-		JLabel label = new JLabel(courseName);
-		panel.add(label);
-		
 		try {
-			model.setDataVector(controller.getMessages(courseName.split("\\(")[1].split("\\)")[0]), new String[0][0]);
+			DefaultTableModel messageModel = new DefaultTableModel() {
+				private static final long serialVersionUID = -3470390279755441442L;
+
+				public Class<String> getColumnClass(int column) {
+					return String.class;
+				}
+			
+				@Override
+				public boolean isCellEditable(int row, int column) {
+		            return false;
+		        }
+			};
+			
+			messageModel.addColumn(courseName);
+			
+			ArrayList<ForumMessage> messages = controller.getMessages(courseName.split("\\(")[1].split("\\)")[0]);
+			int rowCount = 0; 
+			for(ForumMessage message : messages) {
+				messageModel.addRow(new Object[0]);
+				messageModel.setValueAt(message.getMessage(), rowCount, 0);
+				rowCount++;
+			}
+			table.setModel(messageModel);
+			table.getModel().addTableModelListener(null);
+			panel.add(new JScrollPane(table));
 		} catch (SQLException e1) {
 			e1.printStackTrace();
 		}
 		
-		panel.add(new JScrollPane(table));
+		JTextField commentTextField = new JTextField();
+		panel.add(commentTextField);
 		
-		JButton button = new JButton(Labels.BACK);
+		JPanel buttonPanel = new JPanel();
+		buttonPanel.setLayout(new BorderLayout());
+		JButton backButton = new JButton(Labels.BACK);
+		JButton submitButton = new JButton(Labels.SUBMIT);
 		
-		button.addActionListener(e -> {
+		backButton.addActionListener(e -> {
 			panel.setLayout(new BorderLayout());
 			new Forum(panel, controller, gui, currentAccount, table);
 		});
 		
-		panel.add(button);
+		submitButton.addActionListener(e -> {
+			String comment = commentTextField.getText();
+			commentTextField.setText("");
+			//System.out.println(comment);
+		});
+		
+		buttonPanel.add(submitButton, BorderLayout.WEST);
+		buttonPanel.add(backButton, BorderLayout.EAST);
+		JPanel panelForButtonPanel = new JPanel();
+		panelForButtonPanel.setLayout(new FlowLayout());
+		panelForButtonPanel.add(buttonPanel);
+		panel.add(panelForButtonPanel);
 		
 		panel.repaint();
 		panel.revalidate();
