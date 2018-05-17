@@ -62,17 +62,19 @@ public class StudentFrame extends JFrame {
 		JMenuItem listCourses = new JMenuItem(Labels.LIST_COURSES);
 		JMenuItem listRegistratedCourses = new JMenuItem(Labels.LIST_REGISTRATED_COURSES);
 		JMenuItem timetable = new JMenuItem(Labels.TIMETABLE);
+		JMenuItem forum = new JMenuItem(Labels.FORUM);
 		
 		JMenuItem listExams = new JMenuItem(Labels.LIST_EXAMS);
 		JMenuItem listRegistratedExams = new JMenuItem(Labels.LIST_REGISTRATED_EXAMS);
 		JMenuItem examFee = new JMenuItem(Labels.EXAM_FEE);
 		
 		actionOfTheMenuItem(listCourses, 'K', 0);
-		actionOfTheMenuItem(listRegistratedCourses, 'F', 1);
+		actionOfTheMenuItem(listRegistratedCourses, 'e', 1);
 		actionOfTheMenuItem(timetable, 'r', 2);
-		actionOfTheMenuItem(listExams, 'V', 3);
-		actionOfTheMenuItem(listRegistratedExams, 'F', 4);
-		//actionOfTheMenuItem(examFee, 'K', new ListCourses(controller, currentAccount));
+		actionOfTheMenuItem(forum, 'F', 3);
+		actionOfTheMenuItem(listExams, 'V', 4);
+		actionOfTheMenuItem(listRegistratedExams, 'F', 5);
+		actionOfTheMenuItem(examFee, 'b', 6);
 		
 		changePassword.addActionListener(e -> {
 			workingPanel.removeAll();
@@ -93,6 +95,7 @@ public class StudentFrame extends JFrame {
 		courseMenu.add(listCourses);
 		courseMenu.add(listRegistratedCourses);
 		courseMenu.add(timetable);
+		courseMenu.add(forum);
 		
 		examMenu.add(listExams);
 		examMenu.add(listRegistratedExams);

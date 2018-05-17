@@ -99,5 +99,13 @@ public class Labels {
 	public static final String THURSDAY = "Csütörtök";
 	public static final String FRIDAY = "Péntek";
 	public static final String DAY_OF_THE_WEEK = "Hét napja";
+	public static final String PAY = "Befizetés";
+	public static final String SUCCESSFULLY_PAID_EXAMS = "Sikeresen befizetett tételek:\n";
+	public static final String UNSUCCESSFULLY_PAID_EXAM = " tételt nem sikerült befizetni.";
+	public static final String NO_ITEMS_TO_SHOW = "Nincsenek megjeleníthető tételek.";
+	public static final String FORUM = "Fórum";
+	public static final String NO_FORUM_TO_SHOW = "Nincs megjeleníthető fórum.";
+	public static final String OPEN = "Megnyitás";
+	public static final String BACK = "Vissza";
 
 }

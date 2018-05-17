@@ -39,9 +39,6 @@ public class Timetable {
 		for(int i=8; i<20; i++) {
 			model.addColumn(i + ":00 - " + (i+1) + ":00");
 		}
-
-	    //or, set TableCellRenderer into a specified JTable column
-	    //table.getColumnModel().getColumn(1).setCellRenderer(renderer);
 		
 		createRecords(panel, controller, gui, currentAccount, table, model);
 	}

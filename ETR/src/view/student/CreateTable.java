@@ -50,10 +50,16 @@ public class CreateTable extends JPanel {
 				new Timetable(this, controller, gui, currentAccount, table);
 				break;
 			case 3:
-				new ListExams(this, controller, gui, currentAccount, table);
+				new Forum(this, controller, gui, currentAccount, table);
 				break;
 			case 4:
+				new ListExams(this, controller, gui, currentAccount, table);
+				break;
+			case 5:
 				new ListOwnExams(this, controller, gui, currentAccount, table);
+				break;
+			case 6:
+				new ExamFee(this, controller, gui, currentAccount, table);
 				break;
 		}
 		
