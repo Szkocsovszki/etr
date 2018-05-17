@@ -194,9 +194,12 @@ public class Forum implements TableModelListener {
 		});
 		
 		submitButton.addActionListener(e -> {
-			String comment = commentTextField.getText();
+			try {
+				controller.writeMessage(currentAccount.getEha(), courseName.split("\\(")[1].split("\\)")[0], commentTextField.getText());
+			} catch (SQLException e1) {
+				ETRGUI.createMessage(gui, e1.getMessage(), Labels.ERROR);
+			}
 			commentTextField.setText("");
-			//System.out.println(comment);
 		});
 		
 		buttonPanel.add(submitButton, BorderLayout.WEST);

@@ -5,6 +5,7 @@ import java.awt.ComponentOrientation;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.Toolkit;
+import java.sql.SQLException;
 
 import javax.swing.Box;
 import javax.swing.JButton;
@@ -83,13 +84,15 @@ public class StudentFrame extends JFrame {
 		average.addActionListener(e -> {
 			workingPanel.removeAll();
 			
-			JLabel gradePointAverage = new JLabel(Labels.GRADE_POINT_AVERAGE + ": asd");
-			JLabel weightedAverage = new JLabel(Labels.WEIGHTED_AVERAGE + ": qwe");
-			
 			JPanel panel = new JPanel();
 			panel.setLayout(new GridLayout(2, 1));
-			panel.add(gradePointAverage);
-			panel.add(weightedAverage);
+			
+			try {
+				panel.add(new JLabel(Labels.GRADE_POINT_AVERAGE + ": " + controller.getAvg(currentAccount.getEha())));
+				panel.add(new JLabel(Labels.WEIGHTED_AVERAGE + ": " + controller.getSulyAvg(currentAccount.getEha())));
+			} catch (SQLException exception) {
+				ETRGUI.createMessage(gui, exception.getMessage(), Labels.ERROR);
+			}
 			
 			workingPanel.add(panel);
 			
