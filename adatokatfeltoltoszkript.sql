@@ -110,3 +110,5 @@ UPDATE VIZSGAZIK SET vizsgajegy = 4 WHERE eha = 'UYIHISP.SZE' AND vizsgakod = '2
 UPDATE VIZSGAZIK SET vizsgajegy = 4 WHERE eha = 'CNRSDEJ.SZE' AND vizsgakod = '1';
 
 UPDATE SZEMELY SET jelszo = ora_hash(concat(jelszo1,'etr'));
+
+COMMIT WORK;

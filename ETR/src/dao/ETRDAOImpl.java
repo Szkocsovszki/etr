@@ -11,6 +11,7 @@ import javax.swing.JOptionPane;
 
 import dao.course.Course;
 import dao.course.Exam;
+import dao.course.Forum;
 import dao.model.Account;
 import view.Labels;
 
@@ -331,5 +332,26 @@ public class ETRDAOImpl implements ETRDAO {
 		pay.setString(2, examCode);
 		executeStatement(pay);
 	}
+	
+	public String[][] getMessages(String courseCode) throws SQLException{
+		String[][] messages = new String[0][];
+		ArrayList<Forum> mess = new ArrayList<Forum>();
+		PreparedStatement getMessages = conn.prepareStatement(""
+				+ "SELECT forum.mikor, kurzus.nev, szemely.nev, forum.eha, forum.uzenet "
+				+ "FROM (forum INNER JOIN kurzus ON forum.kurzuskod = kurzus.kurzuskod) INNER JOIN szemely ON forum.eha = szemely.eha "
+				+ "WHERE forum.kurzuskod = ?");
+		getMessages.setString(1, courseCode);
+		ResultSet message = getMessages.executeQuery();
+		while(message.next()) {
+			String timestamp = message.getString(1);
+			String time = (timestamp.split("\\."))[0] + ", " + (timestamp.split("\\."))[1] + ":" + (((timestamp.split("\\."))[2].length() == 1) ? "0" : "") + (timestamp.split("\\."))[2];
+			mess.add(new Forum(message.getString(2), message.getString(3)+" ("+message.getString(4)+") ", time, message.getString(5)));
+		}
+		int i = 0;
+		for(;i<mess.size();i++) {
+			messages[0][i] = mess.get(i).toString();
+		}
+		return messages;
+	};
 	
 }

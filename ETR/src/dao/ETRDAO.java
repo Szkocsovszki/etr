@@ -57,4 +57,6 @@ public interface ETRDAO {
 	
 	public void payment(String eha, String examCode) throws SQLException;
 	
+	public String[][] getMessages(String courseCode) throws SQLException;
+	
 }

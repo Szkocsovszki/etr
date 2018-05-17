@@ -85,4 +85,16 @@ public class ETRController {
 		dao.payment(eha, examCode);
 	};
 	
+	public void makeACourse(Course course) throws SQLException{
+		dao.makeACourse(course);
+	};
+	
+	public void makeAnExam(Exam exam) throws SQLException{
+		dao.makeAnExam(exam);
+	};
+	
+	public String[][] getMessages(String courseCode) throws SQLException{
+		return dao.getMessages(courseCode);
+	};
+	
 }
