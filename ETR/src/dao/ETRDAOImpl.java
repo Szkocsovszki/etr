@@ -315,10 +315,13 @@ public class ETRDAOImpl implements ETRDAO {
 
 	@Override
 	public void makeACourse(Course course) throws SQLException {
-		// TODO Auto-generated method stub
+		PreparedStatement makeC = conn.prepareStatement("INSERT INTO KURZUS VALUES (?, ?, ?,?,?,?,?,null)");
+		makeC.setString(1, course.getCode());
+		makeC.setString(2, course.getName());
+		makeC.setString(2, course.getName());
 		
 	}
-
+	
 	@Override
 	public void makeAnExam(Exam exam) throws SQLException {
 		// TODO Auto-generated method stub
@@ -348,5 +351,41 @@ public class ETRDAOImpl implements ETRDAO {
 		}
 		return messages;
 	};
+	
+	public void writeMessage(String eha, String courseCode, String message) throws SQLException{
+		PreparedStatement pickUp = conn.prepareStatement("INSERT INTO forum VALUES (?, ?, Sysdate, ?)");
+		pickUp.setString(1, eha);
+		pickUp.setString(2, courseCode);
+		pickUp.setString(3, message);
+		executeStatement(pickUp);
+	}
+	
+	public Double getAvg(String eha) throws SQLException{
+		Double avarage = 0.0;
+		Integer c = 0;
+		PreparedStatement getAVG = conn.prepareStatement(""
+				+ "SELECT AVG(osztalyzat) "
+				+ "FROM hallgatja "
+				+ "WHERE eha = ?");
+		getAVG.setString(1, eha);
+		ResultSet avg = getAVG.executeQuery();
+		while(avg.next()) {
+			avarage = avg.getDouble(1);
+			PreparedStatement getCount = conn.prepareStatement(""
+					+ "SELECT COUNT(*) "
+					+ "FROM hallgatja "
+					+ "WHERE eha = ?");
+			getCount.setString(1, eha);
+			ResultSet count = getAVG.executeQuery();
+			while(count.next()) {
+				c = count.getInt(1);
+			}
+				
+		}
+		avarage = avarage / c;
+		getAVG.close();
+		return avarage;
+			
+	}
 	
 }

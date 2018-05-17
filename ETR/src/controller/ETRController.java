@@ -98,4 +98,12 @@ public class ETRController {
 		return dao.getMessages(courseCode);
 	};
 	
+	public void writeMessage(String eha, String courseCode, String message) throws SQLException{
+		dao.writeMessage(eha, courseCode, message);
+	}
+	
+	public Double getAvg(String eha) throws SQLException{
+		return dao.getAvg(eha);
+	}
+	
 }

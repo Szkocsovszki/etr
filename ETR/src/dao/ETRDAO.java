@@ -60,4 +60,8 @@ public interface ETRDAO {
 	
 	public ArrayList<ForumMessage> getMessages(String courseCode) throws SQLException;
 	
+	public void writeMessage(String eha, String courseCode, String message) throws SQLException;
+	
+	public Double getAvg(String eha) throws SQLException;
+	
 }
