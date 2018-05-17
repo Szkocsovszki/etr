@@ -318,8 +318,13 @@ public class ETRDAOImpl implements ETRDAO {
 		PreparedStatement makeC = conn.prepareStatement("INSERT INTO KURZUS VALUES (?, ?, ?,?,?,?,?,null)");
 		makeC.setString(1, course.getCode());
 		makeC.setString(2, course.getName());
-		makeC.setString(2, course.getName());
-		
+		makeC.setString(3, course.getWeekday());
+		makeC.setString(4, course.getStart());
+		makeC.setString(5, course.getEnd());
+		makeC.setInt(6, course.getCredit());
+		makeC.setString(7, course.getPlace());
+		makeC.setString(8, course.getLecture());
+		executeStatement(makeC);
 	}
 	
 	@Override
