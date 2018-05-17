@@ -7,6 +7,7 @@ import dao.ETRDAO;
 import dao.ETRDAOImpl;
 import dao.course.Course;
 import dao.course.Exam;
+import dao.course.ForumMessage;
 import dao.model.Account;
 import view.ETRGUI;
 
@@ -93,7 +94,7 @@ public class ETRController {
 		dao.makeAnExam(exam);
 	};
 	
-	public String[][] getMessages(String courseCode) throws SQLException{
+	public ArrayList<ForumMessage> getMessages(String courseCode) throws SQLException{
 		return dao.getMessages(courseCode);
 	};
 	

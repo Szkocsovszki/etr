@@ -1,12 +1,12 @@
 package dao.course;
 
-public class Forum {
+public class ForumMessage {
 	private String course;
 	private String name;
 	private String time;
 	private String message;
 	
-	public Forum(String course, String name, String time, String message) {
+	public ForumMessage(String course, String name, String time, String message) {
 		super();
 		this.course = course;
 		this.name = name;

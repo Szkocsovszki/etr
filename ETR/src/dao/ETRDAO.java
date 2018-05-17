@@ -5,6 +5,7 @@ import java.util.ArrayList;
 
 import dao.course.Course;
 import dao.course.Exam;
+import dao.course.ForumMessage;
 import dao.model.Account;
 
 public interface ETRDAO {
@@ -57,6 +58,6 @@ public interface ETRDAO {
 	
 	public void payment(String eha, String examCode) throws SQLException;
 	
-	public String[][] getMessages(String courseCode) throws SQLException;
+	public ArrayList<ForumMessage> getMessages(String courseCode) throws SQLException;
 	
 }
