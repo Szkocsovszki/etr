@@ -334,7 +334,7 @@ public class ETRDAOImpl implements ETRDAO {
 	}
 	
 	public String[][] getMessages(String courseCode) throws SQLException{
-		String[][] messages = new String[0][];
+		String[][] messages;
 		ArrayList<Forum> mess = new ArrayList<Forum>();
 		PreparedStatement getMessages = conn.prepareStatement(""
 				+ "SELECT forum.mikor, kurzus.nev, szemely.nev, forum.eha, forum.uzenet "
@@ -347,9 +347,12 @@ public class ETRDAOImpl implements ETRDAO {
 			String time = (timestamp.split("\\."))[0] + ", " + (timestamp.split("\\."))[1] + ":" + (((timestamp.split("\\."))[2].length() == 1) ? "0" : "") + (timestamp.split("\\."))[2];
 			mess.add(new Forum(message.getString(2), message.getString(3)+" ("+message.getString(4)+") ", time, message.getString(5)));
 		}
+		
+		int row = mess.size()-1 >= 0 ? mess.size()-1 : 0; 
+		messages = new String[row][0];
 		int i = 0;
 		for(;i<mess.size();i++) {
-			messages[0][i] = mess.get(i).toString();
+			messages[i][0] = mess.get(i).toString();
 		}
 		return messages;
 	};
