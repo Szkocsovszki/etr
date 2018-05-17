@@ -388,7 +388,6 @@ public class ETRDAOImpl implements ETRDAO {
 	
 	public Double getSulyAvg(String eha) throws SQLException{
 		Double avarage = 0.0;
-		Integer c = 0;
 		PreparedStatement getSulySUM = conn.prepareStatement(""
 				+ "SELECT SUM(osztalyzat * kredit) "
 				+ "FROM hallgatja INNER JOIN kurzus ON hallgatja.kurzuskod = kurzus.kurzuskod "
@@ -397,19 +396,9 @@ public class ETRDAOImpl implements ETRDAO {
 		ResultSet sulyAvg = getSulySUM.executeQuery();
 		while(sulyAvg.next()) {
 			avarage = sulyAvg.getDouble(1);
-			PreparedStatement getCount = conn.prepareStatement(""
-					+ "SELECT COUNT(*) "
-					+ "FROM hallgatja "
-					+ "WHERE eha = ?");
-			getCount.setString(1, eha);
-			ResultSet count = getCount.executeQuery();
-			while(count.next()) {
-				c = count.getInt(1);
-			}
-			getCount.close();
 				
 		}
-		avarage = avarage / c;
+		avarage = avarage / 5;
 		getSulySUM.close();
 		return avarage;
 	}
